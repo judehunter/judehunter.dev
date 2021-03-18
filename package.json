@@ -1,0 +1,57 @@
+{
+  "name": "portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.1.3",
+    "@emotion/react": "^11.1.5",
+    "@emotion/server": "^11.0.0",
+    "@emotion/styled": "^11.1.5",
+    "@seznam/compose-react-refs": "^1.0.5",
+    "next": "10.0.8",
+    "react": "17.0.1",
+    "react-dom": "17.0.1"
+  },
+  "devDependencies": {
+    "@emotion/babel-plugin": "^11.2.0",
+    "@types/node": "^14.14.34",
+    "@types/react": "^17.0.3",
+    "babel-plugin-macros": "^3.0.1",
+    "babel-plugin-twin": "^1.0.2",
+    "tailwindcss": "^2.0.3",
+    "twin.macro": "^2.3.0",
+    "typescript": "^4.2.3"
+  },
+  "babelMacros": {
+    "twin": {
+      "preset": "emotion"
+    }
+  },
+  "bit": {
+    "env": {
+      "compiler": {
+        "bit.envs/compilers/react-typescript@4.0.0": {
+          "compilerPath": "@babel/cli/bin/babel",
+          "rawConfig": {
+            "configFileName": "tsconfig.json",
+            "tsconfig": {
+              "include": [
+                "twin.d.ts",
+                "next-env.d.ts",
+                "**/*.ts",
+                "**/*.tsx"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "componentsDefaultDirectory": "components/{name}",
+    "packageManager": "npm"
+  }
+}
