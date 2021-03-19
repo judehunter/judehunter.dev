@@ -19,16 +19,6 @@ type PlainButtonProps = {
 
 type Extend<T> = T & {[key: string]: any};
 
-const PlainButtonStyles = ({color}: PlainButtonProps, rest: {showText: boolean}) => [
-  !rest.showText && tw`pointer-events-none bg-opacity-50`,
-  tw`focus:outline-none`,
-  css`
-    color: ${color?.text};
-    background-color: ${color?.bg};
-    transition: background-color 300ms ease;
-  `
-]
-
 const bounce = keyframes`
   from, to {
     transform: rotate(0deg);
@@ -91,13 +81,25 @@ export const PlainButton: React.FC<PlainButtonProps> = (props) => {
         flex justify-center items-center
         px-3.5 py-1
         rounded
-        bg-pink-50
+        bg-blue-700
+        text-white
         overflow-hidden
         font-medium
-        border-2 border-pink-400
-        
+        border-2 border-blue-700
+        // ring-4 ring-pink-100
+        transition-all
+        focus:outline-none
+        hover:(
+          ring-4 ring-blue-200
+        )
       "
-      css={PlainButtonStyles(props, {showText})}
+      css={[
+        !showText && tw`pointer-events-none bg-opacity-100`,
+        css`
+          color: ${color?.text};
+          background-color: ${color?.bg};
+        `
+      ]}
       onClick={onClick}
     >
       <StatusIcon shown={isLoading} icon="ri-loader-2-line" rotate/>

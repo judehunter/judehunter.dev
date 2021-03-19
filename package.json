@@ -15,7 +15,8 @@
     "@seznam/compose-react-refs": "^1.0.5",
     "next": "10.0.8",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "tailwindcss-children": "^2.1.0"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.2.0",

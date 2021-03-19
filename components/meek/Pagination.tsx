@@ -60,13 +60,13 @@ const PlaceInBetween = (arr: any[], val: any): any[] =>
 
 const PaginationBullet: React.VFC<{isActive?: boolean, idx: number, onClick?}> = ({isActive, idx, onClick}) => (
   <div
-    tw="rounded-full bg-pink-100 relative cursor-pointer hover:bg-pink-200 transition-all"
+    tw="rounded-full bg-blue-100 relative cursor-pointer hover:bg-blue-200 transition-all"
     css={[
       css`
         width: 12px;
         height: 12px;
       `,
-      isActive && tw`bg-pink-400 hover:bg-pink-400 shadow-md`
+      isActive && tw`bg-blue-700 hover:bg-blue-700 shadow-md`
     ]}
     onClick={onClick}
   >

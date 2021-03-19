@@ -18,7 +18,7 @@ const CheckboxIcon: React.FC<{active: boolean, round?: boolean}> = (props) => {
   const {active, round} = props;
   return (
     <div
-      tw="border-2 rounded border-pink-300 transition-all relative overflow-hidden"
+      tw="border-2 rounded border-blue-500 transition-all relative overflow-hidden"
       css={[
         css`
           width: 18px;
@@ -26,7 +26,7 @@ const CheckboxIcon: React.FC<{active: boolean, round?: boolean}> = (props) => {
           transition-duration: 75ms;
         `,
         active && css`
-          ${tw`bg-pink-400 border-pink-400`}
+          ${tw`bg-blue-700 border-blue-700`}
         `,
         !active && css`
           transition-delay: 50ms;

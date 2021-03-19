@@ -41,9 +41,16 @@ export const Switch: React.VFC<SwitchProps> = (props) => {
 
   return (
     <div tw="relative font-content">
-      <div tw="border-2 border-pink-200 absolute left-0 right-0 bottom-0 top-0 z-index[-1] rounded" />
+      <div tw="border-2 border-blue-700 absolute left-0 right-0 bottom-0 top-0 z-index[-1] rounded" />
       <div
-        tw="absolute top-0 bottom-0 bg-pink-50 z-index[-1] transition-all border-2 border-pink-400 rounded"
+        tw="
+          absolute top-0 bottom-0
+          bg-blue-700
+          z-index[-1]
+          transition-all
+          border-2 border-blue-700
+          rounded
+        "
         css={[
           css`
             left: ${bgPos.left}px;
@@ -60,9 +67,14 @@ export const Switch: React.VFC<SwitchProps> = (props) => {
         ref={parentRef}
       >
         <div
-          tw="px-3.5 py-1"
+          tw="px-3.5 py-1 transition-colors"
           css={[
-            // active === 'left' && tw`text-pink-800`
+            active === 'left' && [
+              tw`text-white`,
+              css`
+                transition-delay: 10ms;
+              `
+            ],
           ]}
           ref={leftRef}
           onClick={() => onChange('left')}
@@ -72,7 +84,12 @@ export const Switch: React.VFC<SwitchProps> = (props) => {
         <div
           tw="px-3.5 py-1 transition-colors"
           css={[
-            // active === 'right' && tw`text-pink-800`
+            active === 'right' && [
+              tw`text-white`,
+              css`
+                transition-delay: 10ms;
+              `
+            ],
           ]}
           ref={rightRef}
           onClick={() => onChange('right')}

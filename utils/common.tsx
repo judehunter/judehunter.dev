@@ -27,3 +27,5 @@ export const useMergeState = <T extends Record<string, any>>(init: T) => {
 
 export const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+export const log = (val) => {console.log(val); return val}

@@ -1,17 +1,10 @@
 import tw, {css, styled} from 'twin.macro';
 
-const Center = styled.div`
-  ${tw`ml-auto mr-auto`}
-  ${css`
-    max-width: 700px;
-  `}
-`
-
-const Default: React.FC = ({children}) => {
+const Center: React.FC<{width: number}> = ({children, width}) => {
   return (
-    <Center>
+    <div tw="ml-auto mr-auto" css={[css`max-width: ${width}px;`]}>
       {children}
-    </Center>
+    </div>
   )
 }
 
@@ -24,6 +17,6 @@ const Playground: React.FC = ({children}) => {
 }
 
 export const Layouts = {
-  Default,
+  Default: Center,
   Playground
 }

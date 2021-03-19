@@ -12,6 +12,7 @@ import {RadioList} from '../components/meek/RadioList';
 import {LoadingGizmo, LoadingGizmoTest} from '../components/meek/LoadingGizmo';
 import {TextInput} from '../components/meek/TextInput';
 import {Dropdown} from '../components/meek/Dropdown';
+import {Icon} from '../components/meek/Icon';
 
 // const Example: React.FC<{css}> = (props) => (
 //   <h1 {...props}>Test {JSON.stringify(props)}</h1>
@@ -65,6 +66,17 @@ const Home: React.FC = ({}) => {
           <IconLabel icon="ri-user-3-fill">
             Personalized
           </IconLabel>
+        }
+      />
+      <Spacer h="30px" />
+      <Switch
+        active={state.switch as 'left' | 'right'}
+        onChange={v => mergeState({switch: v})}
+        left={
+          <Icon icon="ri-question-mark" />
+        }
+        right={
+          <Icon icon="ri-user-3-fill" />
         }
       />
       <Spacer h="30px" />

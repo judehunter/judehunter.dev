@@ -18,12 +18,15 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
         flex items-center
         rounded
         px-3.5 py-1
-        border-2 border-pink-400
+        bg-blue-700
+        text-white
+        border-2 border-blue-700
         outline-none
+        transition-all
         focus-within:(
-          ring-pink-400
-          ring-1
-          ring-offset-0 transition-all
+          ring-blue-300
+          ring-4
+          ring-offset-0
         )
       "
       css={[
@@ -35,7 +38,7 @@ export const TextInput: React.FC<TextInputProps> = (props) => {
         <h1 tw="font-content">{label}:</h1>
       </div>
       <input
-        tw="outline-none min-w-0 transition-colors flex-grow"
+        tw="outline-none min-w-0 transition-colors flex-grow bg-blue-700"
         css={[
           disabled && tw`bg-gray-100 pointer-events-none`
         ]}
