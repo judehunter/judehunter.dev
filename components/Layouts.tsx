@@ -2,7 +2,7 @@ import tw, {css, styled} from 'twin.macro';
 
 const Center: React.FC<{width: number}> = ({children, width}) => {
   return (
-    <div tw="ml-auto mr-auto" css={[css`max-width: ${width}px;`]}>
+    <div tw="ml-auto mr-auto flex flex-col min-height[100vh]" css={[css`max-width: ${width}px;`]}>
       {children}
     </div>
   )

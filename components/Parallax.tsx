@@ -2,6 +2,7 @@ import {useRouter} from 'next/router';
 import {DependencyList, ReactNode, useCallback, useEffect, useState} from 'react';
 import {useIsScrolledToBottom, useIsScrolledToTop, useMergeState, useScrolledEdge} from '../utils/common';
 import composeRefs from '@seznam/compose-react-refs';
+import {css} from 'twin.macro';
 
 type ParallaxItem = [el: ReactNode, hash: string]
 
@@ -32,8 +33,8 @@ export const ParallaxManager = (props: {onChange: (val: number) => any, items: P
   const isActive = (i) => i === cur;
   // const [isScrolledToBottom, isScrolledToBottomRef] = useIsScrolledToBottom(0);
   // const [isScrolledToTop, isScrolledToTopRef] = useIsScrolledToTop(0);
-  const [{up, down}, scrolledRef] = useScrolledEdge(); 
-  console.log('is scrolled', up, down);
+  // const [{up, down}, scrolledRef] = useScrolledEdge(); 
+  // console.log('is scrolled', up, down);
   // const scrolledHandler = (deltaY) => {
   //   console.log('top?', isScrolledToTop, 'bottom?', isScrolledToBottom)
   //   if (isScrolledToBottom && deltaY > 0) {
@@ -46,30 +47,33 @@ export const ParallaxManager = (props: {onChange: (val: number) => any, items: P
   //   }
   // };
   
-  const [lastScroll, setLastScroll] = useDetectScrollState();
+  const [lastScroll] = useDetectScrollState();
+  if (lastScroll === 'down' && cur === 0) {
+    setCur(1);
+  }
   // console.log('is scrolled?', isScrolledToTop, isScrolledToBottom)
   // console.log('last scroll', lastScroll, 'bottom?', down, 'top?', up);
   // const [curScroll, setCurScroll] = useState(null);
 
   useEffect(() => {
     // console.log('change');
-    setLastScroll(null);
+    // setLastScroll(null);
     onChange(cur);
   }, [cur]);
 
-  if (lastScroll === 'down' && down) {
-    // console.log('DOWN');
-    setCur(cur => cur < (items.length - 1) ? (cur + 1) : (items.length - 1))
-    setLastScroll(null);
-  }
-  else if (lastScroll === 'up' && up) {
-    // console.log('UP');
-    setCur(cur => cur > 0 ? (cur - 1) : 0)
-    setLastScroll(null);
-  }
-  else if (['up', 'down'].includes(lastScroll) && !up && !down) {
-    setLastScroll(null);
-  }
+  // if (lastScroll === 'down' && down) {
+  //   // console.log('DOWN');
+  //   setCur(cur => cur < (items.length - 1) ? (cur + 1) : (items.length - 1))
+  //   setLastScroll(null);
+  // }
+  // else if (lastScroll === 'up' && up) {
+  //   // console.log('UP');
+  //   setCur(cur => cur > 0 ? (cur - 1) : 0)
+  //   setLastScroll(null);
+  // }
+  // else if (['up', 'down'].includes(lastScroll) && !up && !down) {
+  //   setLastScroll(null);
+  // }
 
   // console.log('lastScroll', lastScroll);
   // scrolledHandler(100);
@@ -99,14 +103,21 @@ export const ParallaxManager = (props: {onChange: (val: number) => any, items: P
   // }, [isScrolledToTop, isScrolledToBottom, isScrolledToTopRef, isScrolledToBottomRef, isScrolledToTopRef.current, isScrolledToBottomRef.current])
 
   return (
-    <div tw="relative w-full overflow-x-hidden height[2000px]">
+    <div tw="relative w-full overflow-x-hidden flex-grow">
       {
         items.map((el, i) => (
           <div key={'ttt' + i}>
             <div
-              tw="w-full absolute px-5 pb-10 overflow-x-hidden transition-all transition-duration[1s]! overflow-y-auto max-height[1000px]"
+              tw="w-full absolute px-5 pb-10 top-0 bottom-0 overflow-x-hidden transition-all transition-duration[1s]! overflow-y-auto"
               style={{left: (i - cur) * 100 + '%'}}
-              ref={isActive(i) ? scrolledRef : undefined}
+              css={[
+                css`
+                  ::-webkit-scrollbar {
+                    width: 0;  /* Remove scrollbar space */
+                    background: transparent;  /* Optional: just make scrollbar invisible */
+                  }
+                `
+              ]}
             >
               {el[0]}
             </div>

@@ -53,7 +53,8 @@ export const Hero = () => {
           "GRAPHIC DESIGNER",
           "REACT DEVELOPER",
           "VUE DEVELOPER",
-          "INDIE GAME DEVELOPER"
+          "INDIE GAME DEVELOPER",
+          "SEO ENGINEER"
         ]} />
         <Spacer h="20px" />
         <SocialBar />
