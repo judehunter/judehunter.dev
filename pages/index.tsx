@@ -30,11 +30,6 @@ const ProjectTechBar = ({tech}: {tech?: string}) => {
   return (
     <div
       tw="flex flex-wrap -m-1"
-      css={[
-        css`
-
-        `
-      ]}
     >
       {
         tech && (tech || '').split(',').map((el, i) => (
@@ -150,7 +145,7 @@ const WorkResponsibilities = ({items}: {items: string}) => {
 }
 
 const WorkExp = () =>
-  <Section title="MONEY-MAKERS 💰" subtitle="WORK & PROFFESIONAL EXPERIENCE">
+  <Section title="MONEY-MAKERS 💰" subtitle="WORK & PROFESSIONAL EXPERIENCE">
     <WorkCompany
       desc={
         <div>
@@ -256,7 +251,7 @@ const WorkExp = () =>
         `} />
       </>)} />
       <WorkItem role="Design Director" time="Sep 2018, 13 mos" desc={(<>
-        <ProjectTechBar tech="Adobe InDesign, Adobe Illustrator, Affinity Designer, " />
+        <ProjectTechBar tech="Adobe InDesign, Adobe Illustrator, Affinity Designer" />
         <Spacer h="10px" />
         <WorkResponsibilities items={`
           I prepared and oversaw social media and print material for the 16th edition of Zwierciadła.
