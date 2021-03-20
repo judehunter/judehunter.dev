@@ -23,7 +23,7 @@ export default class MyDocument extends Document {
             dangerouslySetInnerHTML={{__html: this.props.css}}
           />
         </Head>
-        <body tw="font-display">
+        <body tw="font-display overflow-hidden">
           <Main />
           <NextScript />
         </body>

@@ -3,7 +3,7 @@ import {Icon} from './Icon';
 import 'twin.macro';
 import tw, {css, theme} from 'twin.macro';
 import composeRefs from '@seznam/compose-react-refs';
-import {useIsomorphicLayoutEffect} from '../../utils/common';
+import {useIsomorphicLayoutEffect, useIsScrolledToBottom} from '../../utils/common';
 
 type DropdownProps<T> = {
   items: [ReactNode, T?][],
@@ -15,24 +15,6 @@ const useIsOverflown = () => {
   const ref = useRef<HTMLDivElement>();
   return [
     ref.current ? (ref.current.scrollHeight > ref.current.clientHeight || ref.current.scrollWidth > ref.current.clientWidth) : null,
-    ref
-  ] as const;
-}
-
-const useIsScrolledToBottom = (wiggleRoom: number = 0) => {
-  const ref = useRef<HTMLDivElement>();
-  const [state, setState] = useState(false);
-  const set = () => {
-    setState(ref.current.scrollHeight - ref.current.scrollTop - ref.current.clientHeight - wiggleRoom < 1);
-  }
-
-  useIsomorphicLayoutEffect(() => {
-    ref.current.addEventListener('scroll', set);
-    return () => ref.current.removeEventListener('scroll', set);
-  }, [])
-
-  return [
-    state,
     ref
   ] as const;
 }
