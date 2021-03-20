@@ -6,7 +6,7 @@ import {Icon} from '../components/meek/Icon';
 import {Logo} from '../components/Logo';
 import {Hero} from '../components/Hero';
 import {ParallaxManager} from '../components/Parallax';
-import {MasonryGrid} from '../components/Masonry';
+import {MasonryGrid, MasonryPhotos} from '../components/Masonry';
 import {IconLabel} from '../components/meek/IconLabel';
 import {NavBar} from '../components/NavBar';
 import {TimeLine} from '../components/TimeLine';
@@ -79,6 +79,8 @@ const Project = ({title, subtitle, children, award, img, tech}: ProjectProps) =>
       <div tw="font-display font-size[1.1rem]">
         {children}
       </div>
+      <Spacer h="15px" />
+      <div tw="height[5px] bg-gray-300 width[20%]"/>
     </section>
   )
 }
@@ -87,16 +89,18 @@ const WorkCompany = ({name, img, desc, children}) => {
   return (
     <>
       <Spacer h="20px" />
-      <div tw="flex">
+      <div tw="flex items-stretch">
         <div tw="flex-basis[30%] flex-grow-0 flex-shrink-0 margin-right[80px]">
           {/* <h1 tw="font-bold font-size[2rem]">
             {name}
           </h1> */}
-          <img tw="max-width[160px] rounded" src={img} />
-          <Spacer h="20px" />
-          <aside tw="text-xl">
-            {desc}
-          </aside>
+          <div tw="sticky top[0px] margin-bottom[40px]">
+            <img tw="max-width[160px] rounded" src={img} />
+            <Spacer h="20px" />
+            <aside tw="text-xl">
+              {desc}
+            </aside>
+          </div>
         </div>
         <div>
           <TimeLine>
@@ -108,12 +112,22 @@ const WorkCompany = ({name, img, desc, children}) => {
   )
 }
 
-const WorkItem = ({role, desc}: {role: ReactNode, desc?: ReactNode}) => {
+const WorkItem = ({role, time, desc}: {role: ReactNode, time?: ReactNode, desc?: ReactNode}) => {
   return (
     <div tw="pb-7">
-      <h1 tw="font-size[2rem] font-bold">
+      <h1 tw="font-size[2rem] font-bold sticky">
         {role}
       </h1>
+      {
+        time && <>
+          <aside tw="flex space-x-1.5 font-size[1.1rem]">
+            <IconLabel icon="ri-calendar-2-fill">
+              {time}
+            </IconLabel>
+          </aside>
+          <Spacer h="12px" />
+        </>
+      }
       <div>
         {desc}
       </div>
@@ -148,7 +162,7 @@ const WorkExp = () =>
       name="Ensemble Education"
       img="/imgs/ensemble.png"
     >
-      <WorkItem role="Chief Technology Officer" desc={(<>
+      <WorkItem role="Chief Technology Officer" time="Oct 2020, 6mos" desc={(<>
         <ProjectTechBar tech="Vue, Nuxt (SSR), Tailwind, TypeScript, koa (REST), TypeORM, Python (AI), Serverless, Sentry, DataDog, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS (PostgreSQL), AWS ElastiCache (Redis), GitHub Actions" />
         <Spacer h="10px" />
         <WorkResponsibilities items={`
@@ -158,8 +172,12 @@ const WorkExp = () =>
           Maintained multiple git repositories and reviewed pull requests.
           Developed the infrastructure and the backbone of the API.
         `} />
+        <Spacer h="10px" />
+        <MasonryPhotos photos={[
+          'landing.png',
+        ].map(x => '/imgs/ensemble/' + x)} />
       </>)} />
-      <WorkItem role="Lead Developer" />
+      <WorkItem role="Lead Developer" time="Aug 2020, 8mos"/>
     </WorkCompany>
     <WorkCompany
       desc={
@@ -172,7 +190,7 @@ const WorkExp = () =>
       name="Millie Group"
       img="/imgs/millie.png"
     >
-      <WorkItem role="Product Development Engineer" desc={(<>
+      <WorkItem role="Product Development Engineer" time="Jan 2020, 3mos" desc={(<>
         <ProjectTechBar tech="React, Next, Typescript, Prisma, GraphQL, MailGun, Nodemailer, Sentry, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS, GTag, Google Analytics, Facebook Pixel" />
         <Spacer h="10px" />
         <WorkResponsibilities items={`
@@ -183,7 +201,7 @@ const WorkExp = () =>
           Integrating Google Tag Manager, Google Analytics and Facebook Pixel with the company's website
         `} />
       </>)} />
-      <WorkItem role="Product Development Intern" />
+      <WorkItem role="Product Development Intern" time="Sep 2020, 3mos" />
     </WorkCompany>
     <WorkCompany
       desc={
@@ -194,16 +212,68 @@ const WorkExp = () =>
       name="Interso"
       img="/imgs/interso.png"
     >
-      <WorkItem role="E-commerce Full Stack Developer" desc={(<>
+      <WorkItem role="E-commerce Full Stack Developer" time="Feb 2020, 5 mos" desc={(<>
         <ProjectTechBar tech="Vue, Nuxt, Vuex, TypeScript, koa, Strapi, PM2, Nodemailer, Digital Ocean (CentOS)" />
         <Spacer h="10px" />
         <WorkResponsibilities items={`
           Designed, built from the ground up, and deployed an e-commerce website for a local family business using modern technologies, including Nuxt.js, Vue.js, koa.js, postgres, SCSS and TypeScript.
           The website helped this business during the COVID-19 crisis and is viewed on average 10,000 times by 2,000 users every month.
         `} />
+        <Spacer h="10px" />
+        <MasonryPhotos photos={[
+          '1606375652998.jpg',
+          '1606375551747.jpg'
+        ].map(x => '/imgs/interso/' + x)} />
       </>)} />
+      <WorkItem role="Social Media Graphic Designer" desc={(<>
+        Some of my work:
+        <Spacer h="10px" />
+        <MasonryPhotos photos={[
+          '94083009_3326401470807867_2327922572794003456_o.png',
+          '96081127_3367208433393837_8252974534815121408_o.png',
+          '135369174_4033345743446766_6177507321493363086_o.png',
+          '162463645_4236889969759008_8153523038761269157_o.png',
+          '92909722_3311386782309336_3962024098388770816_o.png',
+          '97998626_3393371017444245_6145400908340527104_o.png',
+        ].map(x => '/imgs/interso/' + x)} />
+      </>)}/>
       <WorkItem role="Social Media Manager" />
-      <WorkItem role="Social Media Graphic Designer" />
+    </WorkCompany>
+    <WorkCompany
+      desc={
+        <div>
+          The largest nation-wide theatre festival for the youth. Established 2004 in Lublin, Poland.
+        </div>
+      }
+      name="Zwierciadła"
+      img="/imgs/zwier.png"
+    >
+      <WorkItem role="IT&Photo Team Leader" time="Sep 2018, 13 mos" desc={(<>
+        <ProjectTechBar tech="Wordpress, Adobe Lightroom CC, Adobe Photoshop" />
+        <Spacer h="10px" />
+        <WorkResponsibilities items={`
+          I've led the IT&Photo team during the 16th edition of Zwierciadła - the largest and most recognizable nation-wide theatre event. We've successfully revived the event's social media & website and dealt with multiple partners and sponsors. That edition was a great success and attracted 1000+ spectators.
+        `} />
+      </>)} />
+      <WorkItem role="Design Director" time="Sep 2018, 13 mos" desc={(<>
+        <ProjectTechBar tech="Adobe InDesign, Adobe Illustrator, Affinity Designer, " />
+        <Spacer h="10px" />
+        <WorkResponsibilities items={`
+          I prepared and oversaw social media and print material for the 16th edition of Zwierciadła.
+        `} />
+        <Spacer h="10px" />
+        <MasonryPhotos photos={[
+          'cosiedziejewzamoyu.png',
+          'cover.png',
+          'harmlublinrgb.png',
+          'jurydolaczHQ.png',
+          'klubrgb.png',
+          'plakatfinalrgb.png'
+        ].map(x => '/imgs/zwier/' + x)} />
+      </>)} />
+      {/* <WorkItem role="Social Media Graphic Designer" desc={(<>
+        I've led the IT&Photo team during the 16th edition of Zwierciadła - the largest and most recognizable nation-wide theatre event. We've successfully revived the event's social media & website and dealt with multiple partners and sponsors. That edition was a great success and attracted 1000+ spectators.
+      </>)}/> */}
     </WorkCompany>
   </Section>
 
@@ -265,6 +335,7 @@ const MyDen = () =>
         subtitle="A React component library"
         tech="React, JSS, Emotion, Tailwind"
       >
+        <i>Work In Progress</i>
       </Project>
       <Project
         title="Joint"
