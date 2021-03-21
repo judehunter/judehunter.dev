@@ -254,8 +254,9 @@ const WorkExp = () =>
         <ProjectTechBar tech="Adobe InDesign, Adobe Illustrator, Affinity Designer" />
         <Spacer h="10px" />
         <WorkResponsibilities items={`
-          I prepared and oversaw social media and print material for the 16th edition of Zwierciadła.
+          I prepared and oversaw the creation of social media and print material for the 16th edition of Zwierciadła.
         `} />
+        Material created by me:
         <Spacer h="10px" />
         <MasonryPhotos photos={[
           'cosiedziejewzamoyu.png',
@@ -314,7 +315,7 @@ const MyDen = () =>
         tech="Vue, Nuxt, PWA, SASS, Express, PostgreSQL, Leaflet, Multer (Uploading Images)"
         img="/imgs/boarinc.jpg"
       >
-        Boar Inc. was a data-visualization and aggregation project to fight the African swine virus plague. Users could submit sightings of boars on a map and authoritiess could generate raports, leverage the QGIS integration, and visualize the density of sightings on the Leaflet map.
+        Boar Inc. was a data-visualization and aggregation project to fight the African swine virus plague. Users could submit sightings of boars on a map and authorities could generate reports, leverage the QGIS integration, and visualize the density of sightings on the Leaflet map.
       </Project>
       <Project
         title="BRAWLBOX"
