@@ -1,3 +1,4 @@
+import {Children} from 'react';
 import tw, {css, styled} from 'twin.macro';
 
 const Center: React.FC<{width: number}> = ({children, width}) => {
@@ -7,6 +8,14 @@ const Center: React.FC<{width: number}> = ({children, width}) => {
     </div>
   )
 }
+
+const CenterFlex = ({children}) => (
+  <div tw="flex justify-center flex-col min-height[100vh]">
+    {/* <div> */}
+      {children}
+    {/* </div> */}
+  </div>
+)
 
 const Playground: React.FC = ({children}) => {
   return (
@@ -18,5 +27,6 @@ const Playground: React.FC = ({children}) => {
 
 export const Layouts = {
   Default: Center,
+  CenterFlex,
   Playground
 }

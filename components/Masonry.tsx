@@ -1,19 +1,19 @@
 import {css} from 'twin.macro';
 import Masonry from 'react-masonry-css';
 
-export const MasonryGrid = ({children, breakpointCols = 3, gutter = 40}) =>
+export const MasonryGrid = ({children, breakpointCols = 3, gutterH = 40, gutterV = 60}: {children?, breakpointCols?, gutterH?, gutterV?}) =>
   <div
     css={[
       css`
         & .masonry {
           display: flex;
-          margin-left: -${gutter}px; /* gutter size offset */
+          margin-left: -${gutterH}px; /* gutter size offset */
           width: auto;
           &__column {
-            padding-left: ${gutter}px; /* gutter size */
+            padding-left: ${gutterH}px; /* gutter size */
             background-clip: padding-box;
             & > * {
-              margin-bottom: ${gutter}px;
+              margin-bottom: ${gutterV}px;
             }
           }
         }
@@ -27,7 +27,7 @@ export const MasonryGrid = ({children, breakpointCols = 3, gutter = 40}) =>
 
 export const MasonryPhotos = ({photos}: {photos: string[]}) => {
   return (
-    <MasonryGrid gutter={20} breakpointCols={2}>
+    <MasonryGrid gutterH={20} gutterV={20} breakpointCols={2}>
       {
         photos.map((v, i) => (
           <img key={i} src={v} tw="rounded shadow" />

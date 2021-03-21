@@ -11,6 +11,7 @@ export const NavBar = ({isSmall}: {isSmall: boolean}) =>
         `
         : css`
           padding: 100px 0 0;
+          /* @media () */
         `,
       css`
         transition-duration: 1s;

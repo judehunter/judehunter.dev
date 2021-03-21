@@ -84,7 +84,11 @@ const WorkCompany = ({name, img, desc, children}) => {
   return (
     <>
       <Spacer h="20px" />
-      <div tw="flex items-stretch">
+      <div tw="
+        flex items-stretch
+        flex-col
+        md:flex-row
+      ">
         <div tw="flex-basis[30%] flex-grow-0 flex-shrink-0 margin-right[80px]">
           {/* <h1 tw="font-bold font-size[2rem]">
             {name}
@@ -110,11 +114,12 @@ const WorkCompany = ({name, img, desc, children}) => {
 const WorkItem = ({role, time, desc}: {role: ReactNode, time?: ReactNode, desc?: ReactNode}) => {
   return (
     <div tw="pb-7">
-      <h1 tw="font-size[2rem] font-bold sticky">
+      <h1 tw="text-4xl font-bold sticky">
         {role}
       </h1>
       {
         time && <>
+          <Spacer h="5px" />
           <aside tw="flex space-x-1.5 font-size[1.1rem]">
             <IconLabel icon="ri-calendar-2-fill">
               {time}
@@ -157,7 +162,7 @@ const WorkExp = () =>
       name="Ensemble Education"
       img="/imgs/ensemble.png"
     >
-      <WorkItem role="Chief Technology Officer" time="Oct 2020, 6mos" desc={(<>
+      <WorkItem role="Chief Technology Officer" time="Oct 2020, 6 mos" desc={(<>
         <ProjectTechBar tech="Vue, Nuxt (SSR), Tailwind, TypeScript, koa (REST), TypeORM, Python (AI), Serverless, Sentry, DataDog, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS (PostgreSQL), AWS ElastiCache (Redis), GitHub Actions" />
         <Spacer h="10px" />
         <WorkResponsibilities items={`
@@ -172,7 +177,7 @@ const WorkExp = () =>
           'landing.png',
         ].map(x => '/imgs/ensemble/' + x)} />
       </>)} />
-      <WorkItem role="Lead Developer" time="Aug 2020, 8mos"/>
+      <WorkItem role="Lead Developer" time="Aug 2020, 8 mos"/>
     </WorkCompany>
     <WorkCompany
       desc={
@@ -185,7 +190,7 @@ const WorkExp = () =>
       name="Millie Group"
       img="/imgs/millie.png"
     >
-      <WorkItem role="Product Development Engineer" time="Jan 2020, 3mos" desc={(<>
+      <WorkItem role="Product Development Engineer" time="Jan 2020, 3 mos" desc={(<>
         <ProjectTechBar tech="React, Next, Typescript, Prisma, GraphQL, MailGun, Nodemailer, Sentry, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS, GTag, Google Analytics, Facebook Pixel" />
         <Spacer h="10px" />
         <WorkResponsibilities items={`
@@ -196,7 +201,7 @@ const WorkExp = () =>
           Integrating Google Tag Manager, Google Analytics and Facebook Pixel with the company's website
         `} />
       </>)} />
-      <WorkItem role="Product Development Intern" time="Sep 2020, 3mos" />
+      <WorkItem role="Product Development Intern" time="Sep 2020, 3 mos" />
     </WorkCompany>
     <WorkCompany
       desc={
@@ -278,10 +283,11 @@ const Section = ({title, subtitle, children}: SectionProps) => {
     <section
       tw="font-ibm padding-bottom[30px]"
     >
-      <h1 tw="font-ibm font-bold font-size[3rem]">
+      <h1 tw="font-ibm font-bold text-3xl md:(text-5xl)">
         {title}
       </h1>
-      <h2 tw="font-ibm font-bold font-size[1.2rem] -mt-2.5">
+      <Spacer h="13px" />
+      <h2 tw="font-ibm font-bold text-xl -mt-2.5 text-gray-600">
         {subtitle}
       </h2>
       <Spacer h="30px" />
@@ -292,7 +298,7 @@ const Section = ({title, subtitle, children}: SectionProps) => {
 
 const MyDen = () =>
   <Section title="MY DEN 🕳️" subtitle="PERSONAL PROJECTS, ACHIEVEMENTS & MORE">
-    <MasonryGrid>
+    <MasonryGrid breakpointCols={{default: 3, 950: 2, 750: 1}}>
       <Project
         title="This portfolio 😛"
         tech="React, TypeScript, Next, Emotion, Tailwind"
@@ -368,7 +374,7 @@ const Portfolio: React.FC = () => {
   return (
     <div>
       <div tw="absolute background-color[#F4F6F8] left-0 right-0 bottom-0 top-0 z-index[-1]" />
-      <Layouts.Default width={1500}>
+      <Layouts.CenterFlex>
         <NavBar isSmall={!!cur}/>
         <div
           tw="transition-all"
@@ -386,7 +392,7 @@ const Portfolio: React.FC = () => {
                 transition-delay: .2s;
               `
           ]}
-          style={{height: cur ? '30px' : '60px'}}
+          style={{height: cur ? '20px' : '60px'}}
         />
         <ParallaxManager 
           onChange={v => setCur(v)}
@@ -400,7 +406,7 @@ const Portfolio: React.FC = () => {
             ), null]
           ]}
         />
-      </Layouts.Default>
+      </Layouts.CenterFlex>
     </div>
   )
 }

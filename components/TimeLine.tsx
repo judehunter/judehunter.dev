@@ -6,15 +6,15 @@ export const TimeLine = ({children}: {children: ReactNode}) => {
     <>{
       React.Children.map(children, (child, i) => (
         <div tw="flex items-stretch">
-          <div tw="flex-shrink-0 relative width[30px]">
+          <div tw="flex-shrink-0 relative width[20px]">
             {/* bar */}
             {
               i < (React.Children.count(children) - 1) &&
               <div tw="absolute transform -translate-x-1/2 left-1/2 top-0 bottom-0 width[3px] " css={[css`background-color: #900067;`]} />
             }
-            <div tw="absolute transform -translate-x-1/2 left-1/2 top-0 width[18px] height[18px] rounded-full border-white border-4" css={[css`background-color: #900067;`]}/>
+            <div tw="absolute transform -translate-x-1/2 left-1/2 top-0 width[18px] height[18px] rounded-full border-color[#f4f6f8] border-4" css={[css`background-color: #900067;`]}/>
           </div>
-          <div tw="flex-grow margin-top[-19px] margin-left[15px]">
+          <div tw="flex-grow margin-top[-13px] margin-left[15px]">
             {child}
           </div>
         </div>

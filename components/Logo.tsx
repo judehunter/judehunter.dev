@@ -13,20 +13,31 @@ export const Logo = ({isSmall}) =>
     `
   ]}>
     <svg
-      viewBox="0 0 312 516"
+      viewBox="0 0 1028 621"
       xmlns="http://www.w3.org/2000/svg"
       fillRule="evenodd"
       clipRule="evenodd"
-      strokeLinecap="round"
       strokeLinejoin="round"
-      strokeMiterlimit={1.5}
+      strokeMiterlimit={2}
     >
-      <path fill="none" d="M0 0h311.208v516H0z" />
-      <path
-        d="M81.307 73c-.222 10.37 0 11 0 11M158.473 32c-11.361 30.211-23 323-23 323s5.314-131.328 68-136c62.686-4.672 55.577 108.982 57.735 135M83.208 148s13.751 362.963-52 337"
-        fill="none"
-        stroke="#000"
-        strokeWidth={24.44}
-      />
+      <path fill="none" d="M0 0h1028v620.206H0z" />
+      <g fontSize={823.667}>
+        <text
+          x={4.111}
+          y={593.033}
+          fontFamily="'IBMPlexSans-Bold','IBM Plex Sans',sans-serif"
+          fontWeight={700}
+        >
+          {"J"}
+        </text>
+        <text
+          x={486.034}
+          y={593.033}
+          fontFamily="'IBMPlexSans-Medium','IBM Plex Sans',sans-serif"
+          fontWeight={500}
+        >
+          {"H"}
+        </text>
+      </g>
     </svg>
   </div>
