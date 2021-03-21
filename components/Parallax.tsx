@@ -44,7 +44,7 @@ export const ParallaxManager = (props: {onChange: (val: number) => any, items: P
           <div key={i}>
             <div
               tw="w-full absolute px-5 pb-10 top-0 bottom-0 overflow-x-hidden transition-all transition-duration[1s]! overflow-y-auto"
-              style={{left: (i - cur) * 100 + '%'}}
+              style={{transform: `translateX(${(i - cur) * 100 + '%'})`}}
               css={[
                 css`
                   ::-webkit-scrollbar {
@@ -69,7 +69,7 @@ type ScrollDir = ScrollDirV;
 
 const useDetectScroll = (cb: (deltaY: number) => any, deps: DependencyList = []) => {
   useEffect(() => {
-    window.addEventListener('wheel', (evt) => cb(evt.deltaY));
+    window.addEventListener('wheel', (evt) => cb(evt.deltaY), {passive: true});
     return () => window.removeEventListener('wheel', null);
   }, [...deps])
 }
@@ -89,7 +89,7 @@ const useDetectSwipe = (cb: (deltaX: number, deltaY: number) => any, deps: Depen
       // console.log('set state', clientX, clientY);
       x = clientX;
       y = clientY;
-    });
+    }, {passive: true});
     window.addEventListener('touchmove', evt  => {
       // console.log('ontouchmove', x, y);
       if (!x || !y) return;
@@ -103,7 +103,7 @@ const useDetectSwipe = (cb: (deltaX: number, deltaY: number) => any, deps: Depen
         y = null;
         cb(xDiff, yDiff)
       }
-    });
+    }, {passive: true});
     return () => {
       window.removeEventListener('touchstart', null);
       window.removeEventListener('touchmove', null);
