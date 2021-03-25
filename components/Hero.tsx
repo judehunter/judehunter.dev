@@ -97,7 +97,10 @@ export const Hero = () => {
 
 const SocialBar = () => (
   <div tw="flex space-x-2 font-size[1.8em]">
-    <Icon icon="ri-linkedin-box-fill" />
+    <a href="" target="_blank">
+      <Icon icon="ri-linkedin-box-fill" />
+    </a>
+    
     <Icon icon="ri-github-fill" />
     <Icon icon="ri-mail-fill" />
     <div

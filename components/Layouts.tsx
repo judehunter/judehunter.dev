@@ -10,7 +10,7 @@ const Center: React.FC<{width: number}> = ({children, width}) => {
 }
 
 const CenterFlex = ({children}) => (
-  <div tw="flex justify-center flex-col min-height[100vh]">
+  <div tw="flex justify-center flex-col h-full">
     {/* <div> */}
       {children}
     {/* </div> */}

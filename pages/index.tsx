@@ -10,6 +10,7 @@ import {MasonryGrid, MasonryPhotos} from '../components/Masonry';
 import {IconLabel} from '../components/meek/IconLabel';
 import {NavBar} from '../components/NavBar';
 import {TimeLine} from '../components/TimeLine';
+import Head from 'next/head';
 
 type SectionProps = {title: ReactNode, subtitle?: ReactNode, children: ReactNode}
 type ProjectProps = SectionProps & {
@@ -371,8 +372,11 @@ const MyDen = () =>
 
 const Portfolio: React.FC = () => {
   const [cur, setCur] = useState(0);
-  return (
-    <div>
+  return (<>
+    <Head>
+      <title>Jude Hunter — Portfolio</title>
+    </Head>
+    <div tw="h-full">
       <div tw="absolute background-color[#F4F6F8] left-0 right-0 bottom-0 top-0 z-index[-1]" />
       <Layouts.CenterFlex>
         <NavBar isSmall={!!cur}/>
@@ -408,7 +412,7 @@ const Portfolio: React.FC = () => {
         />
       </Layouts.CenterFlex>
     </div>
-  )
+  </>)
 }
 
 export default Portfolio;
