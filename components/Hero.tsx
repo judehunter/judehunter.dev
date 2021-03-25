@@ -103,9 +103,9 @@ const SocialBar = () => (
     <a href="https://github.com/judehunter" target="_blank">
       <Icon icon="ri-github-fill" />
     </a>
-    {/* <a href="mailto:matisowagm@gmail.com" target="_blank">
+    <a href="mailto:matisowagm@gmail.com" target="_blank">
       <Icon icon="ri-mail-fill" />
-    </a> */}
+    </a>
     <div
       tw="md:hidden flex flex-grow justify-end items-center px-5 pr-10!"
       css={[
