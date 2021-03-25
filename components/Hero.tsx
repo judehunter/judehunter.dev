@@ -97,12 +97,15 @@ export const Hero = () => {
 
 const SocialBar = () => (
   <div tw="flex space-x-2 font-size[1.8em]">
-    <a href="" target="_blank">
+    <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
       <Icon icon="ri-linkedin-box-fill" />
     </a>
-    
-    <Icon icon="ri-github-fill" />
-    <Icon icon="ri-mail-fill" />
+    <a href="https://github.com/judehunter" target="_blank">
+      <Icon icon="ri-github-fill" />
+    </a>
+    <a href="mailto:matisowagm@gmail.com" target="_blank">
+      <Icon icon="ri-mail-fill" />
+    </a>
     <div
       tw="md:hidden flex flex-grow justify-end items-center px-5 pr-10!"
       css={[
