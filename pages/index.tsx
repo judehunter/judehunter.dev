@@ -376,7 +376,7 @@ const Portfolio: React.FC = () => {
     <Head>
       <title>Jude Hunter — Portfolio</title>
     </Head>
-    <div tw="h-full">
+    <div tw="h-full absolute top-0 bottom-0 left-0 right-0">
       <div tw="absolute background-color[#F4F6F8] left-0 right-0 bottom-0 top-0 z-index[-1]" />
       <Layouts.CenterFlex>
         <NavBar isSmall={!!cur}/>
