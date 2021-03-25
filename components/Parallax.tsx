@@ -3,6 +3,7 @@ import {DependencyList, ReactNode, useCallback, useEffect, useState} from 'react
 import {useIsScrolledToBottom, useIsScrolledToTop, useMergeState, useScrolledEdge} from '../utils/common';
 import composeRefs from '@seznam/compose-react-refs';
 import {css} from 'twin.macro';
+import {GoBackArrow} from './GoBackArrow';
 
 type ParallaxItem = [el: ReactNode, hash: string]
 
@@ -48,14 +49,45 @@ export const ParallaxManager = (props: {onChange: (val: number) => any, items: P
               css={[
                 css`
                   ::-webkit-scrollbar {
-                    width: 0;  /* Remove scrollbar space */
-                    background: transparent;  /* Optional: just make scrollbar invisible */
+                    width: 12px;               /* width of the entire scrollbar */
+                  }
+                  ::-webkit-scrollbar-track {
+                    background: transparent;        /* color of the tracking area */
+                  }
+                  ::-webkit-scrollbar-thumb {
+                    background-color: black;    /* color of the scroll thumb */
+                    border-radius: 2000px;       /* roundness of the scroll thumb */
+                    border: 4px solid #f4f6f8;  /* creates padding around scroll thumb */
                   }
                 `
               ]}
             >
               <div tw="ml-auto mr-auto max-width[1460px]">
-                {el[0]}
+                <div tw="relative">
+                  {
+                    i ?
+                        <div tw="left-0 top-0 margin-top[50px]" css={[
+                          css`
+                            @media (min-width: 1670px) {
+                              position: sticky
+                            }
+                          `
+                        ]}>
+                          <div tw="inline-block top-0" css={[
+                            css`
+                              @media (min-width: 1670px) {
+                                position: absolute;
+                                left: -100px;
+                              }
+                            `
+                          ]}>
+                            <GoBackArrow onClick={() => setCur(0)}/>
+                          </div>
+                        </div>
+                      : null
+                  }
+                  {el[0]}
+                </div>
               </div>
             </div>
           </div>

@@ -11,12 +11,14 @@ import {IconLabel} from '../components/meek/IconLabel';
 import {NavBar} from '../components/NavBar';
 import {TimeLine} from '../components/TimeLine';
 import Head from 'next/head';
+import {GoBackArrow} from '../components/GoBackArrow';
 
 type SectionProps = {title: ReactNode, subtitle?: ReactNode, children: ReactNode}
 type ProjectProps = SectionProps & {
   award?: ReactNode,
   img?: string,
-  tech?: string
+  tech?: string,
+  links?: [el: ReactNode, link: string][]
 }
 
 const ProjectTechBadge = ({val}: {val: string}) => {
@@ -41,7 +43,7 @@ const ProjectTechBar = ({tech}: {tech?: string}) => {
   )
 }
 
-const Project = ({title, subtitle, children, award, img, tech}: ProjectProps) => {
+const Project = ({title, subtitle, children, award, img, tech, links}: ProjectProps) => {
   return (
     <section>
       <h1 tw="font-ibm font-bold font-size[2rem]">
@@ -376,7 +378,7 @@ const Portfolio: React.FC = () => {
     <Head>
       <title>Jude Hunter — Portfolio</title>
     </Head>
-    <div tw="h-full absolute top-0 bottom-0 left-0 right-0">
+    <div tw="h-full">
       <div tw="absolute background-color[#F4F6F8] left-0 right-0 bottom-0 top-0 z-index[-1]" />
       <Layouts.CenterFlex>
         <NavBar isSmall={!!cur}/>

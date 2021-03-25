@@ -22,15 +22,6 @@ export default class MyDocument extends Document {
             data-emotion-css={this.props.ids.join(' ')}
             dangerouslySetInnerHTML={{__html: this.props.css}}
           />
-          <style global jsx>{`
-            html,
-            body,
-            body > div:first-child,
-            div#__next,
-            div#__next > div {
-              height: 100%;
-            }
-          `}</style>
         </Head>
         <body tw="font-display overflow-hidden">
           <Main />

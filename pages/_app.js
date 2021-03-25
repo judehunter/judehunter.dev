@@ -1,4 +1,5 @@
 import {GlobalStyles} from 'twin.macro'
+import '../utils/global.css';
 
 const App = ({Component, pageProps}) => (
   <div>

@@ -1,10 +1,9 @@
 import {css} from 'twin.macro';
 
 export const Logo = ({isSmall}) =>
-  <div tw="transition-all" css={[
+  <div tw="transition-all md:margin-right[20px]" css={[
     css`
       width: 50px;
-      margin-right: 20px;
       transition-duration: .2s;
       transition-delay: .2s;
     `,
