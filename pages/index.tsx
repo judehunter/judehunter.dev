@@ -18,7 +18,7 @@ type ProjectProps = SectionProps & {
   award?: ReactNode,
   img?: string,
   tech?: string,
-  links?: [el: ReactNode, link: string][]
+  links?: [string, string?][]
 }
 
 const ProjectTechBadge = ({val}: {val: string}) => {
@@ -46,13 +46,15 @@ const ProjectTechBar = ({tech}: {tech?: string}) => {
 const Project = ({title, subtitle, children, award, img, tech, links}: ProjectProps) => {
   return (
     <section>
-      <h1 tw="font-ibm font-bold font-size[2rem]">
-        {title}
-      </h1>
+      <div tw="">
+        <h1 tw="font-ibm font-bold font-size[2rem]">
+          {title}
+        </h1>
+      </div>
       {
         subtitle && 
-          <h2 tw="flex items-center font-ibm font-medium font-size[1.2rem] -mt-1.5">
-            <Icon tw="text-2xl mr-1.5" icon="ri-arrow-right-fill" />{subtitle}
+          <h2 tw="flex items-start font-ibm font-medium font-size[1.2rem] -mt-1.5">
+            <Icon tw="text-2xl mr-1.5 margin-top[-2px]" icon="ri-arrow-right-fill" />{subtitle}
           </h2>
       }
       {
@@ -77,6 +79,32 @@ const Project = ({title, subtitle, children, award, img, tech, links}: ProjectPr
       <div tw="font-display font-size[1.1rem]">
         {children}
       </div>
+      {
+        links && <>
+          <Spacer h="20px" />
+          <div tw="flex items-stretch rounded space-x-1.5">
+            {
+              links.map(([address, text], i) => {
+                const iconMap = {
+                  'github': 'ri-github-fill',
+                  'npm': 'ri-npmjs-fill'
+                } as const;
+                const matching = Object.entries(iconMap).find(([k, v]) => ~address.indexOf(k))?.[1];
+                if (matching) return (
+                  <a tw="font-size[1.5rem] bg-black py-0.5 px-3 rounded text-white flex items-center" key={i} href={address} target="_blank">
+                    <Icon icon={matching} />
+                  </a>
+                )
+                else return (
+                  <a tw="font-size[1.25rem] bg-black py-0.5 px-3 rounded text-white flex items-center underline" key={i} href={address} target="_blank">
+                    {text}
+                  </a>
+                )
+              })
+            }
+          </div>
+        </>
+      }
       <Spacer h="15px" />
       <div tw="height[5px] bg-gray-300 width[20%]"/>
     </section>
@@ -305,6 +333,9 @@ const MyDen = () =>
       <Project
         title="This portfolio 😛"
         tech="React, TypeScript, Next, Emotion, Tailwind"
+        links={[
+          ['https://github.com/judehunter/portfolio'],
+        ]}
       >
       </Project>
       <Project
@@ -312,6 +343,9 @@ const MyDen = () =>
         subtitle="🧀 A delicious programming language"
         img="/imgs/queso.png"
         tech="Rust, Handwritten Parser, Pratt Parser, VM, Byte Code"
+        links={[
+          ['https://github.com/queso-lang/queso'],
+        ]}
       >
         <b>Queso</b> is a functional dynamically-typed scripting language that builds on the foundation of existing languages with many unique convenience and quality of life features and tweaks. In fact, the driving force behind it was bad design choices in other languages.
                     <br /><br />
@@ -323,6 +357,10 @@ const MyDen = () =>
         award={<div>HackYeah 2020&nbsp;<b>TOP 5</b> project and finalist</div>}
         tech="Vue, Nuxt, PWA, SASS, Express, PostgreSQL, Leaflet, Multer (Uploading Images)"
         img="/imgs/boarinc.jpg"
+        links={[
+          ['https://github.com/Boar-Inc'],
+          ['https://hackyeah.pl/2020/12/10/the-finalist-boar-inc/', 'HackYeah']
+        ]}
       >
         Boar Inc. was a data-visualization and aggregation project to fight the African swine virus plague. Users could submit sightings of boars on a map and authorities could generate reports, leverage the QGIS integration, and visualize the density of sightings on the Leaflet map.
       </Project>
@@ -332,15 +370,25 @@ const MyDen = () =>
         award={<div>Grarantanna Game Jam&nbsp;<b>1st</b>&nbsp;place winner</div>}
         img="/imgs/brawlbox.png"
         tech="Godot, C#"
+        links={[
+          ['https://github.com/judehunter/brawlbox'],
+          ['https://pcktm.itch.io/brawlbox', 'itch.io'],
+          ['https://gamejolt.com/games/brawlbox/589681', 'gamejolt']
+        ]}
       >
         My friend and I took advantage of the social distancing free time and placed 1st for best gameplay in the Grarantanna Game Jam hosted by the Ministry of Digital Affairs in Poland.
       </Project>
       <Project
-        title="Meek"
-        subtitle="A React component library"
-        tech="React, JSS, Emotion, Tailwind"
+        title="ReactiveFile"
+        subtitle="Parse and reactively auto-save JSON, TOML, YAML and any other data file with ease."
+        tech="Library, TypeScript, Jest, Reactive Programming"
+        img="/imgs/reactivefile.png"
+        links={[
+          ['https://github.com/judehunter/reactivefile'],
+          ['https://www.npmjs.com/package/reactivefile']
+        ]}
       >
-        <i>Work In Progress</i>
+        Reading, altering and then writing data to a file can be gruesome. ReactiveFile does it for you! The library natively supports parsing and serializing of json, toml, yaml and xml files, but you can easily set up other data types using the built-in tools!
       </Project>
       <Project
         title="Joint"
@@ -348,9 +396,19 @@ const MyDen = () =>
         award={<div>HackYeah 2018&nbsp;<b>runner-up</b></div>}
         tech="HTML, JS, CSS, Express"
         img="/imgs/joint.png"
+        links={[
+          ['https://2019.hackyeah.pl/winners/#education', 'HackYeah']
+        ]}
       >
         My friend and I competed in HackYeah - the biggest stationary hackathon in Europe. We earned our spot as the finalists under the education category.
         We built a Physics engine for teachers to use in their classrooms.
+      </Project>
+      <Project
+        title="Meek"
+        subtitle="A React component library"
+        tech="React, JSS, Emotion, Tailwind"
+      >
+        <i>Work In Progress</i>
       </Project>
       <Project title="dev.to" subtitle="My contributions to the dev.to community">
         <a tw="underline color[#900067]" href="https://dev.to/judehunter/the-caveats-and-solutions-to-generic-type-guards-in-typescript-2o7a" target="_blank">
