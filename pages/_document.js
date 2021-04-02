@@ -22,6 +22,20 @@ export default class MyDocument extends Document {
             data-emotion-css={this.props.ids.join(' ')}
             dangerouslySetInnerHTML={{__html: this.props.css}}
           />
+          {
+            process.env.NODE_ENV === 'production'
+              && <>
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-VF7DM82296" />
+                <script dangerouslySetInnerHTML={
+                  { __html: `
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+
+                    gtag('config', 'G-VF7DM82296');
+                  `}} />
+              </>
+          }
         </Head>
         <body tw="font-display overflow-hidden">
           <Main />
