@@ -72,7 +72,7 @@ const Project = ({title, subtitle, children, award, img, tech, links}: ProjectPr
       {
         img && (<>
           <Spacer h="15px" />
-          <img tw="rounded shadow max-width[70%]" src={img} />
+          <img tw="rounded shadow max-width[70%]" src={img} loading="lazy" />
         </>)
       }
       <Spacer h="14px" />
@@ -125,7 +125,7 @@ const WorkCompany = ({name, img, desc, children}) => {
             {name}
           </h1> */}
           <div tw="sticky top[0px] margin-bottom[40px]">
-            <img tw="max-width[160px] rounded" src={img} />
+            <img tw="max-width[160px] rounded" src={img} loading="lazy" />
             <Spacer h="20px" />
             <aside tw="text-xl">
               {desc}
