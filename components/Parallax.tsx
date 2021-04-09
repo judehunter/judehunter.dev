@@ -30,7 +30,7 @@ const useParallaxRouting = (cur?: number, items?: ParallaxItem[], onload?: (cur:
 export const ParallaxManager = (props: {onChange: (val: number) => any, items: ParallaxItem[]}) => {
   const {items, onChange} = props;
   const [cur, setCur] = useState(0);
-  useParallaxRouting(cur, items, c => setCur(c));
+  // useParallaxRouting(cur, items, c => setCur(c));
   useDetectScrollDown(() => setCur(1));
   useDetectSwipeLeft(() => setCur(1));
 

@@ -30,7 +30,7 @@ export const MasonryPhotos = ({photos}: {photos: string[]}) => {
     <MasonryGrid gutterH={20} gutterV={20} breakpointCols={2}>
       {
         photos.map((v, i) => (
-          <img key={i} src={v} tw="rounded shadow" loading="lazy" />
+          <img key={i} src={v} tw="rounded shadow" />
         ))
       }
     </MasonryGrid>
