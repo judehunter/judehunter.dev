@@ -180,12 +180,46 @@ const WorkResponsibilities = ({items}: {items: string}) => {
   )
 }
 
-const WorkExp = () =>
+const WorkExp = () => (
   <Section title="MONEY-MAKERS 💰" subtitle="WORK & PROFESSIONAL EXPERIENCE">
     <WorkCompany
       desc={
         <div>
-          An AI based test prep tutoring platform to level the playing field for disadvantaged students around the world.
+          Marketplace where health, wellness and fitness creators share and
+          monetize their freshest content with their clients, fans and
+          followers. $12M in funding.{" "}
+          <a tw="text-blue-500" href="https://playbookapp.io" target="_blank">
+            playbookapp.io
+          </a>
+          <br />
+          {/* <a href="https://ensembleeducation.org" target="_blank">Website</a> */}
+        </div>
+      }
+      name="Playbook Technologies"
+      img="/imgs/playbook.png"
+    >
+      <WorkItem
+        role="Frontend/Full-Stack engineer"
+        time="May 2021, 9 mos"
+        desc={
+          <>
+            <ProjectTechBar tech="React, Next (SSR), Vite, Tailwind + twin.macro, Emotion, TypeScript, Nest.js, TypeORM, Serverless, AWS Lambda, Sentry, Netlify" />
+            <Spacer h="10px" />
+            <WorkResponsibilities
+              items={`
+                Developed critical applications for hundreds of thousands of users.
+                Developed internal tools to help manage complex data structures.
+              `}
+            />
+          </>
+        }
+      />
+    </WorkCompany>
+    <WorkCompany
+      desc={
+        <div>
+          An AI based test prep tutoring platform to level the playing field for
+          disadvantaged students around the world.
           <br />
           {/* <a href="https://ensembleeducation.org" target="_blank">Website</a> */}
         </div>
@@ -193,27 +227,36 @@ const WorkExp = () =>
       name="Ensemble Education"
       img="/imgs/ensemble.png"
     >
-      <WorkItem role="Chief Technology Officer" time="Oct 2020, 6 mos" desc={(<>
-        <ProjectTechBar tech="Vue, Nuxt (SSR), Tailwind, TypeScript, koa (REST), TypeORM, Python (AI), Serverless, Sentry, DataDog, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS (PostgreSQL), AWS ElastiCache (Redis), GitHub Actions" />
-        <Spacer h="10px" />
-        <WorkResponsibilities items={`
+      <WorkItem
+        role="Chief Technology Officer"
+        time="Oct 2020, 8 mos"
+        desc={
+          <>
+            <ProjectTechBar tech="Vue, Nuxt (SSR), Tailwind, TypeScript, koa (REST), TypeORM, Python (AI), Serverless, Sentry, DataDog, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS (PostgreSQL), AWS ElastiCache (Redis), GitHub Actions" />
+            <Spacer h="10px" />
+            <WorkResponsibilities
+              items={`
           Led and managed our development team at Ensemble.
           Designed the UX and developed the whole Web App.
           Made crucial technology decisions in an effort to develop future-proof applications.
           Maintained multiple git repositories and reviewed pull requests.
           Developed the infrastructure and the backbone of the API.
-        `} />
-        <Spacer h="10px" />
-        <MasonryPhotos photos={[
-          'landing.png',
-        ].map(x => '/imgs/ensemble/' + x)} />
-      </>)} />
-      <WorkItem role="Lead Developer" time="Aug 2020, 8 mos"/>
+        `}
+            />
+            <Spacer h="10px" />
+            <MasonryPhotos
+              photos={["landing.png"].map((x) => "/imgs/ensemble/" + x)}
+            />
+          </>
+        }
+      />
+      <WorkItem role="Lead Developer" time="Aug 2020, 10 mos" />
     </WorkCompany>
     <WorkCompany
       desc={
         <div>
-          A network of mentors for international school students globally. The big brothers & big sisters you wish you had.
+          A network of mentors for international school students globally. The
+          big brothers & big sisters you wish you had.
           <br />
           {/* <a href="https://ensembleeducation.org" target="_blank">Website</a> */}
         </div>
@@ -221,93 +264,138 @@ const WorkExp = () =>
       name="Millie Group"
       img="/imgs/millie.png"
     >
-      <WorkItem role="Product Development Engineer" time="Jan 2020, 3 mos" desc={(<>
-        <ProjectTechBar tech="React, Next, Typescript, Prisma, GraphQL, MailGun, Nodemailer, Sentry, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS, GTag, Google Analytics, Facebook Pixel" />
-        <Spacer h="10px" />
-        <WorkResponsibilities items={`
+      <WorkItem
+        role="Product Development Engineer"
+        time="Jan 2020, 17 mos"
+        desc={
+          <>
+            <ProjectTechBar tech="React, Next, Typescript, Prisma, GraphQL, MailGun, Nodemailer, Sentry, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS, GTag, Google Analytics, Facebook Pixel" />
+            <Spacer h="10px" />
+            <WorkResponsibilities
+              items={`
           Developing products to simplify the interactions of the end users with the company
           Deploying microservices with AWS Lambda, RDS, S3 and other solutions.
           Developing internal administrative tools to help with bulk messaging and LinkedIn scraping
           Web development advisorship, counseling, mentorship
           Integrating Google Tag Manager, Google Analytics and Facebook Pixel with the company's website
-        `} />
-      </>)} />
+        `}
+            />
+          </>
+        }
+      />
       <WorkItem role="Product Development Intern" time="Sep 2020, 3 mos" />
     </WorkCompany>
     <WorkCompany
       desc={
         <div>
-          A local distribution company who was in need of help during the COVID-19 crisis.
+          A local distribution company who was in need of help during the
+          COVID-19 crisis.
         </div>
       }
       name="Interso"
       img="/imgs/interso.png"
     >
-      <WorkItem role="E-commerce Full Stack Developer" time="Feb 2020, 5 mos" desc={(<>
-        <ProjectTechBar tech="Vue, Nuxt, Vuex, TypeScript, koa, Strapi, PM2, Nodemailer, Digital Ocean (CentOS)" />
-        <Spacer h="10px" />
-        <WorkResponsibilities items={`
+      <WorkItem
+        role="E-commerce Full Stack Developer"
+        time="Feb 2020, 5 mos"
+        desc={
+          <>
+            <ProjectTechBar tech="Vue, Nuxt, Vuex, TypeScript, koa, Strapi, PM2, Nodemailer, Digital Ocean (CentOS)" />
+            <Spacer h="10px" />
+            <WorkResponsibilities
+              items={`
           Designed, built from the ground up, and deployed an e-commerce website for a local family business using modern technologies, including Nuxt.js, Vue.js, koa.js, postgres, SCSS and TypeScript.
           The website helped this business during the COVID-19 crisis and is viewed on average 10,000 times by 2,000 users every month.
-        `} />
-        <Spacer h="10px" />
-        <MasonryPhotos photos={[
-          '1606375652998.jpg',
-          '1606375551747.jpg'
-        ].map(x => '/imgs/interso/' + x)} />
-      </>)} />
-      <WorkItem role="Social Media Graphic Designer" desc={(<>
-        Some of my work:
-        <Spacer h="10px" />
-        <MasonryPhotos photos={[
-          '94083009_3326401470807867_2327922572794003456_o.png',
-          '96081127_3367208433393837_8252974534815121408_o.png',
-          '135369174_4033345743446766_6177507321493363086_o.png',
-          '162463645_4236889969759008_8153523038761269157_o.png',
-          '92909722_3311386782309336_3962024098388770816_o.png',
-          '97998626_3393371017444245_6145400908340527104_o.png',
-        ].map(x => '/imgs/interso/' + x)} />
-      </>)}/>
+        `}
+            />
+            <Spacer h="10px" />
+            <MasonryPhotos
+              photos={["1606375652998.jpg", "1606375551747.jpg"].map(
+                (x) => "/imgs/interso/" + x
+              )}
+            />
+          </>
+        }
+      />
+      <WorkItem
+        role="Social Media Graphic Designer"
+        desc={
+          <>
+            Some of my work:
+            <Spacer h="10px" />
+            <MasonryPhotos
+              photos={[
+                "94083009_3326401470807867_2327922572794003456_o.png",
+                "96081127_3367208433393837_8252974534815121408_o.png",
+                "135369174_4033345743446766_6177507321493363086_o.png",
+                "162463645_4236889969759008_8153523038761269157_o.png",
+                "92909722_3311386782309336_3962024098388770816_o.png",
+                "97998626_3393371017444245_6145400908340527104_o.png",
+              ].map((x) => "/imgs/interso/" + x)}
+            />
+          </>
+        }
+      />
       <WorkItem role="Social Media Manager" />
     </WorkCompany>
     <WorkCompany
       desc={
         <div>
-          The largest nation-wide theatre festival for the youth. Established 2004 in Lublin, Poland.
+          The largest nation-wide theatre festival for the youth. Established
+          2004 in Lublin, Poland.
         </div>
       }
       name="Zwierciadła"
       img="/imgs/zwier.png"
     >
-      <WorkItem role="IT&Photo Team Leader" time="Sep 2018, 13 mos" desc={(<>
-        <ProjectTechBar tech="Wordpress, Adobe Lightroom CC, Adobe Photoshop" />
-        <Spacer h="10px" />
-        <WorkResponsibilities items={`
+      <WorkItem
+        role="IT&Photo Team Leader"
+        time="Sep 2018, 13 mos"
+        desc={
+          <>
+            <ProjectTechBar tech="Wordpress, Adobe Lightroom CC, Adobe Photoshop" />
+            <Spacer h="10px" />
+            <WorkResponsibilities
+              items={`
           I've led the IT&Photo team during the 16th edition of Zwierciadła - the largest and most recognizable nation-wide theatre event. We've successfully revived the event's social media & website and dealt with multiple partners and sponsors. That edition was a great success and attracted 1000+ spectators.
-        `} />
-      </>)} />
-      <WorkItem role="Design Director" time="Sep 2018, 13 mos" desc={(<>
-        <ProjectTechBar tech="Adobe InDesign, Adobe Illustrator, Affinity Designer" />
-        <Spacer h="10px" />
-        <WorkResponsibilities items={`
+        `}
+            />
+          </>
+        }
+      />
+      <WorkItem
+        role="Design Director"
+        time="Sep 2018, 13 mos"
+        desc={
+          <>
+            <ProjectTechBar tech="Adobe InDesign, Adobe Illustrator, Affinity Designer" />
+            <Spacer h="10px" />
+            <WorkResponsibilities
+              items={`
           I prepared and oversaw the creation of social media and print material for the 16th edition of Zwierciadła.
-        `} />
-        Material created by me:
-        <Spacer h="10px" />
-        <MasonryPhotos photos={[
-          'cosiedziejewzamoyu.png',
-          'cover.png',
-          'harmlublinrgb.png',
-          'jurydolaczHQ.png',
-          'klubrgb.png',
-          'plakatfinalrgb.png'
-        ].map(x => '/imgs/zwier/' + x)} />
-      </>)} />
+        `}
+            />
+            Material created by me:
+            <Spacer h="10px" />
+            <MasonryPhotos
+              photos={[
+                "cosiedziejewzamoyu.png",
+                "cover.png",
+                "harmlublinrgb.png",
+                "jurydolaczHQ.png",
+                "klubrgb.png",
+                "plakatfinalrgb.png",
+              ].map((x) => "/imgs/zwier/" + x)}
+            />
+          </>
+        }
+      />
       {/* <WorkItem role="Social Media Graphic Designer" desc={(<>
         I've led the IT&Photo team during the 16th edition of Zwierciadła - the largest and most recognizable nation-wide theatre event. We've successfully revived the event's social media & website and dealt with multiple partners and sponsors. That edition was a great success and attracted 1000+ spectators.
       </>)}/> */}
     </WorkCompany>
   </Section>
+);
 
 const Section = ({title, subtitle, children}: SectionProps) => {
   return (
