@@ -1,3 +1,4 @@
+import {motion} from 'framer-motion';
 import Link from 'next/link';
 import tw from 'twin.macro';
 import {Logo} from './Logo';
@@ -12,18 +13,22 @@ const NavLink = ({href, children}) => {
 
 export const NavBar = () => {
   return (
-    <div
+    <motion.div
       tw="
         fixed top-0 left-0 right-0
         background-color[rgba(13,13,15,.05)]
         backdrop-filter[blur(8px)]
         z-index[999999999]
+
+        opacity[0]
       "
+      animate={{opacity: 1}}
+      transition={{delay: 1}}
     >
       <div
         tw="
           flex items-center
-          mx-auto max-width[950px] padding-top[50px] px-4 pb-5 box-sizing[content-box]
+          mx-auto max-width[1150px] padding-top[50px] px-4 pb-5 box-sizing[content-box]
         "
       >
         <Logo />
@@ -37,6 +42,6 @@ export const NavBar = () => {
           <NavLink href="/blog">Contact</NavLink>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
