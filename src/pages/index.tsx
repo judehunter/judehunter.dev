@@ -58,7 +58,7 @@ const HeroSection = () => {
           tw="text-white font-size[6.8rem] line-height[1] font-semibold margin-left[90px]"
           initial={{y: 30, opacity: 0}}
           animate={{y: 0, opacity: 1}}
-          transition={{delay: 0.4, ease: 'easeInOut'}}
+          transition={{delay: 0.4, ease: 'easeOut'}}
         >
           {/* <span tw="color[#7FEC9D] margin-left[-4px] font-bold">perfect</span> */}
           <AnimText
@@ -118,7 +118,11 @@ const WorkSection = () => {
   return (
     <div>
       <div tw="relative max-width[1150px] mx-auto px-4 box-sizing[content-box] padding-top[50px]">
-        <h1 tw="text-white text-6xl font-semibold margin-left[90px]">Work</h1>
+        <h1 tw="text-white text-3xl font-semibold margin-left[90px]">
+          recent work and
+          <br />
+          achievements
+        </h1>
       </div>
     </div>
   );
