@@ -20,7 +20,7 @@ const Line = ({width, i}) => {
 
 export const ScrollDownPlease = () => {
   return (
-    <div tw="space-y-[32px]">
+    <div tw="space-y-[calc(min(32px, 3vh))]">
       {[209, 138, 89, 58, 35, 18].map((x, i) => (
         <Line key={i} width={`${x}px`} i={i} />
       ))}
