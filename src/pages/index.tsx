@@ -2,8 +2,9 @@ import tw from 'twin.macro';
 import {NavBar} from '../components/NavBar';
 import {FaGithub, FaLinkedinIn} from 'react-icons/fa';
 import {ScrollDownPlease} from '../components/ScrollDownPlease';
-import {motion} from 'framer-motion';
+import {motion, useViewportScroll} from 'framer-motion';
 import {ContactInput} from '../components/ContactInput';
+import {useEffect, useRef, useState} from 'react';
 
 const SectionTitle = ({children}) => {
   return (
@@ -71,10 +72,55 @@ const PullUpText = ({delay, children}) => {
   );
 };
 
+const ScrollPullUp = ({children, length, speed = 1}) => {
+  const {scrollY} = useViewportScroll();
+  const ref = useRef<HTMLDivElement>(null!);
+  const [translate, setTranslate] = useState(0);
+
+  // for length 200
+  // x=10 -> translate=200
+  // limit translate to length = 200
+
+  // x=0 -> translate=200
+  // x=-200 -> translate=0
+  // x=-100 -> translate=100
+  // x 0   -100 -200
+  // t 200 100  0
+  // formula: t(x) = x + 200
+
+  // limit translate to min 0
+
+  useEffect(() => {
+    const listener = () => {
+      if (!ref.current) return;
+      const elemPos = ref.current.getBoundingClientRect().top + document.documentElement.scrollTop;
+      const topScrollBottomEdge = document.documentElement.scrollTop + globalThis.window.innerHeight;
+      // console.log(
+      //   'x',
+      //   elemPos - topScrollBottomEdge,
+      //   Math.min(length, Math.max(0, elemPos - topScrollBottomEdge + length)),
+      // );
+      setTranslate(Math.min(length, Math.max(0, (elemPos - topScrollBottomEdge) * speed + length)));
+    };
+    document.addEventListener('scroll', listener, {passive: true});
+    return () => document.removeEventListener('scroll', listener);
+  }, []);
+
+  return (
+    <div {...{ref}}>
+      <div style={{transform: `translateY(${translate}px)`}}>{children}</div>
+    </div>
+  );
+};
+
+const CapsPreTitle = ({children}) => {
+  return <div tw="color[#7FEC9D] font-bold tracking-wide">{children}</div>;
+};
+
 const HeroSection = () => {
   return (
     <div tw="relative min-height[100vh]">
-      <div tw="height[100vh] relative">
+      <div tw="relative">
         <div tw="relative max-width[1150px] mx-auto px-4 box-sizing[content-box] padding-top[min(280px, 30vh)] z-index[1]">
           <motion.h1
             tw="
@@ -142,9 +188,89 @@ const HeroSection = () => {
             <ScrollDownPlease />
           </motion.div>
         </div>
+      </div>
+      <div tw="">
+        <div tw="relative max-width[1150px] mx-auto px-4 box-sizing[content-box] z-index[1] text-white">
+          <div tw="padding-left[90px] margin-bottom[10px] flex items-center">
+            <CapsPreTitle>HI, I’M</CapsPreTitle>
+            <div tw="margin-left[20px] height[1px] width[220px] background-color[#FFFFFF] opacity-50" />
+          </div>
+          <div tw="padding-left[90px] flex space-x-6">
+            <h1 tw="text-6xl font-normal">
+              <span tw="font-thin">j</span>
+              <span tw="font-extralight">u</span>
+              <span tw="font-light">d</span>
+              <span tw="font-normal">e</span>
+            </h1>
+            <h1 tw="text-6xl font-extrabold">
+              <span tw="font-normal">h</span>
+              <span tw="font-medium">u</span>
+              <span tw="font-semibold">n</span>
+              <span tw="font-bold">t</span>
+              <span tw="font-extrabold">e</span>
+              <span tw="font-black">r</span>
+            </h1>
+            {/* <h1 tw="text-8xl font-normal">
+              <span tw="font-black">j</span>
+              <span tw="font-extrabold">u</span>
+              <span tw="font-bold">d</span>
+              <span tw="font-semibold">e</span>
+            </h1>
+            <h1 tw="text-8xl font-extrabold">
+              <span tw="font-semibold">h</span>
+              <span tw="font-medium">u</span>
+              <span tw="font-normal">n</span>
+              <span tw="font-light">t</span>
+              <span tw="font-extralight">e</span>
+              <span tw="font-thin">r</span>
+            </h1> */}
+          </div>
 
-        <div tw="absolute left-0 top-0 bottom-0 right-0 overflow-hidden z-index[0]">
-          <div tw="background[linear-gradient(0deg, rgba(13,13,15,1) 0%, rgba(13,13,15,0) 19%)] absolute left-0 top-0 bottom-0 right-0 z-index[1]" />
+          <div
+            tw="
+              max-width[730px]
+              margin-left[34px] margin-top[40px]
+              padding[34px 56px]
+              background-color[#0E151C]
+              border-radius[7px]
+              text-xl
+              line-height[1.8]
+              font-normal
+              letter-spacing[0.015em]
+              [& b]:(
+                font-extralight
+              )
+              [& p + p]:(
+                margin-top[1.5em]
+              )
+              [& em]:(
+                color[#7FEC9D]
+                not-italic
+              )
+            "
+          >
+            <p>
+              I’m currently a frontend engineer at <b>Playbook Technologies inc.</b> and a software architecture
+              consultant at <b>Millie Group</b>.
+            </p>
+            <p>
+              Pursuing a <b>Computer Science BSc</b> degree at <b>LNU</b>.
+            </p>
+            <p>
+              An advocate of free-as-in-freedom software and an active social progressivist in dire need of building
+              empowering solutions.
+            </p>
+            <p>
+              Working with ones and zeros since the age of 10, I’m looking for that <em>perfect fit</em> and a long-term
+              relationship.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div tw="sticky bottom-0 height[100vh] margin-top[-100vh]">
+        <div tw="absolute left-0 top-0 right-0 height[100vh] overflow-hidden z-index[0]">
+          <div tw="background[linear-gradient(0deg, rgba(7, 12, 16, 1) 0%, rgba(7, 12, 16, 0) 19%)] absolute left-0 top-0 bottom-0 right-0 z-index[1]" />
           <div tw="relative max-width[1150px] mx-auto padding-top[280px] px-4 box-sizing[content-box]">
             <motion.img
               src="/outline.png"
@@ -165,7 +291,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-      <div tw="height[100vh]">test</div>
     </div>
   );
 };
@@ -187,7 +312,7 @@ const HomePage = () => {
     // other candidates:
     // #10101c
     // #070c10
-    <div tw="background-color[#0D0D0F]">
+    <div tw="background-color[#070c10]">
       <NavBar />
       <HeroSection />
       <WorkSection />
