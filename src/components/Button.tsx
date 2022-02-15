@@ -7,6 +7,9 @@ export const Button = ({children, onClick, variant = 'white', ...rest}) => {
       font-size[1em] line-height[1.75] px-[1.3em] py-[0.6em] border-radius[2.5px] font-bold transition-[background, color, outline-width]
       relative
       z-index[0]
+      hocus:(
+        outline-none
+      )
       hocus:before:(
         opacity-100
         left[0px] top[0px] right[0px] bottom[0px]

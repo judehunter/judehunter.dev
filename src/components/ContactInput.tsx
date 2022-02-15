@@ -5,8 +5,9 @@ export const ContactInput = () => {
   return (
     <div
       tw="
-        border-2 border-white flex width[400px] items-stretch border-radius[5px]
+        border-2 border-white flex items-stretch border-radius[5px]
         transition-[border]
+        // margin-left[-15px]
         // focus-within:(
         //   border-color[#7FEC9D]
         // )
