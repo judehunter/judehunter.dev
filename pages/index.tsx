@@ -200,7 +200,7 @@ const WorkExp = () => (
     >
       <WorkItem
         role="Frontend/Full-Stack engineer"
-        time="May 2021, 9 mos"
+        time="May 2021, 12 mos"
         desc={
           <>
             <ProjectTechBar tech="React, Next (SSR), Vite, Tailwind + twin.macro, Emotion, TypeScript, Nest.js, TypeORM, Serverless, AWS Lambda, Sentry, Netlify" />
@@ -229,7 +229,7 @@ const WorkExp = () => (
     >
       <WorkItem
         role="Chief Technology Officer"
-        time="Oct 2020, 8 mos"
+        time="Oct 2020, 10 mos"
         desc={
           <>
             <ProjectTechBar tech="Vue, Nuxt (SSR), Tailwind, TypeScript, koa (REST), TypeORM, Python (AI), Serverless, Sentry, DataDog, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS (PostgreSQL), AWS ElastiCache (Redis), GitHub Actions" />
@@ -265,11 +265,11 @@ const WorkExp = () => (
       img="/imgs/millie.png"
     >
       <WorkItem
-        role="Product Development Engineer"
-        time="Jan 2020, 17 mos"
+        role="Head Product Development Engineer"
+        time="Sep 2020, 20 mos"
         desc={
           <>
-            <ProjectTechBar tech="React, Next, Typescript, Prisma, GraphQL, MailGun, Nodemailer, Sentry, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS, GTag, Google Analytics, Facebook Pixel" />
+            <ProjectTechBar tech="Vue, Nuxt, Typescript, Prisma, GraphQL, MailGun, Nodemailer, Sentry, AWS Lambda, AWS S3, AWS Cloudfront, AWS RDS, GTag, Google Analytics, Facebook Pixel" />
             <Spacer h="10px" />
             <WorkResponsibilities
               items={`
