@@ -9,3 +9,7 @@ div#__next > div {
 html {
   font-family: 'Inter', sans-serif!important;
 }
+
+i {
+  font-variation-settings: "slnt" -2
+}
