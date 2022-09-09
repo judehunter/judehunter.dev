@@ -1,10 +1,9 @@
 import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
-import {FaArrowRight} from 'react-icons/fa';
-import tw from 'twin.macro';
+import tw, {css} from 'twin.macro';
 import {ScrollInterpolationPullUp} from './misc';
 
-const BlogEntryCard = ({title, tags}: {title: string; tags?: string[]}) => {
+const _BlogEntryCard = ({title, tags}: {title: string; tags?: string[]}) => {
   return (
     <ScrollInterpolationPullUp length={250}>
       <motion.div
@@ -36,38 +35,132 @@ const BlogEntryCard = ({title, tags}: {title: string; tags?: string[]}) => {
   );
 };
 
+const BlogEntryCard = ({title, image, tags, ...rest}: {title: string; tags: string[]; image: string}) => {
+  return (
+    <div tw="flex flex-col text-white cursor-pointer" {...rest} className={`${(rest as any).className ?? ''} group`}>
+      <div tw="flex items-end flex-grow">
+        <div tw="">
+          <h1
+            tw="
+              font-semibold text-xl
+              font-variation-settings['slnt' 0]
+              group-hover:(
+                font-variation-settings['slnt' -10]
+                text-[#7FEC9D]
+              )
+              transition-all
+              transition-duration[200ms]
+            "
+          >
+            {title}
+          </h1>
+          <h2 tw="mt-[10px] opacity-50">{tags.map((x) => `#${x}`).join(' ')}</h2>
+        </div>
+      </div>
+      <div tw="mt-[15px] relative">
+        <img tw="rounded-[8px] w-full" src={image} />
+        <div
+          tw="
+            absolute left-0 top-0 right-0 bottom-0
+            border-[3px] border-color[#7FEC9D] rounded-[14px]
+            opacity-0
+            transition-all
+            group-hover:(
+              opacity-100
+              left-[-6px]
+              top-[-6px]
+              right-[-6px]
+              bottom-[-6px]
+            )
+          "
+        ></div>
+      </div>
+    </div>
+  );
+};
+
 const BlogEntries = () => {
   const entries = [
     {
-      title: 'The only API stack (and workflow) you should be using. 1',
+      title: 'Wazum, a WebAssembly compiler architecture library',
+      image: 'https://picsum.photos/seed/2/300/400',
+      tags: ['wasm'],
     },
     {
-      title: 'The only API stack (and workflow) you should be using. 2',
+      title: 'The inception of the Queso programming language',
+      image: 'https://picsum.photos/seed/1/300/400',
+      tags: ['javascript', 'typescript', 'wasm'],
     },
     {
-      title: 'The only API stack (and workflow) you should be using. 3',
+      title: 'The only API stack you should be using',
+      image: 'https://picsum.photos/seed/3/300/400',
+      tags: ['javascript'],
     },
     {
-      title: 'The only API stack (and workflow) you should be using. 4',
+      title: 'The only API stack you should be using',
+      image: 'https://picsum.photos/seed/9/300/400',
+      tags: ['typescript'],
     },
   ];
   return (
-    <div tw="flex space-x-[40px] height[400px] padding-right[20px] margin-top[-58px] overflow-hidden">
-      {/* left column */}
-      <div tw="space-y-[28px] margin-top[58px]">
-        {[entries[0], entries[2]].map((x, i) => (
-          <BlogEntryCard key={i} {...x} />
+    // <div tw="flex space-x-[40px] height[400px] padding-right[20px] margin-top[-58px] overflow-hidden">
+    <div>
+      <div
+        tw="
+          flex justify-between
+          flex-col
+          space-y-[50px]
+          [@media (min-width: 600px)]:(
+            flex-row
+            space-x-[30px]
+            space-y-0
+          )
+        "
+      >
+        {entries.slice(0, 4).map((x, i) => (
+          <BlogEntryCard
+            tw="
+            width[100%]
+            [@media (min-width: 600px)]:(
+              width[50%]
+            )
+            [@media (min-width: 800px)]:(
+              width[29%]
+            )
+            [@media (min-width: 1160px)]:(
+              width[min(23%, 300px)]
+            )
+          "
+            css={[
+              i === 2 &&
+                css`
+                  display: none;
+                  @media (min-width: 800px) {
+                    display: flex;
+                  }
+                `,
+              i === 3 &&
+                css`
+                  display: none;
+                  @media (min-width: 1160px) {
+                    display: flex;
+                  }
+                `,
+            ]}
+            key={i}
+            {...x}
+          />
         ))}
-      </div>
-      {/* right column */}
-      <div tw="space-y-[28px]">
-        {[entries[1], entries[3]].slice(0, 2).map((x, i) => (
-          <BlogEntryCard key={i} {...x} />
-        ))}
-        <div tw="flex justify-end text-white items-center space-x-4 text-lg">
+        <div tw="bg-[#0e151c] w-[50px] align-self[stretch] font-semibold text-white items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all hidden [@media (min-width: 800px)]:flex">
+          <div tw="transform[rotateZ(-90deg)] whitespace-nowrap">See more</div>
+        </div>
+        {/* <div tw="flex justify-end text-white items-center space-x-4 text-lg">
           <span>See more</span>
           <FaArrowRight />
-        </div>
+        </div> */}
+      </div>
+      <div tw="bg-[#0e151c] h-[50px] font-semibold text-white flex items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all [@media (min-width: 800px)]:hidden mt-[30px]">
+        <div tw="whitespace-nowrap">See more</div>
       </div>
     </div>
   );
@@ -86,13 +179,13 @@ const SectionTitle = ({children, variant, ...rest}: {children: ReactNode; varian
 
 export const BlogSection = () => {
   return (
-    <div tw="max-width[1250px] mx-auto px-4 box-sizing[content-box] padding-top[10px] z-index[10] relative">
-      <div tw="flex">
-        <SectionTitle tw="width[340px] flex-shrink-0" variant="line-dedent">
+    <div tw="max-width[1300px] mx-auto px-12 box-sizing[content-box] padding-top[40px] z-index[10] relative">
+      <div tw="flex justify-center">
+        {/* <SectionTitle tw="width[340px] flex-shrink-0" variant="line-dedent">
           latest
           <br />
-          entries
-        </SectionTitle>
+          entries */}
+        {/* </SectionTitle> */}
         {/* <div tw="width[105px]" /> */}
         <BlogEntries />
       </div>

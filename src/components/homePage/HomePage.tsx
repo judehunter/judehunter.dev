@@ -3,6 +3,8 @@ import {NavBar} from '../NavBar';
 import {BlogSection} from './BlogSection';
 import {WorkSection} from './WorkSection';
 import {HeroSection} from './HeroSection';
+import {WhatDoYouSay} from './WhatDoYouSay';
+import {Footer} from '../Footer';
 
 export const HomePage = () => {
   return (
@@ -12,9 +14,13 @@ export const HomePage = () => {
     // #070c10
     <div tw="background-color[#070c10]">
       <NavBar />
+      {/* lookup text clip fade in slide up animation */}
       <HeroSection />
       <BlogSection />
       <WorkSection />
+      <WhatDoYouSay />
+      <Footer />
+      {/* convinced yet? shoot me an email! */}
     </div>
   );
 };

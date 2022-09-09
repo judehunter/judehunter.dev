@@ -42,6 +42,19 @@ export const AnimText = ({text, overlayStyle, delay, ...rest}) => {
 
 export const PullUpText = ({delay, children}) => {
   return (
+    // <span tw="inline-block height[1.2em] overflow-hidden">
+    //   <motion.span
+    //     tw="overflow-hidden inline-block"
+    //     initial={{height: '0.2em'}}
+    //     animate={{height: '1.1em'}}
+    //     transition={{
+    //       height: {
+    //         duration: 0.3,
+    //         delay: delay + 0.2,
+    //         ease: 'easeOut',
+    //       },
+    //     }}
+    //   >
     <motion.span
       tw="inline-block"
       initial={{y: '0.4em', opacity: 0.001}}
@@ -57,6 +70,8 @@ export const PullUpText = ({delay, children}) => {
     >
       {children}
     </motion.span>
+    //   </motion.span>
+    // </span>
   );
 };
 

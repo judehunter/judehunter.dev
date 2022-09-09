@@ -6,7 +6,7 @@ import {AnimText, CapsPreTitle, PullUpText} from './misc';
 
 const HeroImage = () => {
   return (
-    <div tw="sticky bottom-0 height[100vh] margin-top[-100vh] z-index[0]">
+    <div tw="hidden md:block sticky bottom-0 height[100vh] margin-top[-100vh] z-index[0] opacity-80">
       <div tw="absolute left-0 top-0 right-0 height[100vh] overflow-hidden z-index[0]">
         <div tw="background[linear-gradient(0deg, rgba(7, 12, 16, 1) 0%, rgba(7, 12, 16, 0) 19%)] absolute left-0 top-0 bottom-0 right-0 z-index[1]" />
         <div tw="relative max-width[1150px] mx-auto padding-top[280px] px-4 box-sizing[content-box]">
@@ -39,7 +39,8 @@ const MeetYour = () => {
         tw="
             select-none
             text-white font-semibold
-            margin-left[90px]
+            ml-12 pr-12
+            md:margin-left[90px]
             line-height[1]
             font-size[min(3.75rem, 6vh)]
             // [@media (min-height: 700px)]:(
@@ -54,7 +55,8 @@ const MeetYour = () => {
         <PullUpText delay={0.12}>next</PullUpText>{' '}
       </motion.h1>
       <motion.h1
-        tw="select-none text-white font-size[min(6.8rem, 11vh)] line-height[1] font-semibold margin-left[90px]"
+        tw="select-none text-white font-size[min(6.8rem, 11vh)] line-height[1] font-semibold ml-12 pr-12
+        md:margin-left[90px]"
         // initial={{y: 30, opacity: 0}}
         // animate={{y: 0, opacity: 1}}
         // transition={{delay: 0.4, ease: 'easeOut'}}
@@ -79,7 +81,7 @@ const MeetYour = () => {
         </PullUpText>
       </motion.h1>
       <motion.div
-        tw="mt-[73px] margin-left[90px] text-white opacity[0]"
+        tw="mt-[73px] md:margin-left[90px] text-white opacity[0]"
         animate={{opacity: 1}}
         transition={{delay: 1.5, duration: 1}}
       >
@@ -94,11 +96,11 @@ const JudeHunterAnim = () => {
   const getAnimProps = (wght) => ({
     initial: {fontWeight: 100},
     animate: {fontWeight: wght},
-    transition: {delay: 0.7, duration: 0.6},
+    transition: {delay: 0.9, duration: 0.4},
   });
 
   return (
-    <div tw="padding-left[90px] flex space-x-6">
+    <div tw="padding-left[56px] md:padding-left[90px] flex space-x-6">
       <h1 tw="text-6xl">
         <motion.span {...getAnimProps(100)}>j</motion.span>
         <motion.span {...getAnimProps(200)}>u</motion.span>
@@ -126,7 +128,7 @@ const AboutMe = () => {
       transition={{ease: 'easeOut', duration: 0.7, delay: 0.9, opacity: {times: [null, 0.7]}}}
     >
       <div tw="relative max-width[1150px] mx-auto px-4 box-sizing[content-box] z-index[1] text-white">
-        <div tw="padding-left[90px] margin-bottom[10px] flex items-center">
+        <div tw="padding-left[56px] md:padding-left[90px] margin-bottom[10px] flex items-center">
           <CapsPreTitle>HI, I’M</CapsPreTitle>
           <div tw="margin-left[20px] height[1px] width[220px] background-color[#FFFFFF] opacity-50" />
         </div>
@@ -136,7 +138,7 @@ const AboutMe = () => {
           //730px
           tw="
               max-width[700px]
-              margin-left[34px] margin-top[40px]
+              md:margin-left[34px] margin-top[40px]
               padding[34px 56px]
               background-color[#0E151C]
               border-radius[7px]
@@ -176,7 +178,7 @@ const AboutMe = () => {
             long-term relationship.
           </p>
 
-          <div tw="flex items-center space-x-[min(3vh, 20px)] margin-top[40px]">
+          <div tw="flex items-center space-x-[min(3vh, 20px)] margin-top[40px] font-size[1.1rem]">
             <ContactInput />
             <div tw="flex-grow" />
             <a href="https://github.com/judehunter" target="_blank">

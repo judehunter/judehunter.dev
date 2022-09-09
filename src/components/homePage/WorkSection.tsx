@@ -1,9 +1,10 @@
-import {DatePeriod, ScrollInterpolationWorkTech, ScrollInterpolationPullUp} from './misc';
+import {DatePeriod, ScrollInterpolationWorkTech} from './misc';
 import {IntersoLogo, MillieLogo, PlaybookLogo, ZwierciadlaLogo} from './work/logos';
 import tw from 'twin.macro';
 import {ReactNode} from 'react';
 import {icons} from './work/icons';
 import {Icon} from '@iconify/react';
+import {Tooltip} from '../Tooltip';
 
 type WorkItem = {
   company: string;
@@ -28,7 +29,7 @@ const workItems: WorkItem[] = [
         title: 'frontend developer',
         period: {
           start: new Date('May 2021'),
-          end: null,
+          end: new Date('Aug 2022'),
         },
         description:
           'I developed multiple various web applications for internal use, as well as end-user facing applications for hundreds of thousands of Playbook’s customers.',
@@ -138,24 +139,38 @@ const WorkSectionItemTech = ({tech}: {tech: WorkItem['tech']}) => {
     <div tw="padding[30px] padding-left[37px] margin-top[0px] margin-left[-7px] bg-[#090F14] height[100%] rounded-r-[7px] flex flex-col justify-center">
       <div tw="flex space-x-4">
         {tech.slice(0, 3).map((x) => (
-          <Icon
+          <Tooltip
             key={x.icon}
-            icon={x.icon}
-            height={BIG_SIZE}
-            width={BIG_SIZE}
-            css={[x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[5px]`, x.style]}
-          />
+            target={
+              <Icon
+                icon={x.icon}
+                height={BIG_SIZE}
+                width={BIG_SIZE}
+                css={[x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[5px]`, x.style]}
+              />
+            }
+            side="top"
+          >
+            <span tw="whitespace-nowrap">{x.name}</span>
+          </Tooltip>
         ))}
       </div>
       <div tw="flex flex-wrap margin[-8px] margin-top[16px] [& > *]:(margin[8px])">
         {tech.slice(3).map((x) => (
-          <Icon
+          <Tooltip
             key={x.icon}
-            icon={x.icon}
-            height={SMALL_SIZE}
-            width={SMALL_SIZE}
-            css={[x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[3px]`, x.style]}
-          />
+            target={
+              <Icon
+                icon={x.icon}
+                height={SMALL_SIZE}
+                width={SMALL_SIZE}
+                css={[x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[3px]`, x.style]}
+              />
+            }
+            side="top"
+          >
+            <span tw="whitespace-nowrap">{x.name}</span>
+          </Tooltip>
         ))}
       </div>
     </div>
@@ -164,38 +179,40 @@ const WorkSectionItemTech = ({tech}: {tech: WorkItem['tech']}) => {
 
 const WorkSectionItem = ({item}: {item: WorkItem}) => {
   return (
-    <div tw="flex items-stretch">
-      <ScrollInterpolationPullUp length={0} tw="z-index[1] flex items-stretch [& > *]:(flex items-stretch)">
-        <div tw="width[700px] background-color[#0E151C] border-radius[7px] padding[30px 35px 20px]">
-          <div tw="margin-bottom[28px]">{item.logo}</div>
-          {item.positions
-            .map((x, i) => (
-              <div key={i}>
-                <h1 tw="text-2xl font-semibold margin-bottom[10px]">{x.title}</h1>
-                <p tw="line-height[1.7]">
-                  <DatePeriod start={x.period.start} end={x.period.end} />
-                  {x.description}
-                </p>
-              </div>
-            ))
-            .reduce(
-              (prev, curr, idx) =>
-                [
-                  prev,
-                  <div
-                    tw="width[80px] height[1px] bg-white margin[25px 0]"
-                    key={`sep${idx}`}
-                  /> /*<div tw="width[100%] height[2px] bg-[#070C10] margin[25px 0]" key={`sep${idx}`} />*/,
-                  curr,
-                ] as any,
-            )}
-          {/* <h1>
+    <div tw="flex items-stretch md:(flex-row) flex-col">
+      {/* <ScrollInterpolationPullUp length={0} tw="z-index[1] flex items-stretch [& > *]:(flex items-stretch)"> */}
+      <div tw="w-full md:width[60%] background-color[#0E151C] border-radius[7px] padding[30px 35px 20px] z-index[1] flex-shrink-0">
+        <div tw="margin-bottom[28px]">{item.logo}</div>
+        {item.positions
+          .map((x, i) => (
+            <div key={i}>
+              <h1 tw="text-2xl font-semibold margin-bottom[10px]">{x.title}</h1>
+              <p tw="line-height[1.7]">
+                <DatePeriod start={x.period.start} end={x.period.end} />
+                {x.description}
+              </p>
+            </div>
+          ))
+          .reduce(
+            (prev, curr, idx) =>
+              [
+                prev,
+                <div
+                  tw="width[80px] height[1px] bg-white margin[25px 0]"
+                  key={`sep${idx}`}
+                /> /*<div tw="width[100%] height[2px] bg-[#070C10] margin[25px 0]" key={`sep${idx}`} />*/,
+                curr,
+              ] as any,
+          )}
+        {/* <h1>
           {item}
         </h1> */}
-        </div>
-      </ScrollInterpolationPullUp>
+      </div>
+      {/* </ScrollInterpolationPullUp> */}
       <ScrollInterpolationWorkTech length={450} tw="flex-grow flex align-self[stretch] z-index[0] [& > *]:flex-grow">
-        <WorkSectionItemTech tech={item.tech} />
+        <div tw="md:block h-full hidden">
+          <WorkSectionItemTech tech={item.tech} />
+        </div>
       </ScrollInterpolationWorkTech>
     </div>
   );
@@ -204,11 +221,13 @@ const WorkSectionItem = ({item}: {item: WorkItem}) => {
 export const WorkSection = () => {
   return (
     <div tw="text-white">
-      <div tw="relative max-width[1300px] mx-auto px-4 box-sizing[content-box] padding-top[50px]">
+      <div tw="relative max-width[1200px] mx-auto px-12 box-sizing[content-box] padding-top[100px]">
         <div tw="flex items-start">
-          <h1 tw="transform[rotate(-90deg) translateY(-80px)] transform-origin[100% 0] text-4xl font-semibold">
-            experience
-          </h1>
+          <div tw="sticky top-[150px] height[200px] width[60px] flex-shrink-0 hidden md:block">
+            <h1 tw="transform[translateX(-85px) translateY(80px) rotate(-90deg)] text-4xl font-semibold absolute left-0 top-0">
+              experience
+            </h1>
+          </div>
           <div tw="flex-grow space-y-[40px]">
             {workItems.map((x, i) => (
               <WorkSectionItem item={x} key={i} />

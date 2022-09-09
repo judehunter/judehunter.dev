@@ -15,7 +15,7 @@ export const icons = {
   },
   typescript: {
     icon: 'logos:typescript-icon',
-    name: 'typescript',
+    name: 'TypeScript',
   },
   nodejs: {
     icon: 'logos:nodejs-icon',
@@ -28,7 +28,7 @@ export const icons = {
   },
   html: {
     icon: 'logos:html-5',
-    name: 'html5',
+    name: 'HTML5',
   },
   esbuild: {
     icon: 'logos:esbuild',

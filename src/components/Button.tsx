@@ -4,7 +4,7 @@ export const Button = ({children, onClick, variant = 'white', ...rest}) => {
   return (
     <button
       tw="
-      font-size[1em] line-height[1.75] px-[1.3em] py-[0.6em] border-radius[2.5px] font-bold transition-[background, color, outline-width]
+      font-size[1em] line-height[1.75] px-[1.3em] py-[0.6em] border-radius[8px] font-bold transition-[background, color, outline-width]
       relative
       z-index[0]
       hocus:(
@@ -23,7 +23,7 @@ export const Button = ({children, onClick, variant = 'white', ...rest}) => {
         left[2px] top[2px] right[2px] bottom[2px]
         outline[4px solid rgba(255, 255, 255, 0.3)]
         outline-offset[2px]
-        border-radius[2.5px]
+        border-radius[8px]
         // transform[scale(1.1)]
       )
     "
@@ -37,7 +37,7 @@ export const Button = ({children, onClick, variant = 'white', ...rest}) => {
       {...rest}
     >
       <div
-        tw="absolute left-0 top-0 right-0 bottom-0 z-index[-1] border-radius[2.5px]"
+        tw="absolute left-0 top-0 right-0 bottom-0 z-index[-1] border-radius[8px]"
         css={[
           {
             white: tw`bg-white`,

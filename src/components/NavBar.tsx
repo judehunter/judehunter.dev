@@ -34,7 +34,7 @@ export const NavBar = () => {
 
         <div tw="margin-left[50px] margin-right[60px] height[1px] flex-grow flex-shrink background-color[#FFFFFF] opacity-50" />
 
-        <div tw="flex items-center justify-between flex-shrink-0 flex-basis[340px]">
+        <div tw="hidden md:flex items-center justify-between flex-shrink-0 flex-basis[340px]">
           <NavLink href="/blog">Blog</NavLink>
           <NavLink href="/blog">Work</NavLink>
           <NavLink href="/blog">Resume</NavLink>
