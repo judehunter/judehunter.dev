@@ -4,7 +4,7 @@ import {ContactInput} from '../ContactInput';
 
 export const WhatDoYouSay = () => {
   return (
-    <div tw="mt-[100px] flex flex-col items-center text-white pb-[200px] text-center px-12">
+    <div id="contact" tw="mt-[100px] flex flex-col items-center text-white pb-[200px] text-center px-12">
       <h1 tw="text-xl md:text-3xl font-medium opacity-75">what do you say?</h1>
       <h2 tw="text-4xl md:text-5xl font-bold mt-[15px]">let’s work together</h2>
 

@@ -37,16 +37,16 @@ const MeetYour = () => {
     <div tw="relative max-width[1150px] mx-auto px-4 box-sizing[content-box] padding-top[min(280px, 30vh)] z-index[1]">
       <motion.h1
         tw="
-            select-none
-            text-white font-semibold
-            ml-12 pr-12
-            md:margin-left[90px]
-            line-height[1]
-            font-size[min(3.75rem, 6vh)]
-            // [@media (min-height: 700px)]:(
-            //   text-6xl
-            // )
-          "
+          select-none
+          text-white font-semibold
+          ml-[56px] pr-12
+          md:margin-left[90px]
+          line-height[1]
+          font-size[2rem] md:font-size[min(3.75rem, 6vh)]
+          // [@media (min-height: 700px)]:(
+          //   text-6xl
+          // )
+        "
         // initial={{y: 20, opacity: 0}}
         // animate={{y: 0, opacity: 1}}
         // transition={{delay: 0.2, ease: 'easeInOut'}}
@@ -55,7 +55,7 @@ const MeetYour = () => {
         <PullUpText delay={0.12}>next</PullUpText>{' '}
       </motion.h1>
       <motion.h1
-        tw="select-none text-white font-size[min(6.8rem, 11vh)] line-height[1] font-semibold ml-12 pr-12
+        tw="select-none text-white font-size[4rem] md:font-size[min(6.8rem, 11vh)] line-height[1] font-semibold ml-[56px] pr-12
         md:margin-left[90px]"
         // initial={{y: 30, opacity: 0}}
         // animate={{y: 0, opacity: 1}}
@@ -85,7 +85,7 @@ const MeetYour = () => {
         animate={{opacity: 1}}
         transition={{delay: 1.5, duration: 1}}
       >
-        <div tw="margin-top[min(17vh)]" />
+        <div tw="md:margin-top[min(17vh)]" />
         {/* <ScrollDownPlease /> */}
       </motion.div>
     </div>
@@ -178,15 +178,17 @@ const AboutMe = () => {
             long-term relationship.
           </p>
 
-          <div tw="flex items-center space-x-[min(3vh, 20px)] margin-top[40px] font-size[1.1rem]">
+          <div tw="flex md:flex-row flex-col items-center space-x-[min(3vh, 20px)] margin-top[40px] font-size[1.1rem]">
             <ContactInput />
-            <div tw="flex-grow" />
-            <a href="https://github.com/judehunter" target="_blank">
-              <FaGithub tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
-            </a>
-            <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
-              <FaLinkedinIn tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
-            </a>
+            <div tw="md:flex-grow" />
+            <div tw="flex space-x-[min(3vh, 20px)] mt-[45px] md:mt-0">
+              <a href="https://github.com/judehunter" target="_blank">
+                <FaGithub tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
+              </a>
+              <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
+                <FaLinkedinIn tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

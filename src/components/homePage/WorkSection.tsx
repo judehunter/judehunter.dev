@@ -84,7 +84,9 @@ const workItems: WorkItem[] = [
       icons.aws,
       icons.lambda,
       icons.tailwind,
+      icons.vite,
       icons.koa,
+      icons.typeorm,
     ],
   },
   {
@@ -220,7 +222,7 @@ const WorkSectionItem = ({item}: {item: WorkItem}) => {
 
 export const WorkSection = () => {
   return (
-    <div tw="text-white">
+    <div tw="text-white mt-[-80px] pt-[80px]" id="work">
       <div tw="relative max-width[1200px] mx-auto px-12 box-sizing[content-box] padding-top[100px]">
         <div tw="flex items-start">
           <div tw="sticky top-[150px] height[200px] width[60px] flex-shrink-0 hidden md:block">

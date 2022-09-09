@@ -158,4 +158,9 @@ export const icons = {
     icon: 'logos:sass',
     name: 'Sass',
   },
+  typeorm: {
+    icon: 'logos:typeorm',
+    name: 'TypeORM',
+    style: tw`[& path:nth-child(1)]:(fill[white])`,
+  },
 };

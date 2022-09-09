@@ -30,15 +30,19 @@ export const NavBar = () => {
           mx-auto max-width[1150px] padding-top[50px] px-10 pb-5 box-sizing[content-box]
         "
       >
-        <Logo />
+        <Link href="/" passHref>
+          <a>
+            <Logo />
+          </a>
+        </Link>
 
         <div tw="margin-left[50px] margin-right[60px] height[1px] flex-grow flex-shrink background-color[#FFFFFF] opacity-50" />
 
         <div tw="hidden md:flex items-center justify-between flex-shrink-0 flex-basis[340px]">
           <NavLink href="/blog">Blog</NavLink>
-          <NavLink href="/blog">Work</NavLink>
-          <NavLink href="/blog">Resume</NavLink>
-          <NavLink href="/blog">Contact</NavLink>
+          <NavLink href="#work">Work</NavLink>
+          {/* <NavLink href="/blog">Resume</NavLink> */}
+          <NavLink href="#contact">Contact</NavLink>
         </div>
       </div>
     </motion.div>
