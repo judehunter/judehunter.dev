@@ -7,6 +7,7 @@ export const ContactInput = ({...rest}) => {
   const [justSubmitted, setJustSubmitted] = useState(false);
   const submit = async (e) => {
     e.preventDefault();
+    if (!email.trim().length) return;
     await fetch('/api/getInContact', {
       method: 'POST',
       headers: {
