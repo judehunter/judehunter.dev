@@ -1,28 +1,113 @@
 ---
 title: The only API stack (and workflow) you should be using.
+createDate: 'Sep 13, 2021'
+thumbnail: /media/259-900x500.jpg
+tags:
+  - typescript
+  - javascript
+  - nodejs
 ---
 
-### Welcome to the blog.
+Okay okay, I know what you're thinking -- it doesn't exist!
 
-> To edit this site head over to the [`/admin`](/admin "") route. Then click the pencil icon in the bottom lefthand corner to start editing 🦙.
+However, over the years, I've tried multiple Node.js back-end technology stacks, and I can finally say I've found a suitable one that will help you rapidly develop your projects.
 
-# Dixi gaude Arethusa
+Suffice to say, this article is opinionated.
 
-<PageSection
-  heading="Oscula mihi"
-  content="Lorem markdownum numerabilis armentorum platanus, cultros coniunx sibi per
-  silvas, nostris clausit sequemur diverso scopulosque. Fecit tum alta sed non
-  falcato murmura, geminas donata Amyntore, quoque Nox. Invitam inquit, modo
-  nocte; ut ignis faciemque manes in imagine sinistra ut mucrone non ramos
-  sepulcro supplex. Crescentesque populos motura, fit cumque. Verumque est; retro
-  sibi tristia bracchia Aetola telae caruerunt et."
-/>
+# The REST Framework
 
-## Mutato fefellimus sit demisit aut alterius sollicito
+**Why?** I've extensively used both REST and GraphQL back-ends and I believe GraphQL is an overkill in most cases. While it's great for scalability, it is not the fastest way to develop an API for your project.
 
-Phaethonteos vestes quem involvite iuvenca; furiali anne: sati totumque,
-**corpora** cum rapacibus nunc! Nervis repetatne, miserabile doleas, deprensum
-hunc, fluctus Threicio, ad urbes, magicaeque, quid. Per credensque series adicis
-poteram [quidem](# "")! Iam uni mensas victrix
-vittas ut flumina Satyri adulter; bellum iacet domitae repercusso truncis urnis
-mille rigidi sub taurum.
+My REST framework of choice is **koa.js**.
+**Why?** I believe it's one of the best frameworks when it comes to quick development of your API, since it makes it extremely easy to go from the idea to the implementation.
+
+The middleware stack is also very intuitive and relies on async/await.
+
+I also feel it's a lot better than Express and generally more lightweight.
+
+# TypeScript
+
+**Why?** It is an extremely good and easy way to make your API type safe and develop more rapidly in the long run. It has saved me a lot of headaches and I could not live without its IntelliSense suggestions.
+
+You'll also see that using TypeScript enables us to easily integrate TypeORM into our project.
+
+# ESLine & Prettier
+
+**Why?** Consistency goes a long way. ESLint makes sure you and your co-workers don't yell at each other over code that - in their opinion - is not properly formatted. It can also track things like unused variables/imports and usages of let instead of const.
+
+You can forget about formatting your code to make it more readable with Prettier. Set it to auto format on save, preferably. Thank me later 🙂
+
+# The Database
+
+This depends on your use case. However, there are only two database types you should care about - relational and document-based databases.
+
+As your project grows, you'll probably have certain relations between your entities. And thus, you should most likely use a relational database, like MySQL or PostgreSQL (which is my database of choice).
+
+# TypeORM
+
+**Why?** TypeORM is an Object-Relational Mapping library for typescript (and babel), which basically means you don't have to deal with raw SQL and you can use certain utilities, like automatic relation joining.
+
+The reason why TypeORM is so interesting is the fact that it uses decorators for entity synchronization. What that means is you won't have to use migrations in your development environment.
+
+Instead, you define a class and decorate it:
+
+```typescript
+@Entity()
+class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  // automatic type detection thanks to reflection!
+  @Column()
+  name: string;
+
+  // automatic date columns!
+  @CreateDateColumn()
+  createdAt: Date;
+}
+```
+
+TypeORM then uses that class to migrate the database and to make IntelliSense suggestions based on the fields.
+
+**Why not?** Frankly, TypeORM is not beginner friendly, largely due to the docs being quite horrible. However, when you get a hang of it and use IntelliSense to your advantage, it becomes an incredibly powerful tool.
+
+# Git Flow and friends
+
+**Why?** This is a certain philosophy/workflow/strategy that works particularly well when working with git in teams. It defines what branches should be used for certain things, like features, releases, hotfixes.
+
+**Why not?** Git Flow is often criticized for its bulkiness. As you go, you might want to adapt a lighter strategy or even come up with your own.
+
+# File structure
+
+I came up with a file structure that works well with this particular technology stack:
+
+```markdown
+src
+├── entities
+│   └── User.ts
+├── modules
+│   └── module-name
+│       ├── module-name.router.ts
+│       ├── module-name.service.ts
+│       └── module-name.spec.ts
+├── mw
+├── utils
+└── app.ts
+
+e2e
+└── test-name.e2e.ts
+```
+
+Going from the top:
+
+* The `entities` folder is where you should store your TypeORM entities
+* The `modules` folder holds the different modules of your application (inspired by NestJS). For instance, an `auth` module may have a router that has a `/auth/facebook` route which in turn calls the `authWithFacebook()` function in the service file. It's important the router handles the HTTP stuff, and the service deals with pure data. This way, your unit tests (\`.spec.ts\`) can call the service directly. Additionally, your routes should - most of the time - be prefixed with the module name.
+* The `mw` folder is where you should store your custom middleware. You could also use the utils folder for this.
+* The `utils` folder is pretty much every other function that doesn't fit anywhere else.
+* The `e2e` folder stores the end-to-end tests.
+
+***
+
+This workflow has proven most successful for my projects and is great for rapid development.
+
+Happy coding! 🎉

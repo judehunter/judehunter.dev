@@ -2,7 +2,7 @@ import {useRouter} from 'next/router';
 import {useEffect} from 'react';
 
 export const pageview = (url) => {
-  (window as any).gtag('config', 'G-VF7DM82296', {
+  (window as any).gtag?.('config', 'G-VF7DM82296', {
     page_path: url,
   });
 };

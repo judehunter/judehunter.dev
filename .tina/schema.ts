@@ -14,6 +14,12 @@ const schema = defineSchema({
     token: '<Your Read Only Token>', // generated on app.tina.io,
     clientId: '<Your Client ID>', // generated on app.tina.io
     branch,
+    media: {
+      tina: {
+        mediaRoot: "media",
+        publicFolder: "public",
+      },
+    },
   },
   collections: [
     {
@@ -28,29 +34,42 @@ const schema = defineSchema({
           name: 'title',
         },
         {
+          type: 'string',
+          label: 'Create Date',
+          name: 'createDate',
+        },
+        {
+          type: 'image',
+          label: 'Thumbnail',
+          name: 'thumbnail',
+        },
+        {
+          label: 'Tags',
+          name: 'tags',
+          type: 'string',
+          list: true,
+        },
+        {
           type: 'rich-text',
           label: 'Blog Post Body',
           name: 'body',
           isBody: true,
           templates: [
             {
-              name: 'PageSection',
-              label: 'Page Section',
-              fields: [
+              name: "CodeBlock",
+              label: "Code Block",
+              fields:[
                 {
-                  type: 'string',
-                  name: 'heading',
-                  label: 'Heading',
+                  name: "lang",
+                  label: "Language",
+                  type: "string",
                 },
                 {
-                  type: 'string',
-                  name: 'content',
-                  label: 'Content',
-                  ui: {
-                    component: 'textarea',
-                  },
+                  name: "code",
+                  label: "Code",
+                  type: "string",
                 },
-              ],
+              ]
             },
           ],
         },

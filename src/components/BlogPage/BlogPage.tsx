@@ -1,6 +1,9 @@
+import Head from 'next/head';
+import Link from 'next/link';
 import {TinaMarkdown} from 'tinacms/dist/rich-text';
 import tw from 'twin.macro';
 import {Footer} from '../Footer';
+import {Logo} from '../Logo';
 
 const DotPattern = () => {
   return (
@@ -53,27 +56,59 @@ const DotPattern = () => {
   );
 };
 
+const CodeBlock = () => {
+  return <div>test</div>;
+};
+
 const MDStyle = tw`
   [& h1]:(
     text-3xl
     mb-5
     mt-12
     font-semibold
+    // text-[#f1f6ff]
   )
   [& h2]:(
     text-2xl
     mb-3
     mt-10
     font-semibold
+    // text-[#f1f6ff]
   )
   [& h3]:(
     text-xl
     mb-3
     mt-8
     font-semibold
+    // text-[#f1f6ff]
   )
   [& p]:(
     my-5
+  )
+  [& ul]:(
+    list-style-type[square]
+    [li]:(
+      my-3
+    )
+  )
+  [& pre]:(
+    bg-[#2a3b4c]
+    px-5
+    py-2
+    -ml-5
+    rounded-[8px]
+  )
+  [& :not(pre)>code]:(
+    bg-[#2a3b4c]
+    rounded
+    px-1.5
+    // [&:before]:(
+    //   content["d"]
+    // )
+  )
+  [& hr]:(
+    border-top-color[#2a3b4c]
+    my-8
   )
 `;
 
@@ -83,7 +118,7 @@ const ContentSection = ({content}) => {
       <DotPattern />
       <div tw="relative px-4 sm:px-6 lg:px-8">
         <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
-          <TinaMarkdown components={{}} content={content} />
+          <TinaMarkdown components={{CodeBlock} as any} content={content} />
         </div>
       </div>
     </div>
@@ -91,18 +126,38 @@ const ContentSection = ({content}) => {
 };
 
 export const BlogPage = ({data}) => {
+  // console.log(data);
   return (
-    <div tw="background-color[#070c10] py-1 min-h-screen text-[#dadfe7]">
-      <div>
-        <div tw="max-w-[600px] mx-auto">
-          <h1 tw="text-3xl mt-[200px] mb-[50px] text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
-            {data.post.title}
-          </h1>
+    <>
+      <Head>
+        <title>{data.post.title} · Jude Hunter</title>
+      </Head>
+      <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
+        <div tw="pt-24 flex justify-center">
+          <Link href="/" passHref>
+            <a tw="flex items-center space-x-4 ml-[-10px]">
+              <Logo />
+              <span tw="font-semibold">jude hunter</span>
+            </a>
+          </Link>
         </div>
-        <div>test</div>
-        <ContentSection content={data.post.body}></ContentSection>
+        <div>
+          <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px]">
+            <aside tw="text-center mb-5 opacity-50">
+              {data.post.createDate} <span tw="mx-4">·</span> {data.post.tags.map((x) => `#${x}`).join(' ')}
+            </aside>
+            <h1 tw="text-3xl text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
+              {data.post.title}
+            </h1>
+          </div>
+          <div
+            tw="bg-cover bg-center rounded-[8px] max-w-[700px] h-[400px] mx-auto"
+            style={{backgroundImage: `url('${data.post.thumbnail}')`}}
+          />
+          <ContentSection content={data.post.body}></ContentSection>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </>
   );
 };
