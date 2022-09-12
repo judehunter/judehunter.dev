@@ -75,7 +75,8 @@ const CodeBlock = ({lang, code}) => {
         marginRight: '-25px',
         paddingLeft: '25px',
         paddingRight: '25px',
-        // fontFamily: 'Fira Code',
+        fontFamily: 'Fira Code',
+        fontSize: '16px'
       }}
     >
       {code}
