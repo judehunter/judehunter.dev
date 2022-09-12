@@ -1,8 +1,8 @@
 ---
 title: 'The journey of Queso, my programming language'
-createDate: '2022-09-10T22:00:00.000Z'
-updateDate: '2022-09-10T22:00:00.000Z'
-thumbnail: /media/eberhard-grossgasteiger-RLAePomQ-7Q-unsplash.jpg
+createDate: '2022-09-11T22:00:00.000Z'
+updateDate: '2022-09-11T22:00:00.000Z'
+thumbnail: /media/pierre-lemos-CJ0YhhGi_Xg-unsplash.jpg
 tags:
   - functional
   - compiler
@@ -110,7 +110,7 @@ eval({
 // returns 14
 ```
 
-* Compiler -- turns that **AST** into some target representation that can be evaluated in a performant way. For compiled languages, like C, this would be `assembly`. For interpreted languages, this could be bytecode.&#x20;
+* Compiler -- turns that **AST** into some target representation that can be evaluated in a performant way. For compiled languages, like C, this would be `assembly`. For interpreted languages, this could be bytecode.
 * VM -- in the case of interpreted languages, the VM acts as an artificial processor. It reads bytecode instructions just as a processor reads machine code. It might also have a stack and a heap.
 
 ## Queso Mk. 1, a tree-walking interpreter
@@ -143,7 +143,7 @@ A lot has happened in the meantime. We took a gap year, and started studying. Fa
 
 I have always been a web developer. To me, the web is everything and anything I want it to; a boundless playground. I learnt HTML from an obscure website around 2011. The incredible amount of innovation is also what keeps me enthusiastic about it.
 
-Speaking of, enter WebAssembly. A special binary format for a Virtual Machine that's typically run inside of a browser, next to JavaScript. Well, the name speaks for itself -- it's assembly, for the web. The thing is, it's not just for the web. WASM is not inherently tied to the browser, or anything at all really. It's a universal format that any language or application could compile to, and which is portable, i.e. it could be executed on any host environment capable of reading the format.
+Speaking of, enter **WebAssembly**. A special binary format for a Virtual Machine that's typically run inside of a browser, next to JavaScript. Well, the name speaks for itself -- it's assembly, for the web. The thing is, it's not just for the web. **WASM** is not inherently tied to the browser, or anything at all really. It's a universal format that any language or application could compile to, and which is portable, i.e. it could be executed on any host environment capable of reading the format.
 
 WebAssembly should theoretically provide close-to-native performance, while being relatively high-level, and sandboxed. In fact, a WebAssembly module does not have access to any native functions at all. To provide it with external functionality, the host environment must first expose it.
 
@@ -151,4 +151,104 @@ Due to its sandboxing, we already see hosting providers using WebAssembly instea
 
 Something JVM wished it was.&#x20;
 
-I digress. My growing interest in WebAssembly made me recognize the potential that queso could have.&#x20;
+I digress. My growing interest in WebAssembly made me recognize the potential that queso could have. I began redesigning the whole language with familiarity, usability, and flexibility in mind, while carefully crafting a set of unique features that make queso, queso. I also created the first queso specification, which provides a degree of consistency across the project. *I should probably keep it updated though.*
+
+Let's look at how queso has changed.
+
+```markdown
+ts
+let filterSpicySalsas =
+  salsas -> salsas.>filter(salsa -> salsa.isSpicy);
+
+let salsas = [
+  {name: `fresca`, isSpicy: false},
+  {name: `roja`, isSpicy: true},
+  {name: `habanero`, isSpicy: true},
+];
+
+let spicySalsas = salsas |> filterSpicySalsas;
+
+log(
+  spicySalsas
+    .>map(_.name)
+    .>sort()
+    .>join(`, `)
+)
+// prints habanero, roja
+```
+
+There is no function declarations, it's all just variables and data. I opted for the more common `->` operator for lambdas, especially since `:` was too restrictive in terms of parsing. Object literals now use the standard `{}` braces, instead of the unusual `#[]`. All strings are multiline and interpolated. Immutability by default.
+
+A new kind of functionality is the dot-pipe operator. In the above snippet, `filter` is not actually a method of List. Rather, it's a function with the signature
+
+```markdown
+ts
+<T>(list: List<T>, predicate: (item: T)) -> List<T>
+```
+
+Traditionally, we could represent that same operation with:
+
+```markdown
+ts
+filter(salsas, salsa -> salsa.isSpicy);
+// or with the pipe operator
+salsas |> x -> filter(x, salsa -> salsa.isSpicy);
+```
+
+Thus, the dot-pipe operator `.>` pipes the left operand into the right operand's first argument. I believe it's a good way to marry FP with OOP, without the downsides of the latter.
+
+One particular pattern that's ever-present in mainstream programming languages is short lambdas that use the first argument to do some slight transformation. This leads to the programmer having to type that argument's name twice:
+
+```markdown
+ts
+// first example
+salsas.>filter( salsa -> salsa.isSpicy )
+
+// second example
+spicySalsas.>map( x -> x.name );
+```
+
+Notice the salsa `->` salsa part. In queso, this could be expressed as simply as
+
+```markdown
+ts
+// first example
+salsas.>filter( _.isSpicy )
+
+// second example
+spicySalsas.>map( _.name )
+```
+
+The `_` placeholder operator curries a function. Operators in queso are just syntactic sugar for functions. In this case, `_.isSpicy` would translate to `x -> dotAccess(x, 'isSpicy')`.
+
+For a more in-depth overview of the language, see the latest [readme file](https://github.com/queso-lang/queso "readme file").
+
+### The implementation
+
+To aide in development speed, I decided to (re)implement the whole language in TypeScript. This felt good considering that WebAssembly is already tied to the JavaScript ecosystem. The compiler could even be used as a JS library.
+
+I began researching WebAssembly. To my despair, the quality of the documentation was - to put it lightly - suboptimal. That is, if I could even find any documentation. The main reference that exists is the [WebAssembly specification](https://webassembly.github.io/spec/core/ "WebAssembly specification"), which is likely too formal for many.
+
+All this came as a big surprise, coming from web development, which is an area often characterized by exceptional quality of documentation. I had to do a lot of manual experimentation to figure out how everything worked.
+
+Using the binaryen.js library seemed to be the path of least resistance. Binaryen is a C toolkit for generating and optimizing WebAssembly through simple function calls. binaryen.js is a port of Binaryen for JavaScript. The catch is the port is machine generated. It has outdated typing, minimal documentation, and infinite quirks. At one point, I could not figure out how to call a function correctly, or even if it was my fault or the library's.
+
+The low quality of tooling forced me to start a sub-project -
+
+## Wazum
+
+An alternative to binaryen.js, with high quality documentation, strong typing *(with datatype validation built into the type system)*, full test coverage, and a focus on usability for both compilation and hand-writing of WebAssembly.
+
+The purpose of wazum would be to generate WAT (a textual format of WASM), and then pass it behind the scenes to Binaryen for optimization.
+
+Continue reading about wazum [here](blog/creating-wazum-the-webassembly-compilation-library "Wazum")
+
+I would tell you more, but I'm afraid we've reached the present time. I can only speculate -
+
+## What's next?
+
+I want to provide a great experience for potential users of wazum. That might mean I would have to put queso on the backburner until the DX of wazum is where I want it to be. Once ready, I will move onto the finalization of the queso compiler.
+
+***
+
+Thanks for reading.

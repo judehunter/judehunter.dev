@@ -158,10 +158,7 @@ const ContentSection = ({content}) => {
                 return <CodeBlock lang={lang} code={code} />;
               }) as any,
               a: (props) => (
-                <a
-                  href={props!.url}
-                  target="_blank"
-                >
+                <a href={props!.url} target="_blank">
                   {props!.children}
                 </a>
               ),

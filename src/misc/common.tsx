@@ -4,7 +4,7 @@ export const useMergeState = <T extends Record<string, any>>(init: T) => {
   const [state, setState] = useState(init);
   const update: Dispatch<SetStateAction<Partial<T>>> = (value) => {
     setState((cur) => {
-      let partial = null;
+      let partial: any = null;
       if (value instanceof Function) partial = value(cur);
       else partial = value;
 
@@ -13,7 +13,7 @@ export const useMergeState = <T extends Record<string, any>>(init: T) => {
   };
   const updateRaw: Dispatch<SetStateAction<Record<string, any>>> = (value) => {
     setState((cur) => {
-      let partial = null;
+      let partial: any = null;
       if (value instanceof Function) partial = value(cur);
       else partial = value;
 

@@ -69,7 +69,7 @@ const BlogEntryCard = ({
             >
               {title}
             </h1>
-            <h2 tw="mt-[10px] opacity-50">
+            <h2 tw="mt-[10px] opacity-50 text-sm">
               {tags
                 .slice(0, 3)
                 .map((x) => `#${x}`)
@@ -129,6 +129,7 @@ const BlogEntries = () => {
   // ];
   let entries = usePageProps<typeof IndexPage>()
     .posts.slice(0, 4)
+    .reverse()
     .map((x) => ({
       title: x.title!,
       image: x.thumbnail!,
@@ -185,17 +186,13 @@ const BlogEntries = () => {
             {...x}
           />
         ))}
-        <div tw="bg-[#0e151c] w-[50px] align-self[stretch] font-semibold text-white items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all hidden [@media (min-width: 800px)]:flex">
+        {/* <div tw="bg-[#0e151c] w-[50px] align-self[stretch] font-semibold text-white items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all hidden [@media (min-width: 800px)]:flex">
           <div tw="transform[rotateZ(-90deg)] whitespace-nowrap">See more</div>
-        </div>
-        {/* <div tw="flex justify-end text-white items-center space-x-4 text-lg">
-          <span>See more</span>
-          <FaArrowRight />
         </div> */}
       </div>
-      <div tw="bg-[#0e151c] h-[50px] font-semibold text-white flex items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all [@media (min-width: 800px)]:hidden mt-[30px]">
+      {/* <div tw="bg-[#0e151c] h-[50px] font-semibold text-white flex items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all [@media (min-width: 800px)]:hidden mt-[30px]">
         <div tw="whitespace-nowrap">See more</div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -214,6 +211,7 @@ const SectionTitle = ({children, variant, ...rest}: {children: ReactNode; varian
 export const BlogSection = () => {
   return (
     <div tw="max-width[1300px] mx-auto px-12 box-sizing[content-box] padding-top[40px] z-index[10] relative">
+      <div tw="absolute top-[-120px]" id="blog" />
       <div tw="flex justify-center">
         {/* <SectionTitle tw="width[340px] flex-shrink-0" variant="line-dedent">
           latest
