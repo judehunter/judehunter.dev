@@ -218,11 +218,9 @@ export const BlogPage = ({source}) => {
               {source.frontmatter.title}
             </h1>
           </div>
-          <div
-            tw="bg-cover bg-center rounded-[8px] max-w-[700px] h-[400px] mx-auto"
-            style={{backgroundImage: `url('${source.frontmatter.thumbnail}')`}}
-          />
-          <Image src={source.frontmatter.thumbnail} layout="intrinsic" width={700} height={400} />
+          <div tw="max-w-[700px] h-[400px] mx-auto relative">
+            <Img src={source.frontmatter.thumbnail} alt={'thumbnail'} fill tw="rounded-[8px] object-fit[cover]" />
+          </div>
           <ContentSection content={source}></ContentSection>
         </div>
         <Footer />

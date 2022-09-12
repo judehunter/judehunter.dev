@@ -28,8 +28,8 @@ const workItems: WorkItem[] = [
       {
         title: 'frontend developer',
         period: {
-          start: new Date('May 2021'),
-          end: new Date('Aug 2022'),
+          start: new Date('May 1 2021'),
+          end: new Date('Aug 1 2022'),
         },
         description:
           'I developed multiple various web applications for internal use, as well as end-user facing applications for hundreds of thousands of Playbook’s customers.',
@@ -59,7 +59,7 @@ const workItems: WorkItem[] = [
       {
         title: 'fullstack architecture consultant',
         period: {
-          start: new Date('May 2021'),
+          start: new Date('May 1 2021'),
           end: null,
         },
         description:
@@ -68,8 +68,8 @@ const workItems: WorkItem[] = [
       {
         title: 'fullstack developer',
         period: {
-          start: new Date('Sep 2020'),
-          end: new Date('May 2021'),
+          start: new Date('Sep 1 2020'),
+          end: new Date('May 1 2021'),
         },
         description:
           'I developed Millie’s entire pivotal student portal with scalability in mind to allow for thousands of concurrent invocations.',
@@ -96,8 +96,8 @@ const workItems: WorkItem[] = [
       {
         title: 'e-commerce fullstack developer',
         period: {
-          start: new Date('Feb 2020'),
-          end: new Date('Jun 2020'),
+          start: new Date('Feb 1 2020'),
+          end: new Date('Jun 1 2020'),
         },
         description:
           'I designed, built from the ground up, and deployed an e-commerce website for a local family business who was in need of help during the COVID-19 crisis.',
@@ -123,8 +123,8 @@ const workItems: WorkItem[] = [
       {
         title: 'IT&Photo team leader',
         period: {
-          start: new Date('Sep 2018'),
-          end: new Date('Sep 2019'),
+          start: new Date('Sep 1 2018'),
+          end: new Date('Sep 1 2019'),
         },
         description:
           'I’ve led the IT&Photo team during the 16th edition of Zwierciadła - the largest and most recognizable nation-wide theatre event for the youth. We’ve successfully revived the event’s social media & website and dealt with multiple partners and sponsors. That edition was a great success and attracted 1000+ spectators at just one venue.',

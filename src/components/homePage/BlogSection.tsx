@@ -1,4 +1,5 @@
 import {motion} from 'framer-motion';
+import Img from 'next/future/image';
 import Link from 'next/link';
 import {ReactNode} from 'react';
 import tw, {css} from 'twin.macro';
@@ -78,10 +79,13 @@ const BlogEntryCard = ({
           </div>
         </div>
         <div tw="mt-[15px] relative">
-          <div
+          {/* <div
             tw="bg-center bg-cover w-full aspect-ratio[3 / 4] rounded-[8px]"
             style={{backgroundImage: `url('${image}')`}}
-          />
+          /> */}
+          <div tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]" style={{backgroundImage: `url('${image}')`}}>
+            <Img src={image} alt={title} fill tw="rounded-[8px] object-fit[cover]" />
+          </div>
           {/* <img tw="rounded-[8px] w-full" src={image} /> */}
           <div
             tw="
@@ -127,16 +131,16 @@ const BlogEntries = () => {
   //     tags: ['typescript'],
   //   },
   // ];
-  let entries = usePageProps<typeof IndexPage>()
-    .posts.slice(0, 4)
+  const entries = usePageProps<typeof IndexPage>()
+    .posts.sort((a, b) => new Date(a.frontmatter!.createDate).getTime() - new Date(b.frontmatter!.createDate).getTime())
+    .slice(0, 4)
     .reverse()
     .map((x) => ({
-      title: x.title!,
-      image: x.thumbnail!,
-      tags: x.tags!.map((x) => x!),
-      url: `/blog/${x._sys.filename}`,
+      title: x.frontmatter!.title,
+      image: x.frontmatter!.thumbnail,
+      tags: (x.frontmatter!.tags as any as string[]).map((x) => x!),
+      url: x.url,
     }));
-  entries = [...entries, ...entries, ...entries, ...entries];
   return (
     // <div tw="flex space-x-[40px] height[400px] padding-right[20px] margin-top[-58px] overflow-hidden">
     <div>

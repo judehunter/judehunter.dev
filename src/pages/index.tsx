@@ -1,11 +1,12 @@
+import {readdir, readFile} from 'fs/promises';
+import {serialize} from 'next-mdx-remote/serialize';
 import Head from 'next/head';
+import path from 'path';
 import tw from 'twin.macro';
-import client from '../../.tina/__generated__/client';
-import {Post} from '../../.tina/__generated__/types';
 import {HomePage} from '../components/homePage/HomePage';
 import {PagePropsContext} from '../misc/common';
 
-const IndexPage = (props: {posts: Post[]}) => {
+const IndexPage = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
   return (
     // original: #0D0D0F
     // other candidates:
@@ -30,8 +31,18 @@ const IndexPage = (props: {posts: Post[]}) => {
   );
 };
 export const getStaticProps = async () => {
-  const posts = await client.queries.postConnection({sort: 'createDate'});
-  return {props: {posts: posts.data.postConnection.edges!.map((x) => x!.node)}};
+  // const posts = await client.queries.postConnection({sort: 'createDate'});
+  const filesString = await readdir(path.join('content', 'posts/'));
+  const posts = await Promise.all(
+    filesString.map(async (x) => ({
+      ...(await serialize(await readFile(path.join('content', 'posts/', x), 'utf-8'), {
+        parseFrontmatter: true,
+        mdxOptions: {},
+      })),
+      url: '/blog/' + x.replace('.mdx', ''),
+    })),
+  );
+  return {props: {posts}};
 };
 
 // export const getStaticProps = async () => {

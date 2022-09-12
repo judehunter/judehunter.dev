@@ -6,7 +6,7 @@ import tw from 'twin.macro';
 export const AnimText = ({text, overlayStyle, delay, ...rest}) => {
   return (
     <motion.span
-      tw="relative before:(inline absolute z-index[0] opacity[var(--opacity)])"
+      tw="inline-block relative before:(block absolute z-index[0] opacity[var(--opacity)])"
       css={{
         '&:before': {
           content: `"${text}"`,

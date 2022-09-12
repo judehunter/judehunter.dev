@@ -1,5 +1,5 @@
+import {Icon} from '@iconify/react';
 import {motion} from 'framer-motion';
-import {FaGithub, FaLinkedinIn} from 'react-icons/fa';
 import tw from 'twin.macro';
 import {ContactInput} from '../ContactInput';
 import {AnimText, CapsPreTitle, PullUpText} from './misc';
@@ -181,12 +181,23 @@ const AboutMe = () => {
           <div tw="flex md:flex-row flex-col items-center space-x-[min(3vh, 20px)] margin-top[40px] font-size[1.1rem]">
             <ContactInput />
             <div tw="md:flex-grow" />
-            <div tw="flex space-x-[min(3vh, 20px)] mt-[45px] md:mt-0">
+            {/* <div tw="flex space-x-[min(3vh, 20px)] mt-[45px] md:mt-0">
               <a href="https://github.com/judehunter" target="_blank">
                 <FaGithub tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
               </a>
               <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
                 <FaLinkedinIn tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
+              </a>
+            </div> */}
+            <div tw="text-white font-size[30px] space-x-[20px] flex items-center mt-[45px] md:mt-0">
+              <a href="mailto:matisowagm@gmail.com" target="_blank">
+                <Icon icon="mdi:email-open" tw="mb-[-5px]" />
+              </a>
+              <a href="https://github.com/judehunter" target="_blank" tw="font-size[27px]">
+                <Icon icon="akar-icons:github-fill" />
+              </a>
+              <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
+                <Icon icon="akar-icons:linkedin-fill" />
               </a>
             </div>
           </div>
