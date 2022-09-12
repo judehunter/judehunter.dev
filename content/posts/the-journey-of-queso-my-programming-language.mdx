@@ -179,7 +179,10 @@ Blocks (scopes) are denoted by `()`, as groupings in queso can not only group op
 A new kind of functionality is the dot-pipe operator. In the above snippet, `filter` is not actually a method of List. Rather, it's a function with the signature
 
 ```ts
-<T>(list: List<T>, predicate: (item: T) -> bool) -> List<T>
+<T>(
+  list: List<T>,
+  predicate: (item: T) -> bool
+) -> List<T>
 ```
 
 Traditionally, we could represent that same operation with:

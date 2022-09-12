@@ -76,7 +76,7 @@ const CodeBlock = ({lang, code}) => {
         paddingLeft: '25px',
         paddingRight: '25px',
         fontFamily: 'Fira Code',
-        fontSize: '16px'
+        fontSize: '16px',
       }}
     >
       {code}

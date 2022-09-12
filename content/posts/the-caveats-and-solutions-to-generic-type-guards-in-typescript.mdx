@@ -98,7 +98,7 @@ export const hasKeys = <T>(
 
 The TypeScript compiler is clever enough to figure out `T` by itself, if we don't want to specify it.
 
-For instance, `hasKeys(secretVehicle, \['usage'])` will infer `T` to be of type `{usage: any}` and thus, we will be able to use the `usage` key inside of our if statement.
+For instance, `hasKeys(secretVehicle, ['usage'])` will infer `T` to be of type `{usage: any}` and thus, we will be able to use the `usage` key inside of our if statement.
 
 ```ts
 if (hasKeys(secretVehicle, ['usage'])) {
@@ -113,7 +113,7 @@ Alas, this forces us to operate on values of type `any`.
 We can either pass the the type for that key:
 
 ```ts
-hasKeys<{ usage: 'civil' | 'military'}>(
+hasKeys<{usage: 'civil' | 'military'}>(
   secretVehicle,
   ['usage'],
 );
@@ -122,7 +122,7 @@ hasKeys<{ usage: 'civil' | 'military'}>(
 Or just simply pass the entire class:
 
 ```ts
-hasKeys < Aircraft > (secretVehicle, ['usage']);
+hasKeys<Aircraft>(secretVehicle, ['usage']);
 ```
 
 *This will also give us IntelliSense suggestions when defining the keys!*
