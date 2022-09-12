@@ -8,12 +8,11 @@ import {nord} from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import {format} from 'date-fns';
 import {MDXRemote} from 'next-mdx-remote';
 import Img from 'next/future/image';
+import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
+import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 
-// console.log(SyntaxHighlighter.supportedLanguages);
-// SyntaxHighlighter.registerLanguage('js', js);
-// SyntaxHighlighter.registerLanguage('jsx', jsx);
-// SyntaxHighlighter.registerLanguage('ts', ts);
-// SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('ts', ts);
+SyntaxHighlighter.registerLanguage('tsx', tsx);
 
 const DotPattern = () => {
   return (
@@ -67,13 +66,7 @@ const DotPattern = () => {
 };
 
 const CodeBlock = ({lang, code}) => {
-  // const [shown, setShown] = useState(process.env.NODE_ENV === 'production');
-  const shown = true;
-  // useEffect(() => {
-  //   if (process.env.NODE_ENV !== 'production') setTimeout(() => setShown(true), 1000);
-  // }, []);
-
-  return shown ? (
+  return (
     <SyntaxHighlighter
       language={lang}
       style={nord}
@@ -81,7 +74,7 @@ const CodeBlock = ({lang, code}) => {
     >
       {code}
     </SyntaxHighlighter>
-  ) : null;
+  );
 };
 
 const MDStyle = tw`
@@ -142,6 +135,9 @@ const MDStyle = tw`
     text-[#7fec9d]
     underline 
   )
+  [&]:(
+    font-variant-ligatures[none]
+  )
 `;
 
 const ContentSection = ({content}) => {
@@ -177,6 +173,11 @@ const ContentSection = ({content}) => {
                   <code className={className} {...{children}} />
                 );
               },
+              a: (props) => (
+                <a {...props} target="_blank">
+                  {props!.children}
+                </a>
+              ),
             }}
           />
         </div>
