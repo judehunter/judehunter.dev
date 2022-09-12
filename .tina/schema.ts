@@ -1,13 +1,8 @@
-
-import { defineSchema, defineConfig } from 'tinacms'
-import { client } from './__generated__/client'
-
+import {defineSchema, defineConfig} from 'tinacms';
+import {client} from './__generated__/client';
 
 const branch =
-  process.env.NEXT_PUBLIC_TINA_BRANCH ||
-  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF ||
-  process.env.HEAD ||
-  'main'
+  process.env.NEXT_PUBLIC_TINA_BRANCH || process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_REF || process.env.HEAD || 'main';
 const schema = defineSchema({
   // See https://tina.io/docs/tina-cloud/connecting-site/ for more information about this config
   config: {
@@ -16,8 +11,8 @@ const schema = defineSchema({
     branch,
     media: {
       tina: {
-        mediaRoot: "media",
-        publicFolder: "public",
+        mediaRoot: 'media',
+        publicFolder: 'public',
       },
     },
   },
@@ -59,15 +54,14 @@ const schema = defineSchema({
           label: 'Blog Post Body',
           name: 'body',
           isBody: true,
-          templates: [
-          ],
+          templates: [],
         },
       ],
     },
   ],
-})
+});
 
-export default schema
+export default schema;
 
 // Your tina config
 
@@ -81,20 +75,19 @@ export const tinaConfig = defineConfig({
     /**
      * 1. Import `tinacms` and `RouteMappingPlugin`
      **/
-    import('tinacms').then(({ RouteMappingPlugin }) => {
+    import('tinacms').then(({RouteMappingPlugin}) => {
       /**
        * 2. Define the `RouteMappingPlugin` see https://tina.io/docs/tinacms-context/#the-routemappingplugin for more details
        **/
       const RouteMapping = new RouteMappingPlugin((collection, document) => {
-        return undefined
-      })
+        return undefined;
+      });
       /**
        * 3. Add the `RouteMappingPlugin` to the `cms`.
        **/
-      cms.plugins.add(RouteMapping)
-    })
+      cms.plugins.add(RouteMapping);
+    });
 
-    return cms
+    return cms;
   },
-})
-
+});
