@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build && next build",
-    "start": "tinacms build && next start"
+    "build": "tinacms dev -c \"next build\"",
+    "start": "next start"
   },
   "dependencies": {
     "@emotion/css": "^11.7.1",

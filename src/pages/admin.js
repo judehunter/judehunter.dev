@@ -1,2 +1,3 @@
 import {TinaAdmin} from 'tinacms';
-export default TinaAdmin;
+const OptTinaAdmin = process.env.NODE_ENV === 'production' ? () => <div /> : TinaAdmin;
+export default OptTinaAdmin;

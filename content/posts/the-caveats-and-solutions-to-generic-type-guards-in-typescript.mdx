@@ -20,7 +20,7 @@ The compiler uses guards to narrow down the type of your value and provide Intel
 
 Say we have a given inheritance model:
 
-```javascript
+```markdown
 ts
 class Vehicle {
   brand: string;
@@ -39,7 +39,7 @@ We are given a `secretVehicle` object that we know extends `Vehicle` in term
 
 Thus, the `instanceof` approach won't work, since it requires the left operand to be an instance:
 
-```javascript
+```markdown
 ts
 if (secretVehicle instanceof Car) {
   console.log(`
@@ -54,11 +54,11 @@ What we can do instead, is check if our `secretVehicle` has all the properties
 
 We do that by either using reflection or by creating an actual instance of that class and looking up its keys with `Object.keys()`:
 
-```typescript
+```markdown
 ts
 export const hasAllKeys =
-  <T>(obj: Record<string, any>, cls: new () => T):
-  obj is T => {
+  <T>(obj: Record<string, any>, cls: new () => T)
+  : obj is T => {
     const properties = Object.keys(new cls());
     for (const p of properties) {
       if (!(p in obj)) return false;
@@ -69,7 +69,7 @@ export const hasAllKeys =
 
 We can then use the guard to assure TypeScript that the `secretVehicle` is actually of a given type.
 
-```javascript
+```markdown
 ts
 if (hasAllKeys(secretVehicle, Car)) {
   console.log(`
@@ -91,14 +91,13 @@ To counter that, let's use a guard that checks for specific properties instead o
 
 ```typescript
 ts
-export const hasKeys =
-  <T>(
-    obj: Record<string, any>,
-    properties: (keyof T)[]
-  ): obj is T =>
-    properties
-      .filter(p => p in obj)
-      .length == properties.length;
+export const hasKeys = <T>(
+  obj: Record<string, any>,
+  properties: (keyof T)[]
+): obj is T =>
+  properties
+    .filter((p) => p in obj)
+    .length == properties.length;
     // functional approach
 ```
 
@@ -131,7 +130,7 @@ Or just simply pass the entire class:
 
 ```javascript
 ts
-hasKeys<Aircraft>(secretVehicle, ['usage']);
+hasKeys < Aircraft > (secretVehicle, ['usage']);
 ```
 
 *This will also give us IntelliSense suggestions when defining the keys!*
