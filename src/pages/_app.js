@@ -8,12 +8,12 @@ const App = ({Component, pageProps}) => {
   useGAPageView();
   const OptTina = process.env.NODE_ENV === 'production' ? Fragment : Tina;
   return (
-    <OptTina>
-      <div>
-        <GlobalStyles />
-        <Component {...pageProps} />
-      </div>
-    </OptTina>
+    // <OptTina>
+    <div>
+      <GlobalStyles />
+      <Component {...pageProps} />
+    </div>
+    // </OptTina>
   );
 };
 

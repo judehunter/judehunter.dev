@@ -19,8 +19,7 @@ Wazum would still use `binaryen.js` for the optimization part, but it would gene
 
 Here's an example of how one might define a simple function with wazum:
 
-```markdown
-ts
+```ts
 w.func(
   'add',
   {
@@ -55,8 +54,7 @@ w.func(
 
 Notice the multiple datatype (`i32`) definitions. This was a design choice to maxime correctness over type inference. For instance, the type system will not allow you to call
 
-```javascript
-ts
+```ts
 w.add(
   'i32',
   w.local.get('i64', 'a'),
@@ -71,8 +69,7 @@ Wazum will not restrict any user from manipulating the generated tree. You'd be 
 
 Binaryen on the other hand works in a sort of roundabout way. This is what roughly happens there:
 
-```markdown
-ts
+```ts
 // binaryen.js user calls a function:
 i32.local.get(0);
 // binaryen creates a representation for the
@@ -91,8 +88,7 @@ i32.add(123, 456)
 
 In comparison, the functions in wazum simply return the whole representation allowing the user to have maximum control and flexibility.
 
-```markdown
-ts
+```ts
 i32.add(i32.local.get('a'), i32.local.get('b'))
 // becomes:
 {

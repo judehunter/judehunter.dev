@@ -1,9 +1,22 @@
 module.exports = {
-  // webpack: (config, {isServer}) => {
-  //   // Fixes packages that depend on fs/module module
-  //   if (!isServer) {
-  //     config.node = {fs: 'empty', module: 'empty'}
+  // webpack(config, options) {
+  //   config.module.rules.push({
+  //     test: /\.mdx$/,
+  //     use: [
+  //       options.defaultLoaders.babel,
+  //       {
+  //         loader: require.resolve('@mdx-js/loader'),
+  //         options: {
+  //           providerImportSource: '@mdx-js/react',
+  //         },
+  //       },
+  //     ],
+  //   });
+
+  //   if (typeof nextConfig.webpack === 'function') {
+  //     return nextConfig.webpack(config, options);
   //   }
-  //   return config
+
+  //   return config;
   // },
 };

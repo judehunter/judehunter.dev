@@ -27,8 +27,7 @@ The objective was simple -- create something that solved the many gripes I've ha
 
 Here's a snippet of one of those first iterations of queso from 2020:
 
-```markdown
-ts
+```ts
 fn filterSpicySalsas(salsas):
   salsas.filter(salsa: salsa.isSpicy);
 
@@ -60,8 +59,7 @@ For the uninitiated, a typical interpreted programming languages has at least th
 * Lexer -- transforms the source code into a list of tokens. For instance, one could have an `identifier` token for any names, like variables; certain keywords, such as `if`, `true`, `let`; and different tokens for the many operators.
 * Parser -- reads the list of tokens and assembles an **Abstract Syntax Tree** based on a set of precedence and grammar rules. A simple example of a parser is a PEMDAS calculator. The operation `2 + 3 * 4` has to first apply multiplication, and then addition. This would be represented by the following tree:
 
-```javascript
-text
+```text
   +
  / \
 2   *
@@ -71,8 +69,7 @@ text
 
 To then evaluate that tree, we could build a simple tree-walking interpreter like so:
 
-```typescript
-typescript
+```ts
 type Node = {
   type: 'add' | 'mul',
   left: Node,
@@ -96,8 +93,7 @@ const eval = (node: Node) => {
 
 Let's try running that interpreter for our PEMDAS example:
 
-```javascript
-typescript
+```ts
 eval({
   type: 'add',
   left: 2,
@@ -155,8 +151,7 @@ I digress. My growing interest in WebAssembly made me recognize the potential th
 
 Let's look at how queso has changed.
 
-```markdown
-ts
+```ts
 let filterSpicySalsas =
   salsas -> salsas.>filter(salsa -> salsa.isSpicy);
 
@@ -181,15 +176,13 @@ There is no function declarations, it's all just variables and data. I opted for
 
 A new kind of functionality is the dot-pipe operator. In the above snippet, `filter` is not actually a method of List. Rather, it's a function with the signature
 
-```markdown
-ts
+```ts
 <T>(list: List<T>, predicate: (item: T)) -> List<T>
 ```
 
 Traditionally, we could represent that same operation with:
 
-```markdown
-ts
+```ts
 filter(salsas, salsa -> salsa.isSpicy);
 // or with the pipe operator
 salsas |> x -> filter(x, salsa -> salsa.isSpicy);
@@ -199,8 +192,7 @@ Thus, the dot-pipe operator `.>` pipes the left operand into the right operand's
 
 One particular pattern that's ever-present in mainstream programming languages is short lambdas that use the first argument to do some slight transformation. This leads to the programmer having to type that argument's name twice:
 
-```markdown
-ts
+```ts
 // first example
 salsas.>filter( salsa -> salsa.isSpicy )
 
@@ -210,8 +202,7 @@ spicySalsas.>map( x -> x.name );
 
 Notice the salsa `->` salsa part. In queso, this could be expressed as simply as
 
-```markdown
-ts
+```ts
 // first example
 salsas.>filter( _.isSpicy )
 
@@ -241,7 +232,7 @@ An alternative to binaryen.js, with high quality documentation, strong typing *(
 
 The purpose of wazum would be to generate WAT (a textual format of WASM), and then pass it behind the scenes to Binaryen for optimization.
 
-Continue reading about wazum [here](blog/creating-wazum-the-webassembly-compilation-library "Wazum")
+Continue reading about wazum [here](/blog/creating-wazum-the-webassembly-compilation-library "Wazum")
 
 I would tell you more, but I'm afraid we've reached the present time. I can only speculate -
 

@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import {TinaMarkdown} from 'tinacms/dist/rich-text';
 import tw from 'twin.macro';
 import {Footer} from '../Footer';
 import {Logo} from '../Logo';
 import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {nord} from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import {useState, useEffect} from 'react';
 import {format} from 'date-fns';
+import {MDXRemote} from 'next-mdx-remote';
+import Img from 'next/future/image';
 
 // console.log(SyntaxHighlighter.supportedLanguages);
 // SyntaxHighlighter.registerLanguage('js', js);
@@ -67,11 +67,11 @@ const DotPattern = () => {
 };
 
 const CodeBlock = ({lang, code}) => {
-  const [shown, setShown] = useState(process.env.NODE_ENV === 'production');
-
-  useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') setTimeout(() => setShown(true), 1000);
-  }, []);
+  // const [shown, setShown] = useState(process.env.NODE_ENV === 'production');
+  const shown = true;
+  // useEffect(() => {
+  //   if (process.env.NODE_ENV !== 'production') setTimeout(() => setShown(true), 1000);
+  // }, []);
 
   return shown ? (
     <SyntaxHighlighter
@@ -115,13 +115,13 @@ const MDStyle = tw`
       my-3
     )
   )
-  [& pre]:(
-    bg-[#2a3b4c]
-    px-5
-    py-2
-    -ml-5
-    rounded-[8px]
-  )
+  // [& pre > pre]:(
+  //   bg-[#2a3b4c]
+  //   px-5
+  //   py-2
+  //   -ml-5
+  //   rounded-[8px]
+  // )
   [& :not(pre)>code]:(
     bg-[#2a3b4c]
     rounded
@@ -150,7 +150,7 @@ const ContentSection = ({content}) => {
       <DotPattern />
       <div tw="relative px-4 sm:px-6 lg:px-8">
         <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
-          <TinaMarkdown
+          {/* <TinaMarkdown
             components={{
               code_block: (({children}: {children: string}) => {
                 const lang = children.slice(0, children.search(/\r?\n/));
@@ -164,6 +164,20 @@ const ContentSection = ({content}) => {
               ),
             }}
             content={content}
+          /> */}
+          <MDXRemote
+            {...content}
+            components={{
+              pre: ({children}) => <>{children}</>,
+              code: ({className, children}) => {
+                const match = /language-(\w+)/.exec(className || '');
+                return match ? (
+                  <CodeBlock code={children} lang={match[1]} />
+                ) : (
+                  <code className={className} {...{children}} />
+                );
+              },
+            }}
           />
         </div>
       </div>
@@ -171,12 +185,15 @@ const ContentSection = ({content}) => {
   );
 };
 
-export const BlogPage = ({data}) => {
+export const BlogPage = ({source}) => {
   return (
     <>
       <Head>
-        <title>{data.post.title} · Jude Hunter</title>
-        <meta name="keywords" content={[...data.post.tags, ['Jude Hunter, coding, web development']].join(', ')} />
+        <title>{source.frontmatter.title} · Jude Hunter</title>
+        <meta
+          name="keywords"
+          content={[...source.frontmatter.tags, ['Jude Hunter, coding, web development']].join(', ')}
+        />
         <meta name="author" content="Jude Hunter" />
       </Head>
       <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
@@ -191,21 +208,22 @@ export const BlogPage = ({data}) => {
         <div>
           <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px]">
             <aside tw="text-center mb-5 opacity-50">
-              {format(new Date(data.post.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
-              {data.post.tags
+              {format(new Date(source.frontmatter.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
+              {source.frontmatter.tags
                 .slice(0, 3)
                 .map((x) => `#${x}`)
                 .join(' ')}
             </aside>
             <h1 tw="text-3xl text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
-              {data.post.title}
+              {source.frontmatter.title}
             </h1>
           </div>
           <div
             tw="bg-cover bg-center rounded-[8px] max-w-[700px] h-[400px] mx-auto"
-            style={{backgroundImage: `url('${data.post.thumbnail}')`}}
+            style={{backgroundImage: `url('${source.frontmatter.thumbnail}')`}}
           />
-          <ContentSection content={data.post.body}></ContentSection>
+          <Image src={source.frontmatter.thumbnail} layout="intrinsic" width={700} height={400} />
+          <ContentSection content={source}></ContentSection>
         </div>
         <Footer />
       </div>

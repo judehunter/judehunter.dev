@@ -51,8 +51,7 @@ The reason why TypeORM is so interesting is the fact that it uses decorators for
 
 Instead, you define a class and decorate it:
 
-```typescript
-typescript
+```ts
 @Entity()
 class User {
   @PrimaryGeneratedColumn('uuid')
@@ -82,16 +81,15 @@ TypeORM then uses that class to migrate the database and to make IntelliSense su
 
 I came up with a file structure that works well with this particular technology stack:
 
-```markdown
-text
+```text
 src
 ├── entities
-│ └── User.ts
+│   └── User.ts
 ├── modules
-│ └── module-name
-│ ├── module-name.router.ts
-│ ├── module-name.service.ts
-│ └── module-name.spec.ts
+│   └── module-name
+│   ├── module-name.router.ts
+│   ├── module-name.service.ts
+│   └── module-name.spec.ts
 ├── mw
 ├── utils
 └── app.ts

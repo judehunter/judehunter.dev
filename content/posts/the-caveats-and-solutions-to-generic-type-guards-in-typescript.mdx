@@ -20,8 +20,7 @@ The compiler uses guards to narrow down the type of your value and provide Intel
 
 Say we have a given inheritance model:
 
-```markdown
-ts
+```ts
 class Vehicle {
   brand: string;
 }
@@ -39,8 +38,7 @@ We are given a `secretVehicle` object that we know extends `Vehicle` in term
 
 Thus, the `instanceof` approach won't work, since it requires the left operand to be an instance:
 
-```markdown
-ts
+```ts
 if (secretVehicle instanceof Car) {
   console.log(`
     This is a car with ${secretVehicle.drive} drive
@@ -54,8 +52,7 @@ What we can do instead, is check if our `secretVehicle` has all the properties
 
 We do that by either using reflection or by creating an actual instance of that class and looking up its keys with `Object.keys()`:
 
-```markdown
-ts
+```ts
 export const hasAllKeys =
   <T>(obj: Record<string, any>, cls: new () => T)
   : obj is T => {
@@ -69,8 +66,7 @@ export const hasAllKeys =
 
 We can then use the guard to assure TypeScript that the `secretVehicle` is actually of a given type.
 
-```markdown
-ts
+```ts
 if (hasAllKeys(secretVehicle, Car)) {
   console.log(`
     This is a car with ${secretVehicle.drive} drive
@@ -89,8 +85,7 @@ Moreover, sometimes it's simply not what we need. The input data we get is often
 
 To counter that, let's use a guard that checks for specific properties instead of all of them.
 
-```typescript
-ts
+```ts
 export const hasKeys = <T>(
   obj: Record<string, any>,
   properties: (keyof T)[]
@@ -105,8 +100,7 @@ The TypeScript compiler is clever enough to figure out `T` by itself, if we do
 
 For instance, `hasKeys(secretVehicle, \['usage'])` will infer `T` to be of type `{usage: any}` and thus, we will be able to use the `usage` key inside of our if statement.
 
-```javascript
-ts
+```ts
 if (hasKeys(secretVehicle, ['usage'])) {
   console.log(`
     Not sure what this is,
@@ -118,8 +112,7 @@ if (hasKeys(secretVehicle, ['usage'])) {
 Alas, this forces us to operate on values of type `any`.
 We can either pass the the type for that key:
 
-```javascript
-ts
+```ts
 hasKeys<{ usage: 'civil' | 'military'}>(
   secretVehicle,
   ['usage'],
@@ -128,8 +121,7 @@ hasKeys<{ usage: 'civil' | 'military'}>(
 
 Or just simply pass the entire class:
 
-```javascript
-ts
+```ts
 hasKeys < Aircraft > (secretVehicle, ['usage']);
 ```
 
@@ -139,8 +131,7 @@ Still, what if both our subclasses have the same fields, but of different types?
 
 However, we can overcome this problem by specifying a `type` field in our base class to easily differentiate between types.
 
-```javascript
-ts
+```ts
 class Vehicle {
   brand: string;
   type: 'Car' | 'Aircraft';
