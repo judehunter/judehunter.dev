@@ -1,6 +1,6 @@
 ---
-title: The only API stack (and workflow) you should be using.
-createDate: 'Sep 13, 2021'
+title: The only API stack you should be using.
+createDate: '2020-09-12T22:00:00.000Z'
 thumbnail: /media/259-900x500.jpg
 tags:
   - typescript
@@ -52,6 +52,7 @@ The reason why TypeORM is so interesting is the fact that it uses decorators for
 Instead, you define a class and decorate it:
 
 ```typescript
+typescript
 @Entity()
 class User {
   @PrimaryGeneratedColumn('uuid')
@@ -82,6 +83,7 @@ TypeORM then uses that class to migrate the database and to make IntelliSense su
 I came up with a file structure that works well with this particular technology stack:
 
 ```markdown
+text
 src
 ├── entities
 │   └── User.ts
@@ -101,7 +103,7 @@ e2e
 Going from the top:
 
 * The `entities` folder is where you should store your TypeORM entities
-* The `modules` folder holds the different modules of your application (inspired by NestJS). For instance, an `auth` module may have a router that has a `/auth/facebook` route which in turn calls the `authWithFacebook()` function in the service file. It's important the router handles the HTTP stuff, and the service deals with pure data. This way, your unit tests (\`.spec.ts\`) can call the service directly. Additionally, your routes should - most of the time - be prefixed with the module name.
+* The `modules` folder holds the different modules of your application (inspired by NestJS). For instance, an `auth` module may have a router that has a `/auth/facebook` route which in turn calls the `authWithFacebook()` function in the service file. It's important the router handles the HTTP stuff, and the service deals with pure data. This way, your unit tests (`.spec.ts`) can call the service directly. Additionally, your routes should - most of the time - be prefixed with the module name.
 * The `mw` folder is where you should store your custom middleware. You could also use the utils folder for this.
 * The `utils` folder is pretty much every other function that doesn't fit anywhere else.
 * The `e2e` folder stores the end-to-end tests.

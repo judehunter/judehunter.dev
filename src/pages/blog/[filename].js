@@ -1,7 +1,7 @@
 import {useTina} from 'tinacms/dist/edit-state';
 import tw from 'twin.macro';
-import client from '../../../../.tina/__generated__/client';
-import {BlogPage} from '../../../components/BlogPage/BlogPage';
+import client from '../../../.tina/__generated__/client';
+import {BlogPage} from '../../components/BlogPage/BlogPage';
 
 const Page = (props) => {
   const {data} = useTina({
@@ -52,7 +52,3 @@ export const getStaticPaths = async () => {
 };
 
 export default Page;
-
-const components = {
-  // PageSection: PageSection,
-};

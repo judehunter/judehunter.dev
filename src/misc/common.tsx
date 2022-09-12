@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useEffect, useLayoutEffect, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useLayoutEffect, useState, createContext, useContext} from 'react';
 
 export const useMergeState = <T extends Record<string, any>>(init: T) => {
   const [state, setState] = useState(init);
@@ -29,3 +29,6 @@ export const log = (val) => {
   console.log(val);
   return val;
 };
+
+export const PagePropsContext = createContext<any>(null);
+export const usePageProps = <T extends (...any: any) => any>(): Parameters<T>[0] => useContext(PagePropsContext);

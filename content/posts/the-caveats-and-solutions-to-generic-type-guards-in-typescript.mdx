@@ -1,0 +1,167 @@
+---
+title: The caveats (and solutions) to generic type guards in TypeScript.
+createDate: '2020-09-08T22:00:00.000Z'
+thumbnail: /media/134-700x400.jpg
+tags:
+  - typescript
+  - generics
+  - advanced
+  - types
+  - type guards
+  - nodejs
+  - learning
+---
+
+When dealing with user data - especially in APIs - and inheritance, it's often difficult to generalize your code and follow the DRY principle.
+
+The TypeScript language uses a concept called **type guards** 🛡️ - a clever compiler feature that will help you write safer code and deal with that angry and complaining compiler.
+
+The compiler uses guards to narrow down the type of your value and provide IntelliSense suggestions.
+
+Say we have a given inheritance model:
+
+```javascript
+ts
+class Vehicle {
+  brand: string;
+}
+
+class Aircraft extends Vehicle {
+  usage: 'civil' | 'military';
+}
+
+class Car extends Vehicle {
+  drive: 'AWD' | 'FWD' | 'RWD';
+}
+```
+
+We are given a `secretVehicle` object that we know extends `Vehicle` in terms of the properties it has. However, the object is not an instance of any of these classes.
+
+Thus, the `instanceof` approach won't work, since it requires the left operand to be an instance:
+
+```javascript
+ts
+if (secretVehicle instanceof Car) {
+  console.log(`
+    This is a car with ${secretVehicle.drive} drive
+  `);
+  // TypeScript doesn't complain,
+  // but this will never print!
+}
+```
+
+What we can do instead, is check if our `secretVehicle` has all the properties of our subclasses.
+
+We do that by either using reflection or by creating an actual instance of that class and looking up its keys with `Object.keys()`:
+
+```typescript
+ts
+export const hasAllKeys =
+  <T>(obj: Record<string, any>, cls: new () => T):
+  obj is T => {
+    const properties = Object.keys(new cls());
+    for (const p of properties) {
+      if (!(p in obj)) return false;
+    }
+    return true;
+  };
+```
+
+We can then use the guard to assure TypeScript that the `secretVehicle` is actually of a given type.
+
+```javascript
+ts
+if (hasAllKeys(secretVehicle, Car)) {
+  console.log(`
+    This is a car with ${secretVehicle.drive} drive
+  `);
+}
+if (hasAllKeys(secretVehicle, Aircraft)) {
+  console.log(`
+    This is a ${secretVehicle.usage} aircraft
+  `);
+}
+```
+
+However, in some edge cases this solution is problematic. It may incorrectly check the properties when used with a class that has a custom constructor.
+
+Moreover, sometimes it's simply not what we need. The input data we get is often just a `Partial<T>` instead of a `T`, meaning some properties might be missing (e.g. the `id`).
+
+To counter that, let's use a guard that checks for specific properties instead of all of them.
+
+```typescript
+ts
+export const hasKeys =
+  <T>(
+    obj: Record<string, any>,
+    properties: (keyof T)[]
+  ): obj is T =>
+    properties
+      .filter(p => p in obj)
+      .length == properties.length;
+    // functional approach
+```
+
+The TypeScript compiler is clever enough to figure out `T` by itself, if we don't want to specify it.
+
+For instance, `hasKeys(secretVehicle, \['usage'])` will infer `T` to be of type `{usage: any}` and thus, we will be able to use the `usage` key inside of our if statement.
+
+```javascript
+ts
+if (hasKeys(secretVehicle, ['usage'])) {
+  console.log(`
+    Not sure what this is,
+    but it has a ${secretVehicle.usage} usage!
+  `);
+}
+```
+
+Alas, this forces us to operate on values of type `any`.
+We can either pass the the type for that key:
+
+```javascript
+ts
+hasKeys<{ usage: 'civil' | 'military'}>(
+  secretVehicle,
+  ['usage'],
+);
+```
+
+Or just simply pass the entire class:
+
+```javascript
+ts
+hasKeys<Aircraft>(secretVehicle, ['usage']);
+```
+
+*This will also give us IntelliSense suggestions when defining the keys!*
+
+Still, what if both our subclasses have the same fields, but of different types? The issue gets more complicated and may require the usage of reflection.
+
+However, we can overcome this problem by specifying a `type` field in our base class to easily differentiate between types.
+
+```javascript
+ts
+class Vehicle {
+  brand: string;
+  type: 'Car' | 'Aircraft';
+}
+
+const ofType =
+  <T>(
+    obj: Record<string, any> & {type ?: string},
+    cls: new () => T
+  ): obj is T =>
+    obj.type == (new cls()).constructor.name;
+    // or use another argument for the type field
+
+    if (ofType(secretVehicle, Car)) {
+      console.log(`
+        This is a car with ${secretVehicle.drive} drive
+      `);
+}
+```
+
+TypeScript is a powerful language and using these constructs can help you use it to its full potential.
+
+Happy coding! 🎉

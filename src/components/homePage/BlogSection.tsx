@@ -1,9 +1,12 @@
 import {motion} from 'framer-motion';
+import Link from 'next/link';
 import {ReactNode} from 'react';
 import tw, {css} from 'twin.macro';
+import {usePageProps} from '../../misc/common';
+import IndexPage from '../../pages';
 import {ScrollInterpolationPullUp} from './misc';
 
-const _BlogEntryCard = ({title, tags}: {title: string; tags?: string[]}) => {
+const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
   return (
     <ScrollInterpolationPullUp length={250}>
       <motion.div
@@ -35,73 +38,104 @@ const _BlogEntryCard = ({title, tags}: {title: string; tags?: string[]}) => {
   );
 };
 
-const BlogEntryCard = ({title, image, tags, ...rest}: {title: string; tags: string[]; image: string}) => {
+const BlogEntryCard = ({
+  title,
+  image,
+  tags,
+  url,
+  ...rest
+}: {
+  title: string;
+  tags: string[];
+  image: string;
+  url: string;
+}) => {
   return (
-    <div tw="flex flex-col text-white cursor-pointer" {...rest} className={`${(rest as any).className ?? ''} group`}>
-      <div tw="flex items-end flex-grow">
-        <div tw="">
-          <h1
-            tw="
-              font-semibold text-xl
-              font-variation-settings['slnt' 0]
-              group-hover:(
-                font-variation-settings['slnt' -10]
-                text-[#7FEC9D]
-              )
-              transition-all
-              transition-duration[200ms]
-            "
-          >
-            {title}
-          </h1>
-          <h2 tw="mt-[10px] opacity-50">{tags.map((x) => `#${x}`).join(' ')}</h2>
+    <Link passHref href={url}>
+      <a tw="flex flex-col text-white cursor-pointer" {...rest} className={`${(rest as any).className ?? ''} group`}>
+        <div tw="flex items-end flex-grow">
+          <div tw="">
+            <h1
+              tw="
+                font-semibold text-xl
+                font-variation-settings['slnt' 0]
+                group-hover:(
+                  font-variation-settings['slnt' -10]
+                  text-[#7FEC9D]
+                )
+                transition-all
+                transition-duration[200ms]
+              "
+            >
+              {title}
+            </h1>
+            <h2 tw="mt-[10px] opacity-50">
+              {tags
+                .slice(0, 3)
+                .map((x) => `#${x}`)
+                .join(' ')}
+            </h2>
+          </div>
         </div>
-      </div>
-      <div tw="mt-[15px] relative">
-        <img tw="rounded-[8px] w-full" src={image} />
-        <div
-          tw="
-            absolute left-0 top-0 right-0 bottom-0
-            border-[3px] border-color[#7FEC9D] rounded-[14px]
-            opacity-0
-            transition-all
-            group-hover:(
-              opacity-100
-              left-[-6px]
-              top-[-6px]
-              right-[-6px]
-              bottom-[-6px]
-            )
-          "
-        ></div>
-      </div>
-    </div>
+        <div tw="mt-[15px] relative">
+          <div
+            tw="bg-center bg-cover w-full aspect-ratio[3 / 4] rounded-[8px]"
+            style={{backgroundImage: `url('${image}')`}}
+          />
+          {/* <img tw="rounded-[8px] w-full" src={image} /> */}
+          <div
+            tw="
+              absolute left-0 top-0 right-0 bottom-0
+              border-[3px] border-color[#7FEC9D] rounded-[14px]
+              opacity-0
+              transition-all
+              group-hover:(
+                opacity-100
+                left-[-6px]
+                top-[-6px]
+                right-[-6px]
+                bottom-[-6px]
+              )
+            "
+          ></div>
+        </div>
+      </a>
+    </Link>
   );
 };
 
 const BlogEntries = () => {
-  const entries = [
-    {
-      title: 'Wazum, a WebAssembly compiler architecture library',
-      image: 'https://picsum.photos/seed/2/300/400',
-      tags: ['wasm'],
-    },
-    {
-      title: 'The inception of the Queso programming language',
-      image: 'https://picsum.photos/seed/1/300/400',
-      tags: ['javascript', 'typescript', 'wasm'],
-    },
-    {
-      title: 'The only API stack you should be using',
-      image: 'https://picsum.photos/seed/3/300/400',
-      tags: ['javascript'],
-    },
-    {
-      title: 'The only API stack you should be using',
-      image: 'https://picsum.photos/seed/9/300/400',
-      tags: ['typescript'],
-    },
-  ];
+  // const entries2 = [
+  //   {
+  //     title: 'Wazum, a WebAssembly compiler architecture library',
+  //     image: 'https://picsum.photos/seed/2/300/400',
+  //     tags: ['wasm'],
+  //   },
+  //   {
+  //     title: 'The inception of the Queso programming language',
+  //     image: 'https://picsum.photos/seed/1/300/400',
+  //     tags: ['javascript', 'typescript', 'wasm'],
+  //   },
+  //   {
+  //     title: 'The only API stack you should be using',
+  //     image: 'https://picsum.photos/seed/3/300/400',
+  //     tags: ['javascript'],
+  //   },
+  //   {
+  //     title: 'The only API stack you should be using',
+  //     image: 'https://picsum.photos/seed/9/300/400',
+  //     tags: ['typescript'],
+  //   },
+  // ];
+  let entries = usePageProps<typeof IndexPage>()
+    .posts.slice(0, 4)
+    .map((x) => ({
+      title: x.title!,
+      image: x.thumbnail!,
+      tags: x.tags!.map((x) => x!),
+      url: `/blog/${x._sys.filename}`,
+    }));
+  entries = [...entries, ...entries, ...entries, ...entries];
   return (
     // <div tw="flex space-x-[40px] height[400px] padding-right[20px] margin-top[-58px] overflow-hidden">
     <div>
@@ -120,17 +154,17 @@ const BlogEntries = () => {
         {entries.slice(0, 4).map((x, i) => (
           <BlogEntryCard
             tw="
-            width[100%]
-            [@media (min-width: 600px)]:(
-              width[50%]
-            )
-            [@media (min-width: 800px)]:(
-              width[29%]
-            )
-            [@media (min-width: 1160px)]:(
-              width[min(23%, 300px)]
-            )
-          "
+              width[100%]
+              [@media (min-width: 600px)]:(
+                width[50%]
+              )
+              [@media (min-width: 800px)]:(
+                width[29%]
+              )
+              [@media (min-width: 1160px)]:(
+                width[min(23%, 300px)]
+              )
+            "
             css={[
               i === 2 &&
                 css`

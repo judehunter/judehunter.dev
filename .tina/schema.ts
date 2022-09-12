@@ -34,9 +34,14 @@ const schema = defineSchema({
           name: 'title',
         },
         {
-          type: 'string',
+          type: 'datetime',
           label: 'Create Date',
           name: 'createDate',
+        },
+        {
+          type: 'datetime',
+          label: 'Update Date',
+          name: 'updateDate',
         },
         {
           type: 'image',
@@ -55,22 +60,6 @@ const schema = defineSchema({
           name: 'body',
           isBody: true,
           templates: [
-            {
-              name: "CodeBlock",
-              label: "Code Block",
-              fields:[
-                {
-                  name: "lang",
-                  label: "Language",
-                  type: "string",
-                },
-                {
-                  name: "code",
-                  label: "Code",
-                  type: "string",
-                },
-              ]
-            },
           ],
         },
       ],
