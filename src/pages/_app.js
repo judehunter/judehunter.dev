@@ -5,12 +5,10 @@ import {useGAPageView} from '../misc/gtag';
 const App = ({Component, pageProps}) => {
   useGAPageView();
   return (
-    // <OptTina>
     <div>
       <GlobalStyles />
       <Component {...pageProps} />
     </div>
-    // </OptTina>
   );
 };
 

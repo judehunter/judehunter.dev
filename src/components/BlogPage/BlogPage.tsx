@@ -70,7 +70,13 @@ const CodeBlock = ({lang, code}) => {
     <SyntaxHighlighter
       language={lang}
       style={nord}
-      customStyle={{marginLeft: '-25px', marginRight: '-25px', paddingLeft: '25px', paddingRight: '25px'}}
+      customStyle={{
+        marginLeft: '-25px',
+        marginRight: '-25px',
+        paddingLeft: '25px',
+        paddingRight: '25px',
+        // fontFamily: 'Fira Code',
+      }}
     >
       {code}
     </SyntaxHighlighter>

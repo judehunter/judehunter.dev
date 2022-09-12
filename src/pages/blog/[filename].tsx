@@ -1,13 +1,24 @@
-import tw from 'twin.macro';
+import tw, {css} from 'twin.macro';
 // import client from '../../../.tina/__generated__/client';
 import {BlogPage} from '../../components/BlogPage/BlogPage';
 import {serialize} from 'next-mdx-remote/serialize';
 import {readdir, readFile} from 'fs/promises';
 import path from 'path';
+import {Global} from '@emotion/react';
 
 const BlogPageExport = ({source}) => {
   return (
     <>
+      <Global
+        styles={css`
+          @font-face {
+            font-family: 'Fira Code';
+            src: url('/FiraCode-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+          }
+        `}
+      />
       <BlogPage {...{source}} />
     </>
   );

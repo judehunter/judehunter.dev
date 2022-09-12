@@ -13,12 +13,11 @@ export default class MyDocument extends Doc {
     return (
       <Html lang="en">
         <Head>
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          {/* <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap"
             rel="stylesheet"
-          />
-          <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+          /> */}
           <style data-emotion-css={this.props.ids.join(' ')} dangerouslySetInnerHTML={{__html: this.props.css}} />
           {process.env.NODE_ENV === 'production' && (
             <>

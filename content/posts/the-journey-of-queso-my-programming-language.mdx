@@ -174,10 +174,12 @@ log(
 
 There is no function declarations, it's all just variables and data. I opted for the more common `->` operator for lambdas, especially since `:` was too restrictive in terms of parsing. Object literals now use the standard `{}` braces, instead of the unusual `#[]`. All strings are multiline and interpolated. Immutability by default.
 
+Blocks (scopes) are denoted by `()`, as groupings in queso can not only group operations, but also lists of expression statements. The value of the last expression will be returned from the block.
+
 A new kind of functionality is the dot-pipe operator. In the above snippet, `filter` is not actually a method of List. Rather, it's a function with the signature
 
 ```ts
-<T>(list: List<T>, predicate: (item: T)) -> List<T>
+<T>(list: List<T>, predicate: (item: T) -> bool) -> List<T>
 ```
 
 Traditionally, we could represent that same operation with:
@@ -200,7 +202,7 @@ salsas.>filter( salsa -> salsa.isSpicy )
 spicySalsas.>map( x -> x.name );
 ```
 
-Notice the salsa `->` salsa part. In queso, this could be expressed as simply as
+Notice the `salsa -> salsa` part. In queso, this could be expressed as simply as
 
 ```ts
 // first example
