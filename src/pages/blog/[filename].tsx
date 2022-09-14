@@ -51,7 +51,7 @@ export const getStaticProps = async ({params}) => {
           visit(tree, (node) => {
             if (node.type === 'text') {
               console.log(node);
-              node.value = (node.value as string).replaceAll('---', '—').replaceAll('--', '–');
+              node.value = (node.value as string).replace(/---/g, '—').replace(/--/g, '–');
             }
           });
         },
