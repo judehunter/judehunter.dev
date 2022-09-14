@@ -24,6 +24,7 @@ const IndexPage = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) =
           name="keywords"
           content="Jude Hunter, developer, frontend, web development, portfolio, coding, programming, professional"
         />
+        <meta property="og:type" content="website" />
       </Head>
       <PagePropsContext.Provider value={props}>
         <HomePage />

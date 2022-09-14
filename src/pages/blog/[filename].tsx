@@ -14,9 +14,11 @@ const getUrl = () =>
     ? typeof window === 'undefined'
       ? 'http://localhost:3000'
       : `http://${window.location.host}`
-    : `https://${process.env.VERCEL_URL}`;
+    : typeof window === 'undefined'
+    ? `https://${process.env.VERCEL_URL}`
+    : `http://${window.location.host}`;
 
-const BlogPageExport = ({source}) => {
+const BlogPageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
   const router = useRouter();
   const {filename} = router.query;
 
@@ -35,9 +37,19 @@ const BlogPageExport = ({source}) => {
         `}
       />
       <Head>
+        <title>{source.frontmatter!.title} · Jude Hunter</title>
+        <meta property="og:title" content={`${source.frontmatter!.title} · Jude Hunter`} />
+        <meta name="description" content={source.frontmatter!.description} />
+        <meta property="og:description" content={source.frontmatter!.description} />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:secure_url" content={ogImageUrl} />
         <meta name="twitter:image:src" content={ogImageUrl} />
+        <meta property="og:type" content="article" />
+        <meta
+          name="keywords"
+          content={[...source.frontmatter!.tags, ['Jude Hunter', 'coding', 'web development']].join(', ')}
+        />
+        <meta name="author" content="Jude Hunter" />
       </Head>
       <BlogPage {...{source}} />
     </>

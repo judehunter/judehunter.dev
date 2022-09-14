@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Link from 'next/link';
 import tw from 'twin.macro';
 import {Footer} from '../Footer';
@@ -197,14 +196,6 @@ const ContentSection = ({content}) => {
 export const BlogPage = ({source}) => {
   return (
     <>
-      <Head>
-        <title>{source.frontmatter.title} · Jude Hunter</title>
-        <meta
-          name="keywords"
-          content={[...source.frontmatter.tags, ['Jude Hunter, coding, web development']].join(', ')}
-        />
-        <meta name="author" content="Jude Hunter" />
-      </Head>
       <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
         <div tw="pt-24 flex justify-center">
           <Link href="/" passHref>
