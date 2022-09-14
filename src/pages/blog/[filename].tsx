@@ -45,6 +45,7 @@ const BlogPageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['pr
         <meta property="og:image:secure_url" content={ogImageUrl} />
         <meta name="twitter:image:src" content={ogImageUrl} />
         <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="keywords"
           content={[...source.frontmatter!.tags, ['Jude Hunter', 'coding', 'web development']].join(', ')}
