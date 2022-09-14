@@ -10,7 +10,6 @@ export default {
   changefreq: 'weekly',
   priority: 0.5,
   transform: async (config, p) => {
-    console.log(p);
     if (p === '/')
       return {
         loc: p,

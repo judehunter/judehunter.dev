@@ -48,6 +48,7 @@ export const getStaticProps = async ({params}) => {
     mdxOptions: {
       remarkPlugins: [
         () => (tree) => {
+          console.log(tree);
           visit(tree, (node) => {
             if (node.type === 'text') {
               node.value = (node.value as string).replaceAll('---', '—').replaceAll('--', '–');
