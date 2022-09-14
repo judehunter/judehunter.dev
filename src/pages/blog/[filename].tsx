@@ -9,13 +9,18 @@ import {visit} from 'unist-util-visit';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 
-const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://judehunter.dev';
+const getUrl = () =>
+  process.env.NODE_ENV === 'development'
+    ? typeof window === 'undefined'
+      ? 'http://localhost:3000'
+      : `http://${window.location.host}`
+    : `https://${process.env.VERCEL_URL}`;
 
 const BlogPageExport = ({source}) => {
   const router = useRouter();
   const {filename} = router.query;
 
-  const ogImageUrl = `${baseUrl}/ogimages/${filename}.png`;
+  const ogImageUrl = `${getUrl()}/ogimages/${filename}.png`;
 
   return (
     <>

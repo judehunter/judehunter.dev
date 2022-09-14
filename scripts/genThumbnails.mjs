@@ -47,17 +47,17 @@ import path, {resolve} from 'path';
       });
 
       // set screenshot parameters
-      // let screenshotParameters = {
-      //   type: 'jpeg',
-      //   quality: 100,
-      //   omitBackground: true,
-      //   clip: {
-      //     x: 0,
-      //     y: 0,
-      //     width: viewport.width,
-      //     height: viewport.height,
-      //   },
-      // };
+      let screenshotParameters = {
+        type: 'jpeg',
+        quality: 100,
+        omitBackground: true,
+        clip: {
+          x: 0,
+          y: 0,
+          width: viewport.width,
+          height: viewport.height,
+        },
+      };
 
       let image1El = await page.$('#image1');
       await image1El.evaluate(
@@ -72,15 +72,12 @@ import path, {resolve} from 'path';
       let titleEl = await page.$('#title');
       await titleEl.evaluate((el, title) => (el.textContent = title), mdxSource.frontmatter.title);
       // Capture the screenshot
-      const buffer = await page.screenshot(
-        {},
-        {
-          type: 'png',
-          clip: {width: 1200, height: 630},
-          encoding: 'base64',
-        },
-      );
-      await writeFile('public/ogimages/' + p + '.png', buffer, 'base64');
+      const buffer = await page.screenshot(screenshotParameters, {
+        type: 'png',
+        clip: {width: 1200, height: 630},
+        encoding: 'base64',
+      });
+      await writeFile('public/ogimages/' + p.slice(0, -4) + '.png', buffer, 'base64');
     } catch (e) {
       throw e;
     } finally {
