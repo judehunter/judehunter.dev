@@ -223,19 +223,20 @@ const WorkSectionItem = ({item}: {item: WorkItem}) => {
 export const WorkSection = () => {
   return (
     <div tw="text-white mt-[-80px] pt-[80px]" id="work">
-      <div tw="relative max-width[1200px] mx-auto px-12 box-sizing[content-box] padding-top[100px]">
-        <div tw="flex items-start">
+      <div tw="relative max-width[1000px] mx-auto px-12 box-sizing[content-box] padding-top[100px]">
+        <h1 tw="mb-[50px] text-center font-semibold text-4xl">professional experience</h1>
+        {/* <div tw="flex items-start">
           <div tw="sticky top-[150px] height[200px] width[60px] flex-shrink-0 hidden md:block">
             <h1 tw="transform[translateX(-85px) translateY(80px) rotate(-90deg)] text-4xl font-semibold absolute left-0 top-0">
               experience
             </h1>
-          </div>
-          <div tw="flex-grow space-y-[40px]">
-            {workItems.map((x, i) => (
-              <WorkSectionItem item={x} key={i} />
-            ))}
-          </div>
+          </div> */}
+        <div tw="flex-grow space-y-[40px]">
+          {workItems.map((x, i) => (
+            <WorkSectionItem item={x} key={i} />
+          ))}
         </div>
+        {/* </div> */}
       </div>
     </div>
   );

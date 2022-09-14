@@ -56,8 +56,8 @@ Like many amateur *language hackers*, I started by reading the famous [Crafting 
 
 For the uninitiated, a typical interpreted programming languages has at least these stages in the pipeline. **Feel free to skip below if you're already familiar with this.**
 
-* Lexer -- transforms the source code into a list of tokens. For instance, one could have an `identifier` token for any names, like variables; certain keywords, such as `if`, `true`, `let`; and different tokens for the many operators.
-* Parser -- reads the list of tokens and assembles an **Abstract Syntax Tree** based on a set of precedence and grammar rules. A simple example of a parser is a PEMDAS calculator. The operation `2 + 3 * 4` has to first apply multiplication, and then addition. This would be represented by the following tree:
+* Lexer --- transforms the source code into a list of tokens. For instance, one could have an `identifier` token for any names, like variables; certain keywords, such as `if`, `true`, `let`; and different tokens for the many operators.
+* Parser --- reads the list of tokens and assembles an **Abstract Syntax Tree** based on a set of precedence and grammar rules. A simple example of a parser is a PEMDAS calculator. The operation `2 + 3 * 4` has to first apply multiplication, and then addition. This would be represented by the following tree:
 
 ```text
   +
@@ -106,18 +106,18 @@ eval({
 // returns 14
 ```
 
-* Compiler -- turns that **AST** into some target representation that can be evaluated in a performant way. For compiled languages, like C, this would be `assembly`. For interpreted languages, this could be bytecode.
-* VM -- in the case of interpreted languages, the VM acts as an artificial processor. It reads bytecode instructions just as a processor reads machine code. It might also have a stack and a heap.
+* Compiler --- turns that **AST** into some target representation that can be evaluated in a performant way. For compiled languages, like C, this would be `assembly`. For interpreted languages, this could be bytecode.
+* VM --- in the case of interpreted languages, the VM acts as an artificial processor. It reads bytecode instructions just as a processor reads machine code. It might also have a stack and a heap.
 
-## Queso Mk. 1, a tree-walking interpreter
+## Queso Mk. 1 --- a tree-walking interpreter
 
 The first part of the book goes through building a tree-walking interpreter written in Java. I followed along with C# instead, because I knew that the need to translate the concept into a different language would accelerate my learning. And also because Java is... Java.
 
 In no time, I had a working prototype of queso. And by prototype, I really do mean prototype. If memory serves, I was able to program such things as the Fibonacci sequence, and it even had a **REPL**. The performance was quite disappointing, which was to be expected from a tree-walking interpreter.
 
-The next step was obvious -
+The next step was obvious --
 
-## Queso Mk. 2, a bytecode interpreter
+## Queso Mk. 2 --- a bytecode interpreter
 
 Part two of the book jumps deep into C territory. Once again, I chose a different language -- to kill two birds with one stone, I decided to learn Rust, as I already had some prior knowledge about low-level programming.
 
@@ -131,9 +131,9 @@ My final high school exams were coming up, and we were sent home as the pandemic
 
 I wouldn't come back to queso for well over two years, when I had a spark of inspiration. Queso would be transformed both in its design and implementation. An idea for something novel, something interesting yet again.
 
-Say hi to -
+Say hi to --
 
-## Queso Mk. 3, a WebAssembly compiler
+## Queso Mk. 3 --- a WebAssembly compiler
 
 A lot has happened in the meantime. We took a gap year, and started studying. Fast forward to now, roughly one year after the move is when I had the realization queso could become something more than an experiment.
 
@@ -223,7 +223,7 @@ For a more in-depth overview of the language, see the latest [readme file](https
 
 To aide in development speed, I decided to (re)implement the whole language in TypeScript. This felt good considering that WebAssembly is already tied to the JavaScript ecosystem. The compiler could even be used as a JS library.
 
-I began researching WebAssembly. To my despair, the quality of the documentation was - to put it lightly - suboptimal. That is, if I could even find any documentation. The main reference that exists is the [WebAssembly specification](https://webassembly.github.io/spec/core/ "WebAssembly specification"), which is likely too formal for many.
+I began researching WebAssembly. To my despair, the quality of the documentation was -- to put it lightly -- suboptimal. That is, if I could even find any documentation. The main reference that exists is the [WebAssembly specification](https://webassembly.github.io/spec/core/ "WebAssembly specification"), which is likely too formal for many.
 
 All this came as a big surprise, coming from web development, which is an area often characterized by exceptional quality of documentation. I had to do a lot of manual experimentation to figure out how everything worked.
 
@@ -239,7 +239,7 @@ The purpose of wazum would be to generate WAT (a textual format of WASM), and th
 
 Continue reading about wazum [here](/blog/creating-wazum-the-webassembly-compilation-library "Wazum")
 
-I would tell you more, but I'm afraid we've reached the present time. I can only speculate -
+I would tell you more, but I'm afraid we've reached the present time. I can only speculate --
 
 ## What's next?
 

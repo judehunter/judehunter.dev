@@ -10,6 +10,7 @@ import {MDXRemote} from 'next-mdx-remote';
 import Img from 'next/future/image';
 import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
 import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
+import {YouveReached} from './YouveReached';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -231,6 +232,8 @@ export const BlogPage = ({source}) => {
           </div>
           <ContentSection content={source}></ContentSection>
         </div>
+
+        <YouveReached />
         <Footer />
       </div>
     </>

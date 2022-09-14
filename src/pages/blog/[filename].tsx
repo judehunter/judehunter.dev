@@ -5,6 +5,7 @@ import {serialize} from 'next-mdx-remote/serialize';
 import {readdir, readFile} from 'fs/promises';
 import path from 'path';
 import {Global} from '@emotion/react';
+import {visit} from 'unist-util-visit';
 
 const BlogPageExport = ({source}) => {
   return (
@@ -29,7 +30,18 @@ export const getStaticProps = async ({params}) => {
 
   const mdxSource = await serialize(file, {
     parseFrontmatter: true,
-    mdxOptions: {},
+    mdxOptions: {
+      remarkPlugins: [
+        () => (tree) => {
+          visit(tree, (node) => {
+            if (node.type === 'text') {
+              node.value = (node.value as string).replaceAll('---', '—').replaceAll('--', '–');
+            }
+            // console.log(node.type);
+          });
+        },
+      ],
+    },
   });
   return {props: {source: mdxSource}};
 };

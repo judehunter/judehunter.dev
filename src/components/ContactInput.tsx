@@ -5,9 +5,11 @@ import {Button} from './Button';
 export const ContactInput = ({...rest}) => {
   const [email, setEmail] = useState('');
   const [justSubmitted, setJustSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
   const submit = async (e) => {
     e.preventDefault();
     if (!email.trim().length) return;
+    setSending(true);
     await fetch('/api/getInContact', {
       method: 'POST',
       headers: {
@@ -17,7 +19,11 @@ export const ContactInput = ({...rest}) => {
       body: JSON.stringify({email}),
     });
     setJustSubmitted(true);
-    setTimeout(() => setJustSubmitted(false), 3000);
+    setSending(false);
+    setTimeout(() => {
+      setJustSubmitted(false);
+      setEmail('');
+    }, 3000);
   };
 
   return (
@@ -43,7 +49,7 @@ export const ContactInput = ({...rest}) => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <Button tw="flex-shrink-0 margin[-2px]" {...({type: 'submit'} as any)}>
+        <Button tw="flex-shrink-0 margin[-2px]" {...({type: 'submit'} as any)} css={sending && tw`pointer-events-none`}>
           Get in contact
         </Button>
       </form>
@@ -54,6 +60,7 @@ export const ContactInput = ({...rest}) => {
       >
         Thank you! I will get in contact with you soon.
       </div>
+      {sending}
     </div>
   );
 };

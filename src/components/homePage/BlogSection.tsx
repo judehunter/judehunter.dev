@@ -1,5 +1,5 @@
 import {motion} from 'framer-motion';
-import Img from 'next/future/image';
+import Img from 'next/image';
 import Link from 'next/link';
 import {ReactNode} from 'react';
 import tw, {css} from 'twin.macro';
@@ -44,11 +44,13 @@ const BlogEntryCard = ({
   image,
   tags,
   url,
+  imageBlur,
   ...rest
 }: {
   title: string;
   tags: string[];
   image: string;
+  imageBlur: string;
   url: string;
 }) => {
   return (
@@ -84,7 +86,15 @@ const BlogEntryCard = ({
             style={{backgroundImage: `url('${image}')`}}
           /> */}
           <div tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]" style={{backgroundImage: `url('${image}')`}}>
-            <Img src={image} alt={title} fill tw="rounded-[8px] object-fit[cover]" />
+            <Img
+              src={image}
+              alt={title}
+              layout="fill"
+              tw="transition-all rounded-[8px] object-fit[cover]"
+              placeholder="blur"
+              blurDataURL={imageBlur}
+              priority
+            />
           </div>
           {/* <img tw="rounded-[8px] w-full" src={image} /> */}
           <div
@@ -140,6 +150,7 @@ const BlogEntries = () => {
       image: x.frontmatter!.thumbnail,
       tags: (x.frontmatter!.tags as any as string[]).map((x) => x!),
       url: x.url,
+      imageBlur: x.thumbnailBlurDataUrl,
     }));
   return (
     // <div tw="flex space-x-[40px] height[400px] padding-right[20px] margin-top[-58px] overflow-hidden">

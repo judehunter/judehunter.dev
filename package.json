@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap --config next-sitemap.config.mjs",
     "start": "next start"
   },
   "dependencies": {
@@ -19,10 +20,14 @@
     "framer-motion": "^6.2.3",
     "next": "^12.3.0",
     "next-mdx-remote": "^4.1.0",
+    "next-sitemap": "^3.1.22",
     "node-telegram-bot-api": "^0.59.0",
+    "plaiceholder": "^2.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^15.5.0",
+    "sharp": "^0.31.0",
+    "unist-util-visit": "^4.1.1"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.7.2",
@@ -43,6 +48,7 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "esm": "^3.2.25",
     "prettier": "^2.5.1",
     "tailwindcss": "^3.0.18",
     "twin.macro": "^2.8.2",

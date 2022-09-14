@@ -12,11 +12,9 @@ module.exports = {
   //       },
   //     ],
   //   });
-
   //   if (typeof nextConfig.webpack === 'function') {
   //     return nextConfig.webpack(config, options);
   //   }
-
   //   return config;
   // },
 };

@@ -2,6 +2,7 @@ import {readdir, readFile} from 'fs/promises';
 import {serialize} from 'next-mdx-remote/serialize';
 import Head from 'next/head';
 import path from 'path';
+import {getPlaiceholder} from 'plaiceholder';
 import tw from 'twin.macro';
 import {HomePage} from '../components/homePage/HomePage';
 import {PagePropsContext} from '../misc/common';
@@ -34,13 +35,18 @@ export const getStaticProps = async () => {
   // const posts = await client.queries.postConnection({sort: 'createDate'});
   const filesString = await readdir(path.join('content', 'posts/'));
   const posts = await Promise.all(
-    filesString.map(async (x) => ({
-      ...(await serialize(await readFile(path.join('content', 'posts/', x), 'utf-8'), {
+    filesString.map(async (x) => {
+      const mdxData = await serialize(await readFile(path.join('content', 'posts/', x), 'utf-8'), {
         parseFrontmatter: true,
         mdxOptions: {},
-      })),
-      url: '/blog/' + x.replace('.mdx', ''),
-    })),
+      });
+      const {base64: thumbnailBlurDataUrl} = await getPlaiceholder(mdxData.frontmatter!.thumbnail, {size: 4});
+      return {
+        ...mdxData,
+        thumbnailBlurDataUrl,
+        url: '/blog/' + x.replace('.mdx', ''),
+      };
+    }),
   );
   return {props: {posts}};
 };
