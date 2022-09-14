@@ -2,12 +2,22 @@ import tw, {css} from 'twin.macro';
 // import client from '../../../.tina/__generated__/client';
 import {BlogPage} from '../../components/BlogPage/BlogPage';
 import {serialize} from 'next-mdx-remote/serialize';
-import {readdir, readFile} from 'fs/promises';
-import path from 'path';
+import {readdir, readFile, writeFile} from 'fs/promises';
+import path, {resolve} from 'path';
 import {Global} from '@emotion/react';
 import {visit} from 'unist-util-visit';
+import chromium from 'chrome-aws-lambda';
+import Head from 'next/head';
+import {useRouter} from 'next/router';
+
+const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://judehunter.dev';
 
 const BlogPageExport = ({source}) => {
+  const router = useRouter();
+  const {filename} = router.query;
+
+  const ogImageUrl = `${baseUrl}/ogimages/${filename}.png`;
+
   return (
     <>
       <Global
@@ -20,6 +30,11 @@ const BlogPageExport = ({source}) => {
           }
         `}
       />
+      <Head>
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:secure_url" content={ogImageUrl} />
+        <meta name="twitter:image:src" content={ogImageUrl} />
+      </Head>
       <BlogPage {...{source}} />
     </>
   );
@@ -37,12 +52,71 @@ export const getStaticProps = async ({params}) => {
             if (node.type === 'text') {
               node.value = (node.value as string).replaceAll('---', '—').replaceAll('--', '–');
             }
-            // console.log(node.type);
           });
         },
       ],
     },
   });
+
+  let browser = null as any;
+
+  try {
+    browser = await chromium.puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: true,
+      ignoreHTTPSErrors: true,
+    });
+
+    // set viewport
+    const page = await browser.newPage();
+    const viewport = {width: 1200, height: 630};
+    page.setViewport(viewport);
+
+    // go to url
+    await page.goto('file://' + resolve('src/misc/blogOgImage.html'), {
+      timeout: 30 * 1000,
+      waitUntil: 'networkidle2',
+    });
+
+    // set screenshot parameters
+    let screenshotParameters = {
+      type: 'jpeg',
+      quality: 100,
+      omitBackground: true,
+      clip: {
+        x: 0,
+        y: 0,
+        width: viewport.width,
+        height: viewport.height,
+      },
+    };
+
+    let image1El = await page.$('#image1');
+    await image1El.evaluate(
+      (el, thumbnail) => (el.style.backgroundImage = `url('../../public${thumbnail}')`),
+      mdxSource.frontmatter!.thumbnail,
+    );
+    let image2El = await page.$('#image2');
+    await image2El.evaluate(
+      (el, thumbnail) => (el.style.backgroundImage = `url('../../public${thumbnail}')`),
+      mdxSource.frontmatter!.thumbnail,
+    );
+    let titleEl = await page.$('#title');
+    await titleEl.evaluate((el, title) => (el.textContent = title), mdxSource.frontmatter!.title);
+    // Capture the screenshot
+    const buffer = await page.screenshot(screenshotParameters, {
+      type: 'png',
+      clip: {width: 1200, height: 630},
+      encoding: 'base64',
+    });
+    await writeFile('public/ogimages/' + params.filename + '.png', buffer, 'base64');
+  } catch (e) {
+    throw e;
+  } finally {
+    await browser.close();
+  }
+
   return {props: {source: mdxSource}};
 };
 
