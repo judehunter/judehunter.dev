@@ -85,7 +85,7 @@ const BlogEntryCard = ({
             tw="bg-center bg-cover w-full aspect-ratio[3 / 4] rounded-[8px]"
             style={{backgroundImage: `url('${image}')`}}
           /> */}
-          <div tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]" style={{backgroundImage: `url('${image}')`}}>
+          <div tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]">
             <Img
               src={image}
               alt={title}
