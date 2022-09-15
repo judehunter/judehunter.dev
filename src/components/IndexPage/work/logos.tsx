@@ -61,8 +61,8 @@ export const MillieLogo = (props) => (
   </svg>
 );
 
-export const IntersoLogo = (props) => <img src="/interso.png" {...props} />;
+export const IntersoLogo = (props) => <img src="/interso.png" alt="Interso Company Logo" {...props} />;
 
 export const ZwierciadlaLogo = (props) => (
-  <img src="/zwierciadla.png" tw="margin-left[-7px] margin-bottom[-10px]" {...props} />
+  <img src="/zwierciadla.png" alt="Zwierciadla Company Logo" tw="margin-left[-7px] margin-bottom[-10px]" {...props} />
 );

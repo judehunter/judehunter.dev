@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {ReactNode} from 'react';
 import tw, {css} from 'twin.macro';
 import {usePageProps} from '../../misc/common';
-import IndexPage from '../../pages';
+import IndexPageExport from '../../pages';
 import {ScrollInterpolationPullUp} from './misc';
 
 const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
@@ -141,7 +141,7 @@ const BlogEntries = () => {
   //     tags: ['typescript'],
   //   },
   // ];
-  const entries = usePageProps<typeof IndexPage>()
+  const entries = usePageProps<typeof IndexPageExport>()
     .posts.sort((a, b) => new Date(a.frontmatter!.createDate).getTime() - new Date(b.frontmatter!.createDate).getTime())
     .slice(0, 4)
     .reverse()

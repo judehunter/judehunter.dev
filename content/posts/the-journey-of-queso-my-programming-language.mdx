@@ -112,7 +112,7 @@ eval({
 
 ## Queso Mk. 1 --- a tree-walking interpreter
 
-The first part of the book goes through building a tree-walking interpreter written in Java. I followed along with C# instead, because I knew that the need to translate the concept into a different language would accelerate my learning. And also because Java is... Java.
+The first part of the book goes through building a tree-walking interpreter written in Java. I followed along with C# instead, because I knew that the need to translate the concept into a different language would accelerate my learning. And also because Java is... Java 💀.
 
 In no time, I had a working prototype of queso. And by prototype, I really do mean prototype. If memory serves, I was able to program such things as the Fibonacci sequence, and it even had a **REPL**. The performance was quite disappointing, which was to be expected from a tree-walking interpreter.
 
@@ -128,7 +128,7 @@ Using Rust however meant that I couldn't follow the book nearly as closely anymo
 
 ## The break.
 
-My final high school exams were coming up, and we were sent home as the pandemic was ramping up. Reluctantly, I started studying. This inevitably meant the death of queso, at least temporarily. I was admittedly getting burnt-out from the amount of newfound knowledge anyway.
+My final high school exams were coming up, and we were sent home as the pandemic was ramping up. Reluctantly, I started studying. This inevitably meant the death of queso, at least temporarily. I was admittedly getting burnt-out from the amount of newfound programming knowledge anyway.
 
 I wouldn't come back to queso for well over two years, when I had a spark of inspiration. Queso would be transformed both in its design and implementation. An idea for something novel, something interesting yet again.
 
@@ -138,15 +138,17 @@ Say hi to --
 
 A lot has happened in the meantime. We took a gap year, and started studying. Fast forward to now, roughly one year after the move is when I had the realization queso could become something more than an experiment.
 
-I have always been a web developer. To me, the web is everything and anything I want it to; a boundless playground. I learnt HTML from an obscure website around 2011. The incredible amount of innovation is also what keeps me enthusiastic about it.
+I have always been a web developer. To me, the web is everything and anything I want it to be; a boundless playground. I first learnt HTML from an obscure website around 2011. The incredible amount of innovation is also what keeps me enthusiastic about it.
 
 Speaking of, enter **WebAssembly**. A special binary format for a Virtual Machine that's typically run inside of a browser, next to JavaScript. Well, the name speaks for itself -- it's assembly, for the web. The thing is, it's not just for the web. **WASM** is not inherently tied to the browser, or anything at all really. It's a universal format that any language or application could compile to, and which is portable, i.e. it could be executed on any host environment capable of reading the format.
 
+For instance, you could run WebAssembly binaries inside of a native **JavaScript runtime*, such as [Node.js](https://nodejs.org/en/ "Node.js") or [Deno](https://deno.land/ "Deno"), or even use a **standalone runtime**, such as [Wasmtime](https://github.com/bytecodealliance/wasmtime "wasmtime") or [Wasmer](https://wasmer.io/ "Wasmer"), which makes it great for application distribution and deployment, as you don't need to install your language-specific tools on your target machines, the way you do with many interpreted languages.
+
 WebAssembly should theoretically provide close-to-native performance, while being relatively high-level, and sandboxed. In fact, a WebAssembly module does not have access to any native functions at all. To provide it with external functionality, the host environment must first expose it.
 
-Due to its sandboxing, we already see hosting providers using WebAssembly instead of spinning up whole Docker containers. If everything goes right, it could become the universal format for language compilation.
+Due to its sandboxing, we already see hosting providers using WebAssembly instead of spinning up whole Docker containers. If everything goes right, it could become **the universal format for language compilation**.
 
-Something JVM wished it was.&#x20;
+Something JVM wished it was.
 
 I digress. My growing interest in WebAssembly made me recognize the potential that queso could have. I began redesigning the whole language with familiarity, usability, and flexibility in mind, while carefully crafting a set of unique features that make queso, queso. I also created the first queso specification, which provides a degree of consistency across the project. *I should probably keep it updated though.*
 

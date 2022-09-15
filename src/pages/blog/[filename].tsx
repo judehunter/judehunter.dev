@@ -1,6 +1,6 @@
 import tw, {css} from 'twin.macro';
 // import client from '../../../.tina/__generated__/client';
-import {BlogPage} from '../../components/BlogPage/BlogPage';
+import {BlogPage} from '../../components/ArticlePage/BlogPage';
 import {serialize} from 'next-mdx-remote/serialize';
 import {readdir, readFile} from 'fs/promises';
 import path from 'path';
@@ -18,7 +18,7 @@ const getUrl = () =>
     ? `https://${process.env.VERCEL_URL}`
     : `http://${window.location.host}`;
 
-const BlogPageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
+const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
   const router = useRouter();
   const {filename} = router.query;
 
@@ -89,4 +89,4 @@ export const getStaticPaths = async () => {
   };
 };
 
-export default BlogPageExport;
+export default ArticlePageExport;

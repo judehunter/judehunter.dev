@@ -3,9 +3,6 @@ import {serialize} from 'next-mdx-remote/serialize';
 import Head from 'next/head';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
-import tw from 'twin.macro';
-import {HomePage} from '../components/IndexPage/IndexPage';
-import {PagePropsContext} from '../misc/common';
 
 const getUrl = () =>
   process.env.NODE_ENV === 'development'
@@ -16,44 +13,38 @@ const getUrl = () =>
     ? `https://${process.env.VERCEL_URL}`
     : `http://${window.location.host}`;
 
-const IndexPageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
+export const BlogIndexPageExport = () => {
   const ogImageUrl = `${getUrl()}/ogimages/homepage.png`;
 
   return (
-    // original: #0D0D0F
-    // other candidates:
-    // #10101c
-    // #070c10
     <>
       <Head>
-        <title>Jude Hunter · Portfolio</title>
-        <meta property="og:title" content="Jude Hunter · Portfolio" />
+        <title>The Jude Hunter Blog</title>
+        <meta property="og:title" content="The Jude Hunter Blog" />
         <meta
           name="description"
-          content="Hi, I'm Jude Hunter, a web developer, an advocate of free-as-in-freedom software and an active social progressivist in dire need of building empowering solutions. Let's work together!"
+          content="Read Jude Hunter's articles on advanced JavaScript, TypeScript, React, Web Development, Compiler Theory, and just plain old life."
         />
         <meta
           property="og:description"
-          content="Hi, I'm Jude Hunter, a web developer, an advocate of free-as-in-freedom software and an active social progressivist in dire need of building empowering solutions. Let's work together!"
+          content="Read Jude Hunter's articles on advanced JavaScript, TypeScript, React, Web Development, Compiler Theory, and just plain old life."
         />
         <meta
           name="keywords"
-          content="Jude Hunter, developer, frontend, web development, portfolio, coding, programming, professional"
+          content="Jude Hunter, blog, developer, frontend, javascript, typescript, web development, coding, programming, advanced"
         />
         <meta property="og:type" content="website" />
         <meta name="author" content="Jude Hunter" />
-        <link rel="canonical" href={`https://judehunter.dev`} />
+        <link rel="canonical" href={`https://judehunter.dev/blog`} />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:secure_url" content={ogImageUrl} />
         <meta name="twitter:image:src" content={ogImageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <PagePropsContext.Provider value={props}>
-        <HomePage />
-      </PagePropsContext.Provider>
     </>
   );
 };
+
 export const getStaticProps = async () => {
   // const posts = await client.queries.postConnection({sort: 'createDate'});
   const filesString = await readdir(path.join('content', 'posts/'));
@@ -73,16 +64,3 @@ export const getStaticProps = async () => {
   );
   return {props: {posts}};
 };
-
-// export const getStaticProps = async () => {
-//   // const postsResponse = await client.queries;
-//   // console.log(postsResponse);
-//   // const posts = postsResponse.data.postConnection.edges.map((x) => {
-//   // return {filename: x.node._sys.filename};
-//   // });
-//   // return {
-//   // posts,
-//   // };
-// };
-
-export default IndexPageExport;
