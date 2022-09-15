@@ -193,7 +193,7 @@ const ContentSection = ({content}) => {
   );
 };
 
-export const BlogPage = ({source}) => {
+export const ArticlePage = ({source}) => {
   return (
     <>
       <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">

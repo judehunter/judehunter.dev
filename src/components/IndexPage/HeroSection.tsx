@@ -169,7 +169,7 @@ const AboutMe = () => {
             "
         >
           <p>
-            Full Stack Engineer at <b>Millie Group</b>
+            Frontend Engineer at <b>Playbook Technologies</b>.
           </p>
           <p>
             Pursuing a <b>Computer Science BSc</b> degree at <b>LNU, Sweden</b>.

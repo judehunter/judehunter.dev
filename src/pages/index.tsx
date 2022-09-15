@@ -4,7 +4,7 @@ import Head from 'next/head';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
 import tw from 'twin.macro';
-import {HomePage} from '../components/IndexPage/IndexPage';
+import {IndexPage} from '../components/IndexPage/IndexPage';
 import {PagePropsContext} from '../misc/common';
 
 const getUrl = () =>
@@ -49,7 +49,7 @@ const IndexPageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['prop
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <PagePropsContext.Provider value={props}>
-        <HomePage />
+        <IndexPage />
       </PagePropsContext.Provider>
     </>
   );

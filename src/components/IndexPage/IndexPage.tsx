@@ -6,13 +6,13 @@ import {HeroSection} from './HeroSection';
 import {WhatDoYouSay} from './WhatDoYouSay';
 import {Footer} from '../Footer';
 
-export const HomePage = () => {
+export const IndexPage = () => {
   return (
     // original: #0D0D0F
     // other candidates:
     // #10101c
     // #070c10
-    <div tw="background-color[#070c10]">
+    <div tw="background-color[#070c10] text-[white]">
       <NavBar />
       {/* lookup text clip fade in slide up animation */}
       <HeroSection />

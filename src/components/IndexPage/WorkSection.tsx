@@ -26,7 +26,7 @@ const workItems: WorkItem[] = [
     logo: <PlaybookLogo />,
     positions: [
       {
-        title: 'frontend developer',
+        title: 'frontend engineer',
         period: {
           start: new Date('May 1 2021'),
           end: new Date('Aug 1 2022'),
@@ -66,7 +66,7 @@ const workItems: WorkItem[] = [
           'With my position at Playbook, Millie can still count on me with fullstack consultation thanks to the relationship we’ve built.',
       },
       {
-        title: 'fullstack developer',
+        title: 'fullstack engineer',
         period: {
           start: new Date('Sep 1 2020'),
           end: new Date('May 1 2021'),
@@ -94,7 +94,7 @@ const workItems: WorkItem[] = [
     logo: <IntersoLogo />,
     positions: [
       {
-        title: 'e-commerce fullstack developer',
+        title: 'e-commerce fullstack engineer',
         period: {
           start: new Date('Feb 1 2020'),
           end: new Date('Jun 1 2020'),
@@ -121,7 +121,7 @@ const workItems: WorkItem[] = [
     logo: <ZwierciadlaLogo />,
     positions: [
       {
-        title: 'IT&Photo team leader',
+        title: 'IT&Photo team lead',
         period: {
           start: new Date('Sep 1 2018'),
           end: new Date('Sep 1 2019'),

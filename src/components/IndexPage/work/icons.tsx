@@ -99,7 +99,7 @@ export const icons = {
   nextjs: {
     icon: 'logos:nextjs-icon',
     name: 'Next',
-    style: tw`fill[white]`,
+    // style: tw`fill[white]`,
   },
   nuxtjs: {
     icon: 'teenyicons:nuxtjs-solid',

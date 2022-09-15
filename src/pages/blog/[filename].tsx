@@ -1,6 +1,6 @@
 import tw, {css} from 'twin.macro';
 // import client from '../../../.tina/__generated__/client';
-import {BlogPage} from '../../components/ArticlePage/BlogPage';
+import {ArticlePage} from '../../components/ArticlePage/ArticlePage';
 import {serialize} from 'next-mdx-remote/serialize';
 import {readdir, readFile} from 'fs/promises';
 import path from 'path';
@@ -54,7 +54,7 @@ const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>[
         <meta name="author" content="Jude Hunter" />
         <link rel="canonical" href={`https://judehunter.dev/blog/${filename}`} />
       </Head>
-      <BlogPage {...{source}} />
+      <ArticlePage {...{source}} />
     </>
   );
 };

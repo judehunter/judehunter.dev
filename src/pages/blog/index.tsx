@@ -3,6 +3,8 @@ import {serialize} from 'next-mdx-remote/serialize';
 import Head from 'next/head';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
+import {PagePropsContext} from '../../misc/common';
+import {BlogIndexPage} from '../../components/BlogIndexPage/BlogIndexPage';
 
 const getUrl = () =>
   process.env.NODE_ENV === 'development'
@@ -13,7 +15,7 @@ const getUrl = () =>
     ? `https://${process.env.VERCEL_URL}`
     : `http://${window.location.host}`;
 
-export const BlogIndexPageExport = () => {
+const BlogIndexPageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
   const ogImageUrl = `${getUrl()}/ogimages/homepage.png`;
 
   return (
@@ -41,6 +43,10 @@ export const BlogIndexPageExport = () => {
         <meta name="twitter:image:src" content={ogImageUrl} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
+
+      <PagePropsContext.Provider value={props}>
+        <BlogIndexPage />
+      </PagePropsContext.Provider>
     </>
   );
 };
@@ -64,3 +70,5 @@ export const getStaticProps = async () => {
   );
   return {props: {posts}};
 };
+
+export default BlogIndexPageExport;
