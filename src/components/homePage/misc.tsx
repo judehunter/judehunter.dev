@@ -118,9 +118,9 @@ const useScrollInterpolation = ({
           ) - 1
         );
 
-      if (isThisFirst) {
-        console.log(eased);
-      }
+      // if (isThisFirst) {
+      //   console.log(eased);
+      // }
 
       setValue(eased);
     };

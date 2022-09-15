@@ -1,6 +1,7 @@
 import {Icon} from '@iconify/react';
 import tw from 'twin.macro';
 import {ContactInput} from '../ContactInput';
+import Img from 'next/future/image';
 
 export const YouveReached = () => {
   return (
@@ -31,7 +32,13 @@ export const YouveReached = () => {
         </div>
         <div tw="w-[0%] md:w-[27%] flex-shrink-0 relative">
           <div tw="absolute left-[-120px] md:left-[0px] top-[-135px] md:top-[-35px] bottom-0 right-[-80px]">
-            <img src="/outline.png" tw="w-full rounded-full" />
+            <Img
+              src="/outline.png"
+              tw="w-auto h-auto rounded-full"
+              width={270}
+              height={270}
+              alt="Avaatar photo of the blog post author Jude Hunter"
+            />
           </div>
         </div>
       </div>

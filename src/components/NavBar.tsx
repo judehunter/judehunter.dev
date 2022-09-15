@@ -26,8 +26,8 @@ export const NavBar = () => {
     >
       <div
         tw="
-          flex items-center
-          mx-auto max-width[1150px] padding-top[50px] px-10 pb-5 box-sizing[content-box]
+          flex items-center justify-center
+          mx-auto max-width[1150px] padding-top[20px] md:padding-top[50px] px-6 md:px-10 pb-5 box-sizing[content-box]
         "
       >
         <Link href="/" passHref>
@@ -36,7 +36,7 @@ export const NavBar = () => {
           </a>
         </Link>
 
-        <div tw="margin-left[50px] margin-right[60px] height[1px] flex-grow flex-shrink background-color[#FFFFFF] opacity-50" />
+        <div tw="margin-left[50px] margin-right[60px] height[1px] flex-grow flex-shrink background-color[#FFFFFF] opacity-30 hidden md:block" />
 
         <div tw="hidden md:flex items-center justify-between flex-shrink-0 flex-basis[340px]">
           <NavLink href="#blog">Blog</NavLink>

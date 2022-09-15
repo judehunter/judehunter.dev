@@ -1,5 +1,5 @@
 import tw from 'twin.macro';
 
 export const Footer = () => {
-  return <div tw="text-center text-white pb-[30px]">&copy; judehunter.dev</div>;
+  return <footer tw="text-center text-white pb-[30px] opacity-30">&copy; judehunter.dev</footer>;
 };

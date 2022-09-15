@@ -183,7 +183,7 @@ const WorkSectionItem = ({item}: {item: WorkItem}) => {
   return (
     <div tw="flex items-stretch md:(flex-row) flex-col">
       {/* <ScrollInterpolationPullUp length={0} tw="z-index[1] flex items-stretch [& > *]:(flex items-stretch)"> */}
-      <div tw="w-full md:width[60%] background-color[#0E151C] border-radius[7px] padding[30px 35px 20px] z-index[1] flex-shrink-0">
+      <div tw="w-full md:width[60%] background-color[#0E151C] border-radius[7px] padding[30px 25px 20px] md:padding[30px 35px 20px] z-index[1] flex-shrink-0">
         <div tw="margin-bottom[28px]">{item.logo}</div>
         {item.positions
           .map((x, i) => (
@@ -223,7 +223,7 @@ const WorkSectionItem = ({item}: {item: WorkItem}) => {
 export const WorkSection = () => {
   return (
     <div tw="text-white mt-[-80px] pt-[80px]" id="work">
-      <div tw="relative max-width[1000px] mx-auto px-12 box-sizing[content-box] padding-top[100px]">
+      <div tw="relative max-width[1000px] mx-auto px-4 box-sizing[content-box] padding-top[100px]">
         <h1 tw="mb-[50px] text-center font-semibold text-4xl">professional experience</h1>
         {/* <div tw="flex items-start">
           <div tw="sticky top-[150px] height[200px] width[60px] flex-shrink-0 hidden md:block">

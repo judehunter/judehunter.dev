@@ -75,7 +75,7 @@ const CodeBlock = ({lang, code}) => {
         marginRight: '-25px',
         paddingLeft: '25px',
         paddingRight: '25px',
-        fontFamily: 'Fira Code',
+        fontFamily: '"Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
         fontSize: '16px',
       }}
     >
@@ -149,7 +149,7 @@ const MDStyle = tw`
 
 const ContentSection = ({content}) => {
   return (
-    <div tw="relative py-16 overflow-hidden">
+    <main tw="relative py-16 overflow-hidden">
       <DotPattern />
       <div tw="relative px-4 sm:px-6 lg:px-8">
         <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
@@ -189,7 +189,7 @@ const ContentSection = ({content}) => {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
@@ -197,15 +197,15 @@ export const BlogPage = ({source}) => {
   return (
     <>
       <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-        <div tw="pt-24 flex justify-center">
+        <nav tw="pt-24 flex justify-center">
           <Link href="/" passHref>
             <a tw="flex items-center space-x-4 ml-[-10px]">
               <Logo />
               <span tw="font-semibold">jude hunter</span>
             </a>
           </Link>
-        </div>
-        <div>
+        </nav>
+        <header>
           <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px]">
             <aside tw="text-center mb-5 opacity-50">
               {format(new Date(source.frontmatter.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
@@ -219,10 +219,16 @@ export const BlogPage = ({source}) => {
             </h1>
           </div>
           <div tw="max-w-[700px] h-[400px] mx-auto relative">
-            <Img src={source.frontmatter.thumbnail} alt={'thumbnail'} fill tw="rounded-[8px] object-fit[cover]" />
+            <Img
+              src={source.frontmatter.thumbnail}
+              alt={'thumbnail'}
+              fill
+              priority
+              tw="rounded-[8px] object-fit[cover]"
+            />
           </div>
-          <ContentSection content={source}></ContentSection>
-        </div>
+        </header>
+        <ContentSection content={source}></ContentSection>
 
         <YouveReached />
         <Footer />

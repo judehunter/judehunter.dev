@@ -7,7 +7,18 @@ import tw from 'twin.macro';
 import {HomePage} from '../components/homePage/HomePage';
 import {PagePropsContext} from '../misc/common';
 
+const getUrl = () =>
+  process.env.NODE_ENV === 'development'
+    ? typeof window === 'undefined'
+      ? 'http://localhost:3000'
+      : `http://${window.location.host}`
+    : typeof window === 'undefined'
+    ? `https://${process.env.VERCEL_URL}`
+    : `http://${window.location.host}`;
+
 const IndexPage = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
+  const ogImageUrl = `${getUrl()}/ogimages/homepage.png`;
+
   return (
     // original: #0D0D0F
     // other candidates:
@@ -16,8 +27,13 @@ const IndexPage = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) =
     <>
       <Head>
         <title>Jude Hunter · Portfolio</title>
+        <meta property="og:title" content="Jude Hunter · Portfolio" />
         <meta
           name="description"
+          content="Hi, I'm Jude Hunter, a web developer, an advocate of free-as-in-freedom software and an active social progressivist in dire need of building empowering solutions. Let's work together!"
+        />
+        <meta
+          property="og:description"
           content="Hi, I'm Jude Hunter, a web developer, an advocate of free-as-in-freedom software and an active social progressivist in dire need of building empowering solutions. Let's work together!"
         />
         <meta
@@ -25,6 +41,12 @@ const IndexPage = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) =
           content="Jude Hunter, developer, frontend, web development, portfolio, coding, programming, professional"
         />
         <meta property="og:type" content="website" />
+        <meta name="author" content="Jude Hunter" />
+        <link rel="canonical" href={`https://judehunter.dev`} />
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:secure_url" content={ogImageUrl} />
+        <meta name="twitter:image:src" content={ogImageUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <PagePropsContext.Provider value={props}>
         <HomePage />

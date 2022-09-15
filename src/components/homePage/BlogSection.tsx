@@ -225,7 +225,7 @@ const SectionTitle = ({children, variant, ...rest}: {children: ReactNode; varian
 
 export const BlogSection = () => {
   return (
-    <div tw="max-width[1300px] mx-auto px-12 box-sizing[content-box] padding-top[40px] z-index[10] relative">
+    <div tw="max-width[1300px] mx-auto px-6 box-sizing[content-box] padding-top[40px] z-index[10] relative">
       <div tw="absolute top-[-120px]" id="blog" />
       <div tw="flex justify-center">
         {/* <SectionTitle tw="width[340px] flex-shrink-0" variant="line-dedent">

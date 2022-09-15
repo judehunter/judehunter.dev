@@ -118,7 +118,7 @@ export const icons = {
   aws: {
     icon: 'logos:aws',
     name: 'AWS Services',
-    style: tw`[& > path:nth-child(1)]:fill[white]`,
+    style: tw`[& > path:nth-of-type(1)]:fill[white]`,
   },
   lambda: {
     icon: 'logos:aws-lambda',
@@ -161,6 +161,6 @@ export const icons = {
   typeorm: {
     icon: 'logos:typeorm',
     name: 'TypeORM',
-    style: tw`[& path:nth-child(1)]:(fill[white])`,
+    style: tw`[& path:nth-of-type(1)]:(fill[white])`,
   },
 };

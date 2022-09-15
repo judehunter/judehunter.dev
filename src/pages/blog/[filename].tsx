@@ -33,6 +33,7 @@ const BlogPageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['pr
             src: url('/FiraCode-Regular.woff2') format('woff2');
             font-weight: 400;
             font-style: normal;
+            display: swap;
           }
         `}
       />
@@ -51,6 +52,7 @@ const BlogPageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['pr
           content={[...source.frontmatter!.tags, ['Jude Hunter', 'coding', 'web development']].join(', ')}
         />
         <meta name="author" content="Jude Hunter" />
+        <link rel="canonical" href={`https://judehunter.dev/blog/${filename}`} />
       </Head>
       <BlogPage {...{source}} />
     </>

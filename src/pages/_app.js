@@ -5,10 +5,10 @@ import {useGAPageView} from '../misc/gtag';
 const App = ({Component, pageProps}) => {
   useGAPageView();
   return (
-    <div>
+    <>
       <GlobalStyles />
       <Component {...pageProps} />
-    </div>
+    </>
   );
 };
 
