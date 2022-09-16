@@ -1,0 +1,249 @@
+---
+title: 'The journey of Queso, my programming language'
+createDate: '2022-09-11T22:00:00.000Z'
+updateDate: '2022-09-11T22:00:00.000Z'
+thumbnail: /media/pierre-lemos-CJ0YhhGi_Xg-unsplash.jpg
+description: 'The story of how my dream programming language has evolved over the years, from a C# tree-walking interpreter, to a WebAssembly compiled language.'
+tags:
+  - functional
+  - compiler
+  - rust
+  - proglang
+  - queso
+  - bytecode
+  - interpreter
+---
+
+This is the story of how [queso](https://github.com/queso-lang/queso "queso"), my dream programming language came to be, how it evolved, and what comes next.
+
+***
+
+Since as far as I can remember, I've been fascinated by the magic ways programming languages are turned into something computers can understand.
+
+While I'm definitely not a systems programmer, this fascination turned out to be a great pastime. There's just something incredibly stimulating in the area of compiler theory.
+
+One rainy night during my high school senior year, I was feeling particularly curious. I decided to give in to my then-unfulfilled desire to create my own programming language.
+
+The objective was simple -- create something that solved the many gripes I've had with other mainstream languages. Soon enough, I realized it wasn't going to be as easy as I thought. I designed a rough syntax of **queso**, my dream programming language. It featured some functional and event-driven programming, the everything-is-an-expression notion, and of course some funky features **no one in their right mind would ever think of using**.
+
+Here's a snippet of one of those first iterations of queso from 2020:
+
+```ts
+fn filterSpicySalsas(salsas):
+  salsas.filter(salsa: salsa.isSpicy);
+
+let salsas = [
+  //object literals
+  #[name = "fresca", isSpicy = false],
+  #[name = "habanero", isSpicy = true],
+  #[name = "verde", isSpicy = false],
+];
+
+trace salsas |> filterSpicySalsas();
+// prints [#[name = "habanero", isSpicy = true]]
+
+let evtLoaded = new Event();
+emit evtLoaded -> ..fetch(endpoint);
+on evtLoaded -> refreshGUI;
+```
+
+Function declarations had a colon `:`. That's because the function body didn't have to be a block, but just any expression. Basically like lambdas. Then, some syntax sugar for event emitters and listeners, and async/await.
+
+Other than that, nothing too revolutionary, rather just experimentation. For those more curious about the more unusual parts of queso, have a look at [the GitHub repository at the time](https://github.com/queso-lang/queso/tree/63ad53634284e17ac78da178791ebd5d6444cd5e "the GitHub repository at the time").
+
+Like many amateur *language hackers*, I started by reading the famous [Crafting Interpreters](https://craftinginterpreters.com/ "Crafting Interpreters") online e-book. The book describes the design and implementation of the `lox` language.
+
+# So how does it work?
+
+For the uninitiated, a typical interpreted programming languages has at least these stages in the pipeline. **Feel free to skip below if you're already familiar with this.**
+
+* Lexer --- transforms the source code into a list of tokens. For instance, one could have an `identifier` token for any names, like variables; certain keywords, such as `if`, `true`, `let`; and different tokens for the many operators.
+* Parser --- reads the list of tokens and assembles an **Abstract Syntax Tree** based on a set of precedence and grammar rules. A simple example of a parser is a PEMDAS calculator. The operation `2 + 3 * 4` has to first apply multiplication, and then addition. This would be represented by the following tree:
+
+```text
+  +
+ / \
+2   *
+   / \
+  3   4
+```
+
+To then evaluate that tree, we could build a simple tree-walking interpreter like so:
+
+```ts
+type Node = {
+  type: 'add' | 'mul',
+  left: Node,
+  right: Node,
+} | number;
+
+const eval = (node: Node) => {
+  if (typeof node === 'number')
+    return node;
+
+  const left = eval(node.left);
+  const right = eval(node.right);
+
+  if (node.type === 'add')
+    return left + right;
+
+  if (node.type === 'mul')
+    return left * right;
+}
+```
+
+Let's try running that interpreter for our PEMDAS example:
+
+```ts
+eval({
+  type: 'add',
+  left: 2,
+  right: {
+    type: 'mul',
+    left: 3,
+    right: 4,
+  },
+});
+// returns 14
+```
+
+* Compiler --- turns that **AST** into some target representation that can be evaluated in a performant way. For compiled languages, like C, this would be `assembly`. For interpreted languages, this could be bytecode.
+* VM --- in the case of interpreted languages, the VM acts as an artificial processor. It reads bytecode instructions just as a processor reads machine code. It might also have a stack and a heap.
+
+## Queso Mk. 1 --- a tree-walking interpreter
+
+The first part of the book goes through building a tree-walking interpreter written in Java. I followed along with C# instead, because I knew that the need to translate the concept into a different language would accelerate my learning. And also because Java is... Java 💀.
+
+In no time, I had a working prototype of queso. And by prototype, I really do mean prototype. If memory serves, I was able to program such things as the Fibonacci sequence, and it even had a **REPL**. The performance was quite disappointing, which was to be expected from a tree-walking interpreter.
+
+The next step was obvious --
+
+## Queso Mk. 2 --- a bytecode interpreter
+
+Part two of the book jumps deep into C territory. Once again, I chose a different language -- to kill two birds with one stone, I decided to learn Rust, as I already had some prior knowledge about low-level programming.
+
+This time, the language had a much neater implementation. Well maybe apart from how bad my Rust code quality was. Anyhoo, it had distinct stages and passes, as well as more thought out representations.
+
+Using Rust however meant that I couldn't follow the book nearly as closely anymore. A lot of C obscurities simply don't exist in Rust, not to mention that one has to adapt an entirely new mindset to program with the borrow checker in mind. I also took advantage of some of the Rust built-ins, such as strings and hashmaps. Those were implemented by hand in the book.
+
+## The break.
+
+My final high school exams were coming up, and we were sent home as the pandemic was ramping up. Reluctantly, I started studying. This inevitably meant the death of queso, at least temporarily. I was admittedly getting burnt-out from the amount of newfound programming knowledge anyway.
+
+I wouldn't come back to queso for well over two years, when I had a spark of inspiration. Queso would be transformed both in its design and implementation. An idea for something novel, something interesting yet again.
+
+Say hi to --
+
+## Queso Mk. 3 --- a WebAssembly compiler
+
+A lot has happened in the meantime. We took a gap year, and started studying. Fast forward to now, roughly one year after the move is when I had the realization queso could become something more than an experiment.
+
+I have always been a web developer. To me, the web is everything and anything I want it to be; a boundless playground. I first learnt HTML from an obscure website around 2011. The incredible amount of innovation is also what keeps me enthusiastic about it.
+
+Speaking of, enter **WebAssembly**. A special binary format for a Virtual Machine that's typically run inside of a browser, next to JavaScript. Well, the name speaks for itself -- it's assembly, for the web. The thing is, it's not just for the web. **WASM** is not inherently tied to the browser, or anything at all really. It's a universal format that any language or application could compile to, and which is portable, i.e. it could be executed on any host environment capable of reading the format.
+
+For instance, you could run WebAssembly binaries inside of a native **JavaScript runtime*, such as [Node.js](https://nodejs.org/en/ "Node.js") or [Deno](https://deno.land/ "Deno"), or even use a **standalone runtime**, such as [Wasmtime](https://github.com/bytecodealliance/wasmtime "wasmtime") or [Wasmer](https://wasmer.io/ "Wasmer"), which makes it great for application distribution and deployment, as you don't need to install your language-specific tools on your target machines, the way you do with many interpreted languages.
+
+WebAssembly should theoretically provide close-to-native performance, while being relatively high-level, and sandboxed. In fact, a WebAssembly module does not have access to any native functions at all. To provide it with external functionality, the host environment must first expose it.
+
+Due to its sandboxing, we already see hosting providers using WebAssembly instead of spinning up whole Docker containers. If everything goes right, it could become **the universal format for language compilation**.
+
+Something JVM wished it was.
+
+I digress. My growing interest in WebAssembly made me recognize the potential that queso could have. I began redesigning the whole language with familiarity, usability, and flexibility in mind, while carefully crafting a set of unique features that make queso, queso. I also created the first queso specification, which provides a degree of consistency across the project. *I should probably keep it updated though.*
+
+Let's look at how queso has changed.
+
+```ts
+let filterSpicySalsas =
+  salsas -> salsas.>filter(salsa -> salsa.isSpicy);
+
+let salsas = [
+  {name: `fresca`, isSpicy: false},
+  {name: `roja`, isSpicy: true},
+  {name: `habanero`, isSpicy: true},
+];
+
+let spicySalsas = salsas |> filterSpicySalsas;
+
+log(
+  spicySalsas
+    .>map(_.name)
+    .>sort()
+    .>join(`, `)
+)
+// prints habanero, roja
+```
+
+There is no function declarations, it's all just variables and data. I opted for the more common `->` operator for lambdas, especially since `:` was too restrictive in terms of parsing. Object literals now use the standard `{}` braces, instead of the unusual `#[]`. All strings are multiline and interpolated. Immutability by default.
+
+Blocks (scopes) are denoted by `()`, as groupings in queso can not only group operations, but also lists of expression statements. The value of the last expression will be returned from the block.
+
+A new kind of functionality is the dot-pipe operator. In the above snippet, `filter` is not actually a method of List. Rather, it's a function with the signature
+
+```ts
+<T>(
+  list: List<T>,
+  predicate: (item: T) -> bool
+) -> List<T>
+```
+
+Traditionally, we could represent that same operation with:
+
+```ts
+filter(salsas, salsa -> salsa.isSpicy);
+// or with the pipe operator
+salsas |> x -> filter(x, salsa -> salsa.isSpicy);
+```
+
+Thus, the dot-pipe operator `.>` pipes the left operand into the right operand's first argument. I believe it's a good way to marry FP with OOP, without the downsides of the latter.
+
+One particular pattern that's ever-present in mainstream programming languages is short lambdas that use the first argument to do some slight transformation. This leads to the programmer having to type that argument's name twice:
+
+```ts
+// first example
+salsas.>filter( salsa -> salsa.isSpicy )
+
+// second example
+spicySalsas.>map( x -> x.name );
+```
+
+Notice the `salsa -> salsa` part. In queso, this could be expressed as simply as
+
+```ts
+// first example
+salsas.>filter( _.isSpicy )
+
+// second example
+spicySalsas.>map( _.name )
+```
+
+The `_` placeholder operator curries a function. Operators in queso are just syntactic sugar for functions. In this case, `_.isSpicy` would translate to `x -> dotAccess(x, 'isSpicy')`.
+
+For a more in-depth overview of the language, see the latest [readme file](https://github.com/queso-lang/queso "readme file").
+
+### The implementation
+
+To aide in development speed, I decided to (re)implement the whole language in TypeScript. This felt good considering that WebAssembly is already tied to the JavaScript ecosystem. The compiler could even be used as a JS library.
+
+I began researching WebAssembly. To my despair, the quality of the documentation was -- to put it lightly -- suboptimal. That is, if I could even find any documentation. The main reference that exists is the [WebAssembly specification](https://webassembly.github.io/spec/core/ "WebAssembly specification"), which is likely too formal for many.
+
+All this came as a big surprise, coming from web development, which is an area often characterized by exceptional quality of documentation. I had to do a lot of manual experimentation to figure out how everything worked.
+
+Using the binaryen.js library seemed to be the path of least resistance. Binaryen is a C toolkit for generating and optimizing WebAssembly through simple function calls. binaryen.js is a port of Binaryen for JavaScript. The catch is the port is machine generated. It has outdated typing, minimal documentation, and infinite quirks. At one point, I could not figure out how to call a function correctly, or even if it was my fault or the library's.
+
+The low quality of tooling forced me to start a sub-project -
+
+## Wazum
+
+An alternative to binaryen.js, with high quality documentation, strong typing *(with datatype validation built into the type system)*, full test coverage, and a focus on usability for both compilation and hand-writing of WebAssembly.
+
+The purpose of wazum would be to generate WAT (a textual format of WASM), and then pass it behind the scenes to Binaryen for optimization.
+
+Continue reading about wazum [here](/blog/creating-wazum-the-webassembly-compilation-library "Creating Wazum, the WebAssembly compilation library")
+
+I would tell you more, but I'm afraid we've reached the present time. I can only speculate --
+
+## What's next?
+
+I want to provide a great experience for potential users of wazum. That might mean I would have to put queso on the backburner until the DX of wazum is where I want it to be. Once ready, I will move onto the finalization of the queso compiler.

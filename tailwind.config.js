@@ -3,11 +3,7 @@ module.exports = {
     extend: {
       colors: {},
     },
-    fontFamily: {
-      display: ['Nunito Sans', 'sans-serif'],
-      content: ['Work Sans', 'sans-serif'],
-      ibm: ['IBM Plex Sans', 'sans-serif']
-    }
+    fontFamily: {},
   },
   plugins: [],
-}
+};

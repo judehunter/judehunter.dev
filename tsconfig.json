@@ -1,14 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext",
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
+    "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -18,15 +15,18 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "@emotion/react",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "incremental": true
   },
-  "files": ["twin.d.ts"],
   "include": [
     "next-env.d.ts",
+    "twin.d.ts",
+    ".prettierrc.js",
+    ".eslintrc.js",
     "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+    "**/*.tsx",
+    "**/*.js",
+    "**/*.jsx"
+, "scripts/genThumbnails.mjs"  ],
+  "exclude": ["node_modules", "next-sitemap.config.mjs"]
 }
