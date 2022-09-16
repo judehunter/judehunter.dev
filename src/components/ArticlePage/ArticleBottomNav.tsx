@@ -4,9 +4,9 @@ import {Icon} from '@iconify/react';
 
 export const ArticleBottomNav = () => {
   return (
-    <div>
+    <footer>
       <hr />
-      <div tw="flex items-center">
+      <nav tw="flex items-center">
         <span tw="flex-grow">Thanks for reading.</span>
         <Link passHref href="/blog">
           <a
@@ -43,8 +43,8 @@ export const ArticleBottomNav = () => {
             />
           </a>
         </Link>
-      </div>
+      </nav>
       {/* <p></p> */}
-    </div>
+    </footer>
   );
 };
