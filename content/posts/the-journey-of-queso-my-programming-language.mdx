@@ -55,7 +55,7 @@ Like many amateur *language hackers*, I started by reading the famous [Crafting 
 
 # So how does it work?
 
-For the uninitiated, a typical interpreted programming languages has at least these stages in the pipeline. **Feel free to skip below if you're already familiar with this.**
+For the uninitiated, a typical interpreted programming language has at least these stages in the pipeline. **Feel free to skip below if you're already familiar with this.**
 
 * Lexer --- transforms the source code into a list of tokens. For instance, one could have an `identifier` token for any names, like variables; certain keywords, such as `if`, `true`, `let`; and different tokens for the many operators.
 * Parser --- reads the list of tokens and assembles an **Abstract Syntax Tree** based on a set of precedence and grammar rules. A simple example of a parser is a PEMDAS calculator. The operation `2 + 3 * 4` has to first apply multiplication, and then addition. This would be represented by the following tree:
@@ -112,7 +112,7 @@ eval({
 
 ## Queso Mk. 1 --- a tree-walking interpreter
 
-The first part of the book goes through building a tree-walking interpreter written in Java. I followed along with C# instead, because I knew that the need to translate the concept into a different language would accelerate my learning. And also because Java is... Java 💀.
+The first part of the book goes through building a tree-walking interpreter written in Java. I followed along with C# instead, because I knew that the need to translate the concepts into a different language would accelerate my learning. And also because Java is... Java 💀.
 
 In no time, I had a working prototype of queso. And by prototype, I really do mean prototype. If memory serves, I was able to program such things as the Fibonacci sequence, and it even had a **REPL**. The performance was quite disappointing, which was to be expected from a tree-walking interpreter.
 
@@ -142,7 +142,7 @@ I have always been a web developer. To me, the web is everything and anything I 
 
 Speaking of, enter **WebAssembly**. A special binary format for a Virtual Machine that's typically run inside of a browser, next to JavaScript. Well, the name speaks for itself -- it's assembly, for the web. The thing is, it's not just for the web. **WASM** is not inherently tied to the browser, or anything at all really. It's a universal format that any language or application could compile to, and which is portable, i.e. it could be executed on any host environment capable of reading the format.
 
-For instance, you could run WebAssembly binaries inside of a native **JavaScript runtime*, such as [Node.js](https://nodejs.org/en/ "Node.js") or [Deno](https://deno.land/ "Deno"), or even use a **standalone runtime**, such as [Wasmtime](https://github.com/bytecodealliance/wasmtime "wasmtime") or [Wasmer](https://wasmer.io/ "Wasmer"), which makes it great for application distribution and deployment, as you don't need to install your language-specific tools on your target machines, the way you do with many interpreted languages.
+For instance, you could run WebAssembly binaries inside of a native **JavaScript runtime**, such as [Node.js](https://nodejs.org/en/ "Node.js") or [Deno](https://deno.land/ "Deno"), or even use a **standalone runtime**, such as [Wasmtime](https://github.com/bytecodealliance/wasmtime "wasmtime") or [Wasmer](https://wasmer.io/ "Wasmer"), which makes it great for application distribution and deployment, as you don't need to install your language-specific tools on your target machines, the way you do with many interpreted languages.
 
 WebAssembly should theoretically provide close-to-native performance, while being relatively high-level, and sandboxed. In fact, a WebAssembly module does not have access to any native functions at all. To provide it with external functionality, the host environment must first expose it.
 
@@ -230,9 +230,9 @@ I began researching WebAssembly. To my despair, the quality of the documentation
 
 All this came as a big surprise, coming from web development, which is an area often characterized by exceptional quality of documentation. I had to do a lot of manual experimentation to figure out how everything worked.
 
-Using the binaryen.js library seemed to be the path of least resistance. Binaryen is a C toolkit for generating and optimizing WebAssembly through simple function calls. binaryen.js is a port of Binaryen for JavaScript. The catch is the port is machine generated. It has outdated typing, minimal documentation, and infinite quirks. At one point, I could not figure out how to call a function correctly, or even if it was my fault or the library's.
+Using the binaryen.js library seemed to be the path of least resistance. Binaryen is a C toolkit for generating and optimizing WebAssembly through simple function calls. binaryen.js is a port of Binaryen for JavaScript. The catch is the port is machine generated. It has outdated typings, minimal documentation, and infinite quirks. At one point, I could not figure out how to call a function correctly, or even if it was my fault or the library's.
 
-The low quality of tooling forced me to start a sub-project -
+The low quality of tooling forced me to start a sub-project --
 
 ## Wazum
 
