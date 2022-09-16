@@ -33,7 +33,7 @@ const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>[
             src: url('/FiraCode-Regular.woff2') format('woff2');
             font-weight: 400;
             font-style: normal;
-            display: swap;
+            font-display: swap;
           }
         `}
       />

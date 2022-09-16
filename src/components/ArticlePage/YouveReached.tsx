@@ -18,13 +18,13 @@ export const YouveReached = () => {
           <div tw="flex md:space-x-6 md:flex-row flex-col">
             <ContactInput tw="font-size[0.9em]" />
             <div tw="text-white font-size[30px] space-x-[20px] flex items-center mt-[25px] md:mt-0">
-              <a href="mailto:matisowagm@gmail.com" target="_blank">
+              <a href="mailto:matisowagm@gmail.com" target="_blank" aria-label="email">
                 <Icon icon="mdi:email-open" tw="mb-[-5px]" />
               </a>
-              <a href="https://github.com/judehunter" target="_blank" tw="font-size[27px]">
+              <a href="https://github.com/judehunter" target="_blank" tw="font-size[27px]" aria-label="GitHub">
                 <Icon icon="akar-icons:github-fill" />
               </a>
-              <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
+              <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank" aria-label="LinkedIn">
                 <Icon icon="akar-icons:linkedin-fill" />
               </a>
             </div>

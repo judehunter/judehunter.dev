@@ -5,6 +5,7 @@ import {ArticleCard} from '../ArticleCard';
 import {usePageProps} from '../../misc/common';
 import IndexPageExport from '../../pages';
 import {ScrollInterpolationPullUp} from './misc';
+import Link from 'next/link';
 
 const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
   return (
@@ -62,9 +63,8 @@ const BlogEntries = () => {
   //   },
   // ];
   const entries = usePageProps<typeof IndexPageExport>()
-    .posts.sort((a, b) => new Date(a.frontmatter!.createDate).getTime() - new Date(b.frontmatter!.createDate).getTime())
+    .posts.sort((a, b) => new Date(b.frontmatter!.createDate).getTime() - new Date(a.frontmatter!.createDate).getTime())
     .slice(0, 4)
-    .reverse()
     .map((x) => ({
       title: x.frontmatter!.title,
       image: x.frontmatter!.thumbnail,
@@ -87,6 +87,9 @@ const BlogEntries = () => {
           )
         "
       >
+        {/* <div tw="opacity-0 bg-[#0e151c] w-[50px] align-self[stretch] font-semibold text-white items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all hidden [@media (min-width: 800px)]:flex">
+          <div tw="transform[rotateZ(-90deg)] whitespace-nowrap">See more</div>
+        </div> */}
         {entries.slice(0, 4).map((x, i) => (
           <ArticleCard
             tw="
@@ -121,13 +124,19 @@ const BlogEntries = () => {
             {...x}
           />
         ))}
-        {/* <div tw="bg-[#0e151c] w-[50px] align-self[stretch] font-semibold text-white items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all hidden [@media (min-width: 800px)]:flex">
-          <div tw="transform[rotateZ(-90deg)] whitespace-nowrap">See more</div>
-        </div> */}
+        {/* <Link passHref href="/blog">
+          <a tw="bg-[#0e151c] w-[50px] align-self[stretch] font-semibold text-white items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all hidden [@media (min-width: 800px)]:flex">
+            <div tw="transform[rotateZ(-90deg)] whitespace-nowrap">See more</div>
+          </a>
+        </Link> */}
       </div>
-      {/* <div tw="bg-[#0e151c] h-[50px] font-semibold text-white flex items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all [@media (min-width: 800px)]:hidden mt-[30px]">
-        <div tw="whitespace-nowrap">See more</div>
-      </div> */}
+      <div tw="flex justify-center">
+        <Link passHref href="/blog">
+          <a tw="bg-[#0e151c] h-[50px] font-semibold text-white flex items-center justify-center rounded-[8px] cursor-pointer hover:(bg-[#7FEC9D] text-black) transition-all [@media (min-width: 800px)]:inline-flex px-6 mt-[30px]">
+            <div tw="whitespace-nowrap">See the full blog</div>
+          </a>
+        </Link>
+      </div>
     </div>
   );
 };
@@ -145,7 +154,7 @@ const SectionTitle = ({children, variant, ...rest}: {children: ReactNode; varian
 
 export const BlogSection = () => {
   return (
-    <div tw="max-width[1300px] mx-auto px-6 box-sizing[content-box] padding-top[40px] z-index[10] relative">
+    <section tw="max-width[1300px] mx-auto px-6 box-sizing[content-box] padding-top[40px] z-index[10] relative">
       <div tw="absolute top-[-120px]" id="blog" />
       <div tw="flex justify-center">
         {/* <SectionTitle tw="width[340px] flex-shrink-0" variant="line-dedent">
@@ -156,6 +165,6 @@ export const BlogSection = () => {
         {/* <div tw="width[105px]" /> */}
         <BlogEntries />
       </div>
-    </div>
+    </section>
   );
 };

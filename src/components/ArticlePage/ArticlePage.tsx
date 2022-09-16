@@ -10,6 +10,7 @@ import Img from 'next/future/image';
 import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
 import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import {YouveReached} from './YouveReached';
+import {ArticleBottomNav} from './ArticleBottomNav';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -151,7 +152,7 @@ const ContentSection = ({content}) => {
   return (
     <main tw="relative py-16 overflow-hidden">
       <DotPattern />
-      <div tw="relative px-4 sm:px-6 lg:px-8">
+      <div tw="relative px-5 sm:px-6 lg:px-8">
         <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
           {/* <TinaMarkdown
             components={{
@@ -187,6 +188,7 @@ const ContentSection = ({content}) => {
               ),
             }}
           />
+          <ArticleBottomNav />
         </div>
       </div>
     </main>
@@ -206,7 +208,7 @@ export const ArticlePage = ({source}) => {
           </Link>
         </nav>
         <header>
-          <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px]">
+          <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
             <aside tw="text-center mb-5 opacity-50">
               {format(new Date(source.frontmatter.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
               {source.frontmatter.tags

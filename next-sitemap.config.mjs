@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import {readFile} from 'fs/promises';
 import {serialize} from 'next-mdx-remote/serialize';
 import path from 'path';
 
@@ -15,6 +15,15 @@ export default {
         loc: p,
         changefreq: config.changefreq,
         priority: 1,
+        lastmod: new Date().toISOString(),
+        alternateRefs: config.alternateRefs ?? [],
+      };
+
+    if (p === '/blog')
+      return {
+        loc: p,
+        changefreq: config.changefreq,
+        priority: 0.7,
         lastmod: new Date().toISOString(),
         alternateRefs: config.alternateRefs ?? [],
       };
