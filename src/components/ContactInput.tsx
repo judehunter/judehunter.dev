@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import tw from 'twin.macro';
+import {GooeyLoader} from '../misc/GooeyLoader';
 import {Button} from './Button';
 
 export const ContactInput = ({...rest}) => {
@@ -38,7 +39,7 @@ export const ContactInput = ({...rest}) => {
           // )
           opacity-100 transition-opacity
         "
-        css={[justSubmitted && tw`opacity-0 pointer-events-none`]}
+        css={[(justSubmitted || sending) && tw`opacity-0 pointer-events-none`]}
         onSubmit={submit}
       >
         <div tw="flex-grow flex-shrink">
@@ -59,6 +60,13 @@ export const ContactInput = ({...rest}) => {
         css={[justSubmitted && tw`opacity-100`]}
       >
         Thank you! I will get in contact with you soon.
+      </div>
+      <div
+        tw="absolute left-1/2 top-1/2 transform[translateY(-50%) translateX(-50%)]
+        whitespace-nowrap opacity-0 transition-opacity pointer-events-none"
+        css={[sending && tw`opacity-100`]}
+      >
+        <GooeyLoader />
       </div>
       {sending}
     </div>
