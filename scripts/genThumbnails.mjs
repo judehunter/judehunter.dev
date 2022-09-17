@@ -41,7 +41,7 @@ import path, {resolve} from 'path';
       page.setViewport(viewport);
 
       // go to url
-      await page.goto('file://' + resolve('src/misc/blogOgImage.html'), {
+      await page.goto('file://' + resolve('scripts/blogOgImage.html'), {
         timeout: 30 * 1000,
         waitUntil: 'networkidle2',
       });
@@ -61,12 +61,12 @@ import path, {resolve} from 'path';
 
       let image1El = await page.$('#image1');
       await image1El.evaluate(
-        (el, thumbnail) => (el.style.backgroundImage = `url('../../public${thumbnail}')`),
+        (el, thumbnail) => (el.style.backgroundImage = `url('../public${thumbnail}')`),
         mdxSource.frontmatter.thumbnail,
       );
       let image2El = await page.$('#image2');
       await image2El.evaluate(
-        (el, thumbnail) => (el.style.backgroundImage = `url('../../public${thumbnail}')`),
+        (el, thumbnail) => (el.style.backgroundImage = `url('../public${thumbnail}')`),
         mdxSource.frontmatter.thumbnail,
       );
       let titleEl = await page.$('#title');

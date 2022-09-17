@@ -2,7 +2,7 @@
 title: 'The journey of Queso, my programming language'
 createDate: '2022-09-16T18:39:19.991Z'
 updateDate: '2022-09-16T18:39:19.991Z'
-thumbnail: /media/pierre-lemos-CJ0YhhGi_Xg-unsplash.jpg
+thumbnail: /media/joseph-greve-TII6axq3eo4-unsplash.jpg
 description: 'The story of how my dream programming language has evolved over the years, from a C# tree-walking interpreter, to a WebAssembly compiled language.'
 tags:
   - functional
@@ -176,8 +176,6 @@ log(
 ```
 
 There is no function declarations, it's all just variables and data. I opted for the more common `->` operator for lambdas, especially since `:` was too restrictive in terms of parsing. Object literals now use the standard `{}` braces, instead of the unusual `#[]`. All strings are multiline and interpolated. Immutability by default.
-
-Blocks (scopes) are denoted by `()`, as groupings in queso can not only group operations, but also lists of expression statements. The value of the last expression will be returned from the block.
 
 A new kind of functionality is the dot-pipe operator. In the above snippet, `filter` is not actually a method of List. Rather, it's a function with the signature
 
