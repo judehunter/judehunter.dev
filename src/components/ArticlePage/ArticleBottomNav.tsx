@@ -6,7 +6,7 @@ export const ArticleBottomNav = () => {
   return (
     <footer>
       <hr />
-      <nav tw="flex items-center">
+      <nav tw="flex items-center md:flex-row flex-col">
         <span tw="flex-grow">Thanks for reading.</span>
         <Link passHref href="/blog">
           <a
@@ -25,6 +25,8 @@ export const ArticleBottomNav = () => {
                 border-[#7fec9d]
               )
               flex items-center
+              mt-4
+              md:mt-0
             "
             className="group"
           >
@@ -44,7 +46,6 @@ export const ArticleBottomNav = () => {
           </a>
         </Link>
       </nav>
-      {/* <p></p> */}
     </footer>
   );
 };
