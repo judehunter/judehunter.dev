@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 import {useRouter} from 'next/router';
 
 const LikeButton = () => {
-  const SHOW_THRESHOLD = 20;
+  const SHOW_THRESHOLD = 0;
   const slug = useRouter().query.filename;
   const [likes, setLikes] = useState<null | number>(null);
 
@@ -36,18 +36,21 @@ const LikeButton = () => {
 
   return (
     <div
-      tw="flex flex-col space-y-1 items-center cursor-pointer opacity-100 transition-all select-none hover:text-[#7fec9d] relative"
-      css={[likes == null && tw`opacity-0`]}
+      tw="flex flex-col items-center cursor-pointer opacity-100 transition-all select-none hover:text-[#7fec9d] relative"
+      css={[likes == null && tw`opacity-0`, likes! < SHOW_THRESHOLD && tw`mt-3`]}
       className="group"
       onClick={giveLike}
     >
-      <div tw="absolute left-1/2 top-[-2px] -translate-x-1/2 w-[70px] h-[70px] rounded-full z-index[0] bg-[#070c10]" />
+      <div tw="absolute left-1/2 top-1/2 transform[translateX(-50%) translateY(calc(-50% - 2px))] w-[70px] h-[70px] rounded-full z-index[0] bg-[#070c10]" />
       <Icon
         icon="ph:hands-clapping-bold"
         width={32}
         tw="group-hover:transform[scale(1.3)] transition-transform z-index[1]"
       />
-      <div tw="opacity-100 transition-opacity font-semibold z-index[1]" css={likes! < SHOW_THRESHOLD && tw`opacity-0`}>
+      <div
+        tw="opacity-100 font-semibold z-index[1] md:mt-[4px] h-[24px] transition-all"
+        css={likes! < SHOW_THRESHOLD && tw`opacity-0 h-0`}
+      >
         {likes}
       </div>
       {hits.map((x) => (
@@ -70,7 +73,7 @@ const LikeButton = () => {
 
 export const ArticleSideBar = () => {
   return (
-    <div tw="absolute left-0 top[-387px] md:top-[-401px] bottom-0 right-0 h-full pointer-events-none z-index[99999]">
+    <div tw="absolute left-0 top[-381px] md:top-[-401px] bottom-0 right-0 h-full pointer-events-none z-index[99999]">
       {/* <div tw="w-[563px] " */}
       <div tw="sticky top[50px] md:top-[50px] pointer-events-auto max-w-[700px] mx-auto flex justify-end md:justify-start">
         <div
