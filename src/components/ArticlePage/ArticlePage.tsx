@@ -11,13 +11,15 @@ import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
 import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import {YouveReached} from './YouveReached';
 import {ArticleBottomNav} from './ArticleBottomNav';
+import {ArticleSideBar} from './ArticleSideBar';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 
 const DotPattern = () => {
+  return null;
   return (
-    <div tw="hidden lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full">
+    <div tw="hidden lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full overflow-hidden">
       <div tw="relative h-full text-lg max-w-prose mx-auto" aria-hidden="true">
         <svg
           tw="absolute top-1/2 right-full transform -translate-y-1/2 -translate-x-32"
@@ -150,9 +152,10 @@ const MDStyle = tw`
 
 const ContentSection = ({content}) => {
   return (
-    <main tw="relative py-16 overflow-hidden">
+    <main tw="relative py-16">
       <DotPattern />
-      <div tw="relative px-5 sm:px-6 lg:px-8">
+      <ArticleSideBar />
+      <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
         <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
           {/* <TinaMarkdown
             components={{
