@@ -17,7 +17,6 @@ SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 
 const DotPattern = () => {
-  return null;
   return (
     <div tw="hidden lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full overflow-hidden">
       <div tw="relative h-full text-lg max-w-prose mx-auto" aria-hidden="true">
