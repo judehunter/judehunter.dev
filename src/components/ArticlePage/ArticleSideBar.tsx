@@ -5,7 +5,7 @@ import {motion} from 'framer-motion';
 import {useRouter} from 'next/router';
 
 const LikeButton = () => {
-  const SHOW_THRESHOLD = 0;
+  const SHOW_THRESHOLD = 20;
   const slug = useRouter().query.filename;
   const [likes, setLikes] = useState<null | number>(null);
 
