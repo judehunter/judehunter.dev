@@ -53,34 +53,32 @@ const LikeButton = () => {
       >
         {likes}
       </div>
-      {hits.map((x, i) =>
-        x !== 0 ? (
-          <motion.div
-            key={x}
-            tw="font-semibold text-[#7fec9d] absolute top-[-24px] left-1/2 z-index[1] text-sm"
-            initial="before"
-            animate={i === hits.length - 1 ? 'visible' : 'after'}
-            transition={{opacity: {delay: 0}}}
-            variants={{
-              before: {
-                opacity: 0.3,
-                y: 5,
-                x: '-50%',
-              },
-              visible: {
-                opacity: 1,
-                y: 0,
-              },
-              after: {
-                opacity: 0,
-                y: -10,
-              },
-            }}
-          >
-            +{x}
-          </motion.div>
-        ) : null,
-      )}
+      {hits.map((x, i) => (
+        <motion.div
+          key={x}
+          tw="font-semibold text-[#7fec9d] absolute top-[-24px] left-1/2 z-index[1] text-sm"
+          initial="before"
+          animate={i === hits.length - 1 ? 'visible' : 'after'}
+          transition={{opacity: {delay: 0}}}
+          variants={{
+            before: {
+              opacity: 0.3,
+              y: 5,
+              x: '-50%',
+            },
+            visible: {
+              opacity: 1,
+              y: 0,
+            },
+            after: {
+              opacity: 0,
+              y: -10,
+            },
+          }}
+        >
+          +{x}
+        </motion.div>
+      ))}
     </div>
   );
   // <div tw="rounded-full w-[15px] h-[15px]">
