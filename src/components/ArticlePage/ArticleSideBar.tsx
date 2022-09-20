@@ -41,7 +41,7 @@ const LikeButton = () => {
       className="group"
       onClick={giveLike}
     >
-      <div tw="absolute left-1/2 top-1/2 transform[translateX(-50%) translateY(calc(-50% - 14px))] w-[90px] h-[90px] rounded-full z-index[0] bg-[#070c10]" />
+      <div tw="absolute left-1/2 top-1/2 transform[translateX(-50%) translateY(calc(-50% - 14px))] w-[90px] h-[90px] rounded-full z-index[0] bg-[#070c10] md:hidden block" />
       <Icon
         icon="ph:hands-clapping-bold"
         width={32}
