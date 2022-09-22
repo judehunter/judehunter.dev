@@ -90,9 +90,9 @@ export const ArticleSideBar = () => {
   return (
     <div tw="absolute left-0 top[-381px] md:top-[-401px] bottom-0 right-0 h-full pointer-events-none z-index[99999]">
       {/* <div tw="w-[563px] " */}
-      <div tw="sticky top[50px] md:top-[50px] pointer-events-auto max-w-[700px] mx-auto flex justify-end md:justify-start">
+      <div tw="sticky top[50px] md:top-[50px] pointer-events-none max-w-[700px] mx-auto flex justify-end md:justify-start">
         <div
-          tw="transform[translateX(-45px)] md:transform[translateX(-100%)] inline-block md:pr-6"
+          tw="transform[translateX(-45px)] md:transform[translateX(-100%)] inline-block md:pr-6 pointer-events-auto"
           suppressHydrationWarning
         >
           {typeof window !== 'undefined' && <LikeButton />}

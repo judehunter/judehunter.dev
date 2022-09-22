@@ -30,7 +30,7 @@ export const YouveReached = () => {
             </div>
           </div>
         </div>
-        <div tw="w-[0%] md:w-[27%] flex-shrink-0 relative">
+        <div tw="w-[0%] md:w-[27%] flex-shrink-0 relative pointer-events-none">
           <div tw="absolute left-[-120px] md:left-[0px] top-[-135px] md:top-[-35px] bottom-0 right-[-80px]">
             <Img
               src="/outline.png"
