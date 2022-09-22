@@ -3,10 +3,11 @@ import {useEffect, useRef, useState} from 'react';
 import tw from 'twin.macro';
 import {motion} from 'framer-motion';
 import {useRouter} from 'next/router';
+import {evt} from '../../misc/gtag';
 
 const LikeButton = () => {
   const SHOW_THRESHOLD = 20;
-  const slug = useRouter().query.filename;
+  const slug = useRouter().query.filename as string;
   const [likes, setLikes] = useState<null | number>(null);
 
   const getLikes = async () =>
@@ -23,10 +24,11 @@ const LikeButton = () => {
   const [hits, setHits] = useState<number[]>([personalLikes.current]);
 
   const giveLike = async () => {
-    const p = fetch('/api/addPostLike', {
+    fetch('/api/addPostLike', {
       method: 'POST',
       body: JSON.stringify({slug}),
     });
+    evt({action: 'like_post', category: 'engagement', label: slug});
     setLikes((x) => x! + 1);
     personalLikes.current += 1;
     localStorage.setItem(`likes:${slug}`, JSON.stringify(personalLikes.current));
