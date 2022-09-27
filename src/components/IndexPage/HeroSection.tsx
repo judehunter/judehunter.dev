@@ -4,6 +4,7 @@ import tw from 'twin.macro';
 import {ContactInput} from '../ContactInput';
 import {AnimText, CapsPreTitle, PullUpText} from './misc';
 import Img from 'next/future/image';
+import {OpenToWork} from '../OpenToWork';
 
 const HeroImage = () => {
   return (
@@ -169,8 +170,10 @@ const AboutMe = () => {
             "
         >
           <p>
-            <em tw="font-semibold">I’m looking for a new professional relationship</em>.
-            <br /> Currently a Full-Stack Engineer at <b>Millie Group</b> and Ex&nbsp;Frontend Engineer at{' '}
+            <em tw="font-semibold mb-1 block">
+              I’m looking for a new professional relationship <OpenToWork tw="relative top-[-2px]" />
+            </em>
+            Currently a Full-Stack Engineer at <b>Millie Group</b> and Ex&nbsp;Frontend Engineer at{' '}
             <b>Playbook Technologies</b>.
           </p>
           <p>

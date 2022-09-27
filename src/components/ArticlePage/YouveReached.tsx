@@ -2,14 +2,17 @@ import {Icon} from '@iconify/react';
 import tw from 'twin.macro';
 import {ContactInput} from '../ContactInput';
 import Img from 'next/future/image';
+import {OpenToWork} from '../OpenToWork';
 
 export const YouveReached = () => {
   return (
-    <div tw="overflow-hidden mt-[-200px] pt-[200px]">
+    <div tw="overflow-hidden mt-[-300px] pt-[300px]">
       <div tw="max-w-[700px] mx-auto flex mb-24 box-sizing[content-box] px-4">
         <div>
           <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mb-3">HI, YOU’VE REACHED</div>
-          <div tw="text-2xl mb-2">jude hunter</div>
+          <div tw="text-2xl mb-2 flex items-center">
+            <span tw="mr-4">jude hunter</span> <OpenToWork />
+          </div>
           <div tw="opacity-70">
             An advocate of free-as-in-freedom software and an active social progressivist in dire need of building
             empowering solutions.
