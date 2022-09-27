@@ -4,7 +4,7 @@ export const OpenToWork = ({...rest}) => {
   return (
     <div
       tw="
-        rounded-full
+        rounded-lg
         text-xs
         text-[#070c10]
         bg-[#7fec9d]

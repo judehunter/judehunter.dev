@@ -156,7 +156,7 @@ const AboutMe = () => {
               [& b, & i]:(
                 font-extralight
               )
-              [& p + p]:(
+              [& * + p]:(
                 margin-top[1.5em]
               )
               [& em]:(
@@ -169,13 +169,13 @@ const AboutMe = () => {
               // )
             "
         >
-          <p>
+          <div>
             <em tw="font-semibold mb-1 block">
               I’m looking for a new professional relationship <OpenToWork tw="relative top-[-2px]" />
             </em>
             Currently a Full-Stack Engineer at <b>Millie Group</b> and Ex&nbsp;Frontend Engineer at{' '}
             <b>Playbook Technologies</b>.
-          </p>
+          </div>
           <p>
             Pursuing a <b>Computer Science BSc</b> degree at <b>LNU, Sweden</b>.
           </p>
