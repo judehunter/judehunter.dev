@@ -169,8 +169,8 @@ const AboutMe = () => {
             "
         >
           <p>
-            I'm looking for new professional relationships.
-            <br /> Currently a Fullstack Engineer at <b>Millie Group</b> and Ex&nbsp;Frontend Engineer at{' '}
+            <em tw="font-semibold">I’m looking for a new professional relationship</em>.
+            <br /> Currently a Full-Stack Engineer at <b>Millie Group</b> and Ex&nbsp;Frontend Engineer at{' '}
             <b>Playbook Technologies</b>.
           </p>
           <p>
