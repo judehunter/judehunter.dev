@@ -11,7 +11,6 @@ export const BlogIndexPage = () => {
 
   const entries = posts
     .sort((a, b) => new Date(b.frontmatter!.createDate).getTime() - new Date(a.frontmatter!.createDate).getTime())
-    .slice(0, 4)
     .map((x) => ({
       title: x.frontmatter!.title,
       image: x.frontmatter!.thumbnail,

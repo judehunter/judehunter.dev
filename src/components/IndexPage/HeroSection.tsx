@@ -169,7 +169,9 @@ const AboutMe = () => {
             "
         >
           <p>
-            Frontend Engineer at <b>Playbook Technologies</b>.
+            I'm looking for new professional relationships.
+            <br /> Currently a Fullstack Engineer at <b>Millie Group</b> and Ex&nbsp;Frontend Engineer at{' '}
+            <b>Playbook Technologies</b>.
           </p>
           <p>
             Pursuing a <b>Computer Science BSc</b> degree at <b>LNU, Sweden</b>.

@@ -15,7 +15,7 @@ type WorkItem = {
       start: Date;
       end: Date | null;
     };
-    description: string;
+    description: ReactNode;
   }[];
   tech: {icon: string; name: string; dark?: boolean; style?: any}[];
 };
@@ -57,22 +57,20 @@ const workItems: WorkItem[] = [
     logo: <MillieLogo width={120} />,
     positions: [
       {
-        title: 'fullstack architecture consultant',
-        period: {
-          start: new Date('May 1 2021'),
-          end: null,
-        },
-        description:
-          'With my position at Playbook, Millie can still count on me with fullstack consultation thanks to the relationship we’ve built.',
-      },
-      {
         title: 'fullstack engineer',
         period: {
           start: new Date('Sep 1 2020'),
-          end: new Date('May 1 2021'),
+          end: null,
         },
-        description:
-          'I developed Millie’s entire pivotal student portal with scalability in mind to allow for thousands of concurrent invocations.',
+        description: (
+          <>
+            I developed Millie’s entire pivotal student portal with scalability in mind to allow for tens of thousands
+            of concurrent real-time users.
+            <br />
+            <br />I designed, architected, and spearheaded the implementation of a variety of crucial tooling to propel
+            Millie into the EdTech industry.
+          </>
+        ),
       },
     ],
     tech: [
