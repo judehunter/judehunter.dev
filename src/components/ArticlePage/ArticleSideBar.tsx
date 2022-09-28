@@ -7,7 +7,7 @@ import {evt} from '../../misc/gtag';
 
 const LikeButton = () => {
   const SHOW_THRESHOLD = 20;
-  const slug = useRouter().query.filename as string;
+  const slug = useRouter().query.slug as string;
   const [likes, setLikes] = useState<null | number>(null);
 
   const getLikes = async () =>

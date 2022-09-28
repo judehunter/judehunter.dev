@@ -1,20 +1,23 @@
-module.exports = {
-  // webpack(config, options) {
-  //   config.module.rules.push({
-  //     test: /\.mdx$/,
-  //     use: [
-  //       options.defaultLoaders.babel,
-  //       {
-  //         loader: require.resolve('@mdx-js/loader'),
-  //         options: {
-  //           providerImportSource: '@mdx-js/react',
-  //         },
-  //       },
-  //     ],
-  //   });
-  //   if (typeof nextConfig.webpack === 'function') {
-  //     return nextConfig.webpack(config, options);
-  //   }
-  //   return config;
-  // },
-};
+const {readdirSync} = require('fs');
+const path = require('path');
+
+// const filesString = readdirSync(path.join('content', 'posts/')).map((x) =>
+//   path.resolve(__dirname, path.join('content', 'posts/', x)),
+// );
+
+// console.log(filesString);
+
+const withRemoteRefresh = require('next-remote-refresh')({
+  paths: [require('path').resolve(__dirname, './content')],
+});
+
+module.exports = withRemoteRefresh({
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
+});

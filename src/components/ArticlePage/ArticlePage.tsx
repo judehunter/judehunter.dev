@@ -5,13 +5,14 @@ import {Logo} from '../Logo';
 import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {nord} from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import {format} from 'date-fns';
-import {MDXRemote} from 'next-mdx-remote';
+import {getMDXComponent} from 'mdx-bundler/client';
 import Img from 'next/future/image';
 import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
 import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import {YouveReached} from './YouveReached';
 import {ArticleBottomNav} from './ArticleBottomNav';
 import {ArticleSideBar} from './ArticleSideBar';
+import {useMemo, useState} from 'react';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -150,6 +151,7 @@ const MDStyle = tw`
 `;
 
 const ContentSection = ({content}) => {
+  const Component = useMemo(() => getMDXComponent(content.code), [content.code]);
   return (
     <main tw="relative py-16">
       <DotPattern />
@@ -171,8 +173,7 @@ const ContentSection = ({content}) => {
             }}
             content={content}
           /> */}
-          <MDXRemote
-            {...content}
+          <Component
             components={{
               pre: ({children}) => <>{children}</>,
               code: ({className, children}) => {

@@ -1,13 +1,16 @@
 import tw, {css} from 'twin.macro';
 // import client from '../../../.tina/__generated__/client';
 import {ArticlePage} from '../../components/ArticlePage/ArticlePage';
-import {serialize} from 'next-mdx-remote/serialize';
-import {readdir, readFile} from 'fs/promises';
+import {bundleMDX} from 'mdx-bundler';
+import {readdir, readFile, stat} from 'fs/promises';
 import path from 'path';
 import {Global} from '@emotion/react';
 import {visit} from 'unist-util-visit';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
+import {useRemoteRefresh} from 'next-remote-refresh/hook';
+import dynamic from 'next/dynamic';
+// import {Suspense} from 'react';
 
 const getUrl = () =>
   process.env.NODE_ENV === 'development'
@@ -19,10 +22,17 @@ const getUrl = () =>
     : `http://${window.location.host}`;
 
 const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
+  const T = dynamic(
+    () => import('../../../content/posts/how-to-write-your-own-state-management-library/Test').then((x) => x.Test),
+    {ssr: true, suspense: false},
+  );
   const router = useRouter();
-  const {filename} = router.query;
+  useRemoteRefresh({
+    shouldRefresh: (path) => path.includes(router.query.slug as string),
+  });
+  const {slug} = router.query;
 
-  const ogImageUrl = `${getUrl()}/ogimages/${filename}.png`;
+  const ogImageUrl = `${getUrl()}/ogimages/${slug}.png`;
 
   return (
     <>
@@ -52,20 +62,30 @@ const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>[
           content={[...source.frontmatter!.tags, ['Jude Hunter', 'coding', 'web development']].join(', ')}
         />
         <meta name="author" content="Jude Hunter" />
-        <link rel="canonical" href={`https://judehunter.dev/blog/${filename}`} />
+        <link rel="canonical" href={`https://judehunter.dev/blog/${slug}`} />
       </Head>
+      {/* <Suspense fallback={'test'}> */}
+      <T />
+      {/* </Suspense> */}
       <ArticlePage {...{source}} />
     </>
   );
 };
 
 export const getStaticProps = async ({params}) => {
-  const file = await readFile(path.join('content', 'posts/', `${params.filename}.mdx`), 'utf-8');
+  const fileExists = async (path) => !!(await stat(path).catch((e) => false));
 
-  const mdxSource = await serialize(file, {
-    parseFrontmatter: true,
-    mdxOptions: {
-      remarkPlugins: [
+  let rel = path.join('content', 'posts/', params.slug);
+  const isDir = await fileExists(rel);
+  rel = isDir ? path.join(rel, 'index.mdx') : rel + '.mdx';
+  const file = await readFile(rel, 'utf-8');
+
+  const {code, frontmatter} = await bundleMDX({
+    source: file,
+    cwd: isDir ? path.resolve(path.join('content', 'posts/', params.slug)) : undefined,
+    mdxOptions(options) {
+      options.remarkPlugins = [
+        ...(options.remarkPlugins ?? []),
         () => (tree) => {
           visit(tree, (node) => {
             if (node.type === 'text') {
@@ -73,11 +93,12 @@ export const getStaticProps = async ({params}) => {
             }
           });
         },
-      ],
+      ];
+      return options;
     },
   });
 
-  return {props: {source: mdxSource}};
+  return {props: {source: {code, frontmatter}}};
 };
 
 export const getStaticPaths = async () => {

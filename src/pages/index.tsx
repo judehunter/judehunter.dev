@@ -1,5 +1,5 @@
-import {readdir, readFile} from 'fs/promises';
-import {serialize} from 'next-mdx-remote/serialize';
+import {lstat, readdir, readFile} from 'fs/promises';
+import {bundleMDX} from 'mdx-bundler';
 import Head from 'next/head';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
@@ -55,13 +55,13 @@ const IndexPageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['prop
   );
 };
 export const getStaticProps = async () => {
-  // const posts = await client.queries.postConnection({sort: 'createDate'});
-  const filesString = await readdir(path.join('content', 'posts/'));
+  const filesOrDirs = await readdir(path.join('content', 'posts/'));
   const posts = await Promise.all(
-    filesString.map(async (x) => {
-      const mdxData = await serialize(await readFile(path.join('content', 'posts/', x), 'utf-8'), {
-        parseFrontmatter: true,
-        mdxOptions: {},
+    filesOrDirs.map(async (x) => {
+      let rel = path.join('content', 'posts/', x);
+      rel = (await lstat(rel)).isDirectory() ? path.join(rel, '/index.mdx') : rel;
+      const mdxData = await bundleMDX({
+        source: await readFile(rel, 'utf-8'),
       });
       const {base64: thumbnailBlurDataUrl} = await getPlaiceholder(mdxData.frontmatter!.thumbnail, {size: 4});
       return {
