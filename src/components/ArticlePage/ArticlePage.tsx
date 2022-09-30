@@ -5,14 +5,17 @@ import {Logo} from '../Logo';
 import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {nord} from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import {format} from 'date-fns';
-import {getMDXComponent} from 'mdx-bundler/client';
 import Img from 'next/future/image';
 import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
 import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import {YouveReached} from './YouveReached';
 import {ArticleBottomNav} from './ArticleBottomNav';
 import {ArticleSideBar} from './ArticleSideBar';
-import {useMemo, useState} from 'react';
+import dynamic from 'next/dynamic';
+import {useRouter} from 'next/router';
+import {MDXRemote} from 'next-mdx-remote';
+import {usePageProps} from '../../misc/common';
+import ArticlePageExport from '../../pages/blog/[slug]';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -150,30 +153,30 @@ const MDStyle = tw`
   )
 `;
 
-const ContentSection = ({content}) => {
-  const Component = useMemo(() => getMDXComponent(content.code), [content.code]);
+const ContentSection = ({content, components}) => {
+  const slug = useRouter().query.slug as string;
+  const dynamics =
+    components &&
+    Object.fromEntries(
+      components.map((x) => {
+        x = x.replace('.tsx', '');
+        return [
+          x,
+          dynamic(() => import(`../../../content/posts/${slug}/${x}.tsx`).then((x) => x.default), {
+            ssr: true,
+            suspense: false,
+          }),
+        ];
+      }),
+    );
   return (
     <main tw="relative py-16">
       <DotPattern />
       <ArticleSideBar />
       <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
         <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
-          {/* <TinaMarkdown
-            components={{
-              code_block: (({children}: {children: string}) => {
-                const lang = children.slice(0, children.search(/\r?\n/));
-                const code = children.slice(children.search(/\n/) + 1);
-                return <CodeBlock lang={lang} code={code} />;
-              }) as any,
-              a: (props) => (
-                <a href={props!.url} target="_blank">
-                  {props!.children}
-                </a>
-              ),
-            }}
-            content={content}
-          /> */}
-          <Component
+          <MDXRemote
+            {...content}
             components={{
               pre: ({children}) => <>{children}</>,
               code: ({className, children}) => {
@@ -189,6 +192,7 @@ const ContentSection = ({content}) => {
                   {props!.children}
                 </a>
               ),
+              ...dynamics,
             }}
           />
           <ArticleBottomNav />
@@ -198,7 +202,9 @@ const ContentSection = ({content}) => {
   );
 };
 
-export const ArticlePage = ({source}) => {
+export const ArticlePage = () => {
+  const {source, components} = usePageProps<typeof ArticlePageExport>();
+
   return (
     <>
       <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
@@ -213,19 +219,16 @@ export const ArticlePage = ({source}) => {
         <header>
           <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
             <aside tw="text-center mb-5 opacity-50">
-              {format(new Date(source.frontmatter.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
-              {source.frontmatter.tags
-                .slice(0, 3)
-                .map((x) => `#${x}`)
-                .join(' ')}
+              {format(new Date(source.frontmatter!.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
+              {(source.frontmatter!.tags.slice(0, 3) as any as string[]).map((x) => `#${x}`).join(' ')}
             </aside>
             <h1 tw="text-3xl text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
-              {source.frontmatter.title}
+              {source.frontmatter!.title}
             </h1>
           </div>
           <div tw="max-w-[700px] h-[400px] mx-auto relative">
             <Img
-              src={source.frontmatter.thumbnail}
+              src={source.frontmatter!.thumbnail}
               alt={'thumbnail'}
               fill
               priority
@@ -233,7 +236,7 @@ export const ArticlePage = ({source}) => {
             />
           </div>
         </header>
-        <ContentSection content={source}></ContentSection>
+        <ContentSection content={source} {...{components}}></ContentSection>
 
         <YouveReached />
         <Footer />

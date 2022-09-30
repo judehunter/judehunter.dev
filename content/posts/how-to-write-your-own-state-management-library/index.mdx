@@ -1,32 +1,44 @@
 ---
 title: 'How to write your own state management library'
-createDate: '2022-09-27T22:00:00.000Z'
-updateDate: '2022-09-16T18:39:19.991Z'
-thumbnail: https://images.unsplash.com/photo-1597600159211-d6c104f408d1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2239&q=80
-description: 'Ever wondered what magic happens behind the scenes of state management libraries for SPA frameworks? Jump in for a deep dive on selectors, subscribers, transient updates, and more.'
+createDate: '2022-09-30T10:00:00.000Z'
+updateDate: '2022-09-30T10:00:00.000Z'
+thumbnail: /media/michael-dziedzic-W6l35A_rxxU-unsplash.jpg
+description: 'Ever wondered what magic happens behind the scenes of state management libraries for SPA frameworks? Jump in for a deep dive on selectors, subscribers, preventing re-renders, and more.'
 tags:
   - react
   - typescript
   - state
+  - nodejs
+  - javascript
   - state management
   - zustand
   - jotai
   - redux
-  - ssr
   - nextjs
   - recoil
 ---
 
-import {Test} from './Test.tsx';
-
-<Test />
 Ever wondered what happens behind the scenes of the most popular state management libraries? How do they re-render only the relevant components instead of the whole tree? How are they different from the Context API?
 
-This article is a deep dive into the inner workings of selectors, subscribers, transient updates, and more. The examples given will be based on the React ecosystem, but if you're coming from a different framework, there are lessons to be learned as well.
+This article is a deep dive into the inner workings of selectors, subscribers, preventing re-renders, and more. The examples given will be based on the React ecosystem, but if you're coming from a different framework, there are lessons to be learned as well.
 
 ---
 
-Let's begin by looking at a popular and simple state management library, [Zustand](https://github.com/pmndrs/zustand).
+The great thing about state management libraries is that only the relevant components will be re-rendered once the state is modified. This is in contrast to the Context API, where any update will result in the whole sub-tree -- starting from the Context Provider -- being re-rendered.
+
+You can play around with this interactive re-render visualization.
+
+- The diagrams depict a component hierarchy.
+- The letters represent which part of state a given component uses. Those parts are contained within one context or store.
+- Click on a component to trigger the respective state change it depends on and observe which components in the tree get re-rendered.
+
+<Updates />
+
+It's easy to see that in the Context API example, triggering any state changes will re-render the component with the context provider, and thus, every descendant of that component will by default always be re-rendered.
+
+In the Store example however, making state changes will only re-render the top-most component which uses that part of the state. For instance, observe that clicking the component that depends on  the C part of the state will only light up that one component. Notably, clicking on any of the components that depend on the A part of the state will light up all components, as one of those components wraps all the other ones. This can be further optimized by the user abstracting logic into sibling components.
+
+We will examine those mechanisms more closely in our implementation. Let's begin by looking at a popular and simple state management library, [Zustand](https://github.com/pmndrs/zustand).
 ```tsx
 const useUserStore = create((set) => ({
   user: null,
@@ -46,16 +58,10 @@ const Profile = () => {
 };
 ```
 
-The store is defined globally, and yet, only the Profile component will be re-rendered once the user object is modified. This is in contrast to the Context API, where any update will result in the whole sub-tree -- starting from the Context Provider -- being re-rendered.
-
-INSERT INTERACTIVE COMPONENT HERE
-
-The mechanisms behind this are selectors and subscribers. We will examine those closely in our implementation.
-
-First, however, let's design a simple API for our own state management library. Similar to Zustand and dissimilar to say Jotai, we will have stores that can contain multiple state values. For good TypeScript support, we will split the store into state and actions, i.e. methods that modify the state.
+Let's design a simple API for our own state management library. Similar to Zustand, we will have stores that can contain multiple state values. For good TypeScript support, we will split the store into state and actions, i.e. methods that modify the state.
 
 ```tsx
-const counterStore = create(
+const counterStore = createStore(
   {
     counter: 0,
   },
@@ -71,7 +77,7 @@ const counterStore = create(
 const Counter = () => {
   const counter = useSelector(
     counterStore,
-    s => s.counter
+    s => s.counter,
   );
 
   return <button onClick={counterStore.increment}>
@@ -80,7 +86,7 @@ const Counter = () => {
 };
 ```
 
-We then start working backward to implement this API. But how do we actually proceed? First, we need to understand what goes on behind the scenes.
+We then start working backward to implement this API. But how do we actually proceed? We need to understand what goes on behind the scenes.
 
 ## Subscribers
 This design pattern is often called the Observer pattern. A typical state management library uses it to broadcast changes in the store to the store's subscribers. The subscribers are also often called listeners instead. Queue my contrived analogy&nbsp;---
@@ -93,14 +99,14 @@ One solution is for the drones to poll the leader, i.e. frequently ask if there 
 ```tsx
 const createLeader = () => {
   let info = {
-    destination: 'north',
+    direction: 'north',
     velocity: 10,
   };
 
   // drones are just callback functions
   // which we will invoke with the new data
   // whenever it changes
-  type Drone = (info: typeof info) => void;
+  type Drone = (newInfo: typeof info) => void;
 
   const drones: Drone[] = [];
 
@@ -119,7 +125,7 @@ const createLeader = () => {
 
     for (const drone of drones) {
       drone(info);
-    };
+    }
   };
 
   return {joinSwarm, leaveSwarm, notify};
@@ -139,7 +145,7 @@ leader.notify({ direction: 'west', velocity: 5 });
 // Drone B: { direction: 'west', velocity: 5 }
 ```
 
-In essence, just like with event emitters and listeners, you register a subscriber, which then gets called when the event (here, a state change) is fired. Below we will transform this analogy into a concrete implementation.
+In essence, just like with event emitters and listeners, you register a subscriber, which then gets called when the event (here, a state change) is emitted. Below we will transform this analogy into a concrete implementation.
 
 ## Selectors
 A selector defines which part of the state the given component should subscribe to. Additionally, the selector might define a value that's derived from the state instead. In other words, the subscriber should be invoked *only when* the selected value has been changed. 
@@ -147,9 +153,9 @@ A selector defines which part of the state the given component should subscribe 
 We could imagine a special drone that adjusts its own velocity based on environmental factors, and not mission control's command. Thus, this drone only cares about changes in direction. Sending the changes in velocity would simply be inefficient.
 
 ```tsx
-const leader = () => {
+const createLeader = () => {
   let info = {
-    destination: 'north',
+    direction: 'north',
     velocity: 10,
   };
 
@@ -163,17 +169,14 @@ const leader = () => {
   // the drones now also contain the selector
   type Drone = [
     selector: Selector,
-    callback: val => void,
+    callback: (val) => void,
   ];
   const drones: Drone[] = [];
 
   const joinSwarm = (
     selector: Selector,
-    callback: Drone,
-  ) => drones.push(drone);
-
-  const leaveSwarm = (drone: Drone) =>
-    drones.splice(drones.indexOf(drone), 1);
+    callback: (val) => void,
+  ) => drones.push([selector, callback]);
 
   const notify = (newInfo: typeof info) => {
     for (const [selector, callback] of drones) {
@@ -202,10 +205,12 @@ const leader = () => {
     info = newInfo;
   };
 
-  return {joinSwarm, leaveSwarm, notify};
+  return {joinSwarm, notify};
 };
 ```
 ```tsx
+const leader = createLeader();
+
 leader.joinSwarm('direction', direction =>
   console.log('Drone A changed direction:', direction));
 leader.joinSwarm('velocity', velocity =>
@@ -225,10 +230,10 @@ leader.notify({ direction: 'west', velocity: 5 });
 // Drone B changed velocity: 20
 ```
 
-In practice, this would look very different, since selectors commonly allow any value to be returned. We won't have to implement that part, however, as we can use the built-in React equality checking.
+In practice, this would look very different, since selectors commonly allow any value to be returned. We will include that in the actual implementation. Additionally, React's built-in equality checking will do some heavy-lifting for us.
 
-## Transient updates
-...are what makes modern state management libraries efficient. To understand it better, let's first see an example with the Context API
+## Preventing deep re-renderes
+...is what makes modern state management libraries efficient. To understand it better, let's first see an example with the Context&nbsp;API
 
 ```tsx
 const CounterContext = createContext<{
@@ -242,11 +247,11 @@ const Child = () => {
 
   return <button onClick={increment}>
     {counter}
-  </button>
+  </button>;
 }
 
 const Parent = () => {
-  const [counter, setCounter] = 
+  const [counter, setCounter] = useState(0);
   return <CounterContext.Provider
     value={{
       counter,
@@ -258,11 +263,9 @@ const Parent = () => {
 }
 ```
 
-To be able to modify the state from a descendant of the component that defines it, we pass the state setter that we get from `useState` into the context. When we call that setter from within that descendant, it's the parent component's state that gets updated, which triggers all its children to re-render as well -- *unless they are Memo'ed*.
+To be able to modify the state from a descendant of the component that defines it, we pass the state setter that we get from `useState` into the context. When we call that setter from within that descendant, it's the parent component's state that gets updated, which triggers all its children to re-render as well.
 
-In comparison, transient updates allow us to re-render the exact component that subscribed to the state using a selector. For React, this is done by combining `useState` with the `subscriber` pattern.
-
-INTERACTIVE COMPONENT HERE
+In comparison, state management libraries re-render the exact component that subscribed to the state using a selector. For React, this is done by combining `useState` with the subscribers.
 
 ---
 
@@ -273,30 +276,17 @@ Now that we have the backbone of required knowledge, let's jump into --
 We can now translate my bad drone analogy into real application code.
 
 ```tsx
-const create = <STATE, ACTIONS>(
+const createStore = <STATE, ACTIONS>(
   initialState: STATE,
-  actions: (set: () => 
-    // either return a partial state:
+  actions: (set: (state:
+    // either pass a partial state:
     | Partial<STATE>
     // or a setState-like callback for derived values:
-    | (current: STATE) => Partial<STATE>
-  ) => ACTIONS
+    | ((current: STATE) => Partial<STATE>)
+  ) => void) => ACTIONS
 ) => {
   // initialize the state with the user-defined defaults
   let state = initialState;
-
-  // pass the setState function to the actions.
-  // basically your usual React setState,
-  // with the addition of merging the state,
-  // like in Zustand
-  actions = actions((setStateAction) => {
-    const newVal = 
-      typeof setStateAction === 'function'
-        ? setStateAction(state)
-        : setStateAction;
-    
-    notify({...info, ...newVal});
-  })
 
   type Subscriber = (state: STATE) => void;
 
@@ -314,13 +304,16 @@ const create = <STATE, ACTIONS>(
     // a cleanup function,
     // which is the unsubscribe method
     return () =>
-      subscribers.splice(subscriber.indexOf(drone), 1);
+      subscribers.splice(
+        subscribers.indexOf(subscriber),
+        1
+      );
   }
 
   // we don't expose (return) this function
   // directly anymore
   // instead, we will expose the user-defined
-  // actions only 
+  // actions only
   const notify = (newState: STATE) => {
     for (const subscriber of subscribers) {
       // again, we don't care about selectors here
@@ -330,7 +323,20 @@ const create = <STATE, ACTIONS>(
     state = newState;
   };
 
-  return {state, subscribe, ...actions};
+  // pass the setState function to the actions.
+  // basically your usual React setState,
+  // with the addition of merging the state,
+  // like in Zustand
+  const actualActions = actions((setStateAction) => {
+    const newVal = 
+      typeof setStateAction === 'function'
+        ? setStateAction(state)
+        : setStateAction;
+    
+    notify({...state, ...newVal});
+  });
+
+  return {state, subscribe, ...actualActions};
 };
 ```
 
@@ -340,14 +346,14 @@ This implementation could be -- at a high level -- how major state management li
 // we use the type of the state parameter
 // of the subscribe method defined in the last code block
 // to define our STATE type
-const useSelector = <STATE>(
-  store: {subscribe: (state: STATE) => void},
-  selector: STATE => any,
+const useSelector = <STATE,>(
+  store: {state: STATE; subscribe: any},
+  selector: (state: STATE) => any,
 ) => {
   // we use the current state value to set the
   // initial value for our state
   const [selectedValue, setSelectedValue]
-    = useState(selector(state))
+    = useState(selector(store.state))
 
   useEffect(() => {
     // if the return part is confusing to you,
@@ -370,10 +376,10 @@ const useSelector = <STATE>(
 }
 ```
 
-That's just it. In fact, there are more comments here than actual code! 
+That's just it. In fact, there are more comments here than actual code! This should give you a good knowledge base if you actually do want to create your own library. Otherwise, I just hope you had fun reading.
 
 ---
 ### Addendum
 Keep in mind this high-level overview only scratches the surface of the actual implementation. In reality, without proper optimizations and strategies, this implementation in and of itself can lead to surprising behavior when combined with JS frameworks.
 
-I encourage you to dive deep into codebases of projects such as Zustand and Jotai to learn more.
+I encourage you to dive deep into codebases of projects such as [Redux](https://github.com/reduxjs/redux), [Zustand](https://github.com/pmndrs/zustand) and [Jotai](https://github.com/pmndrs/jotai) to learn more.

@@ -10,11 +10,14 @@ export const BlogIndexPage = () => {
   const {posts} = usePageProps<typeof BlogIndexPageExport>();
 
   const entries = posts
-    .sort((a, b) => new Date(b.frontmatter!.createDate).getTime() - new Date(a.frontmatter!.createDate).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.source.frontmatter!.createDate).getTime() - new Date(a.source.frontmatter!.createDate).getTime(),
+    )
     .map((x) => ({
-      title: x.frontmatter!.title,
-      image: x.frontmatter!.thumbnail,
-      tags: (x.frontmatter!.tags as any as string[]).map((x) => x!),
+      title: x.source.frontmatter!.title,
+      image: x.source.frontmatter!.thumbnail,
+      tags: (x.source.frontmatter!.tags as any as string[]).map((x) => x!),
       url: x.url,
       imageBlur: x.thumbnailBlurDataUrl,
     }));

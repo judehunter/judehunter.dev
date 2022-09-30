@@ -1,15 +1,14 @@
 import tw, {css} from 'twin.macro';
 // import client from '../../../.tina/__generated__/client';
 import {ArticlePage} from '../../components/ArticlePage/ArticlePage';
-import {bundleMDX} from 'mdx-bundler';
-import {readdir, readFile, stat} from 'fs/promises';
+import {readdir} from 'fs/promises';
 import path from 'path';
 import {Global} from '@emotion/react';
-import {visit} from 'unist-util-visit';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import {useRemoteRefresh} from 'next-remote-refresh/hook';
-import dynamic from 'next/dynamic';
+import {serverSerializeAllPosts, serverSerializePostBySlug} from '../../misc/mdx';
+import {PagePropsContext} from '../../misc/common';
 // import {Suspense} from 'react';
 
 const getUrl = () =>
@@ -21,11 +20,7 @@ const getUrl = () =>
     ? `https://${process.env.VERCEL_URL}`
     : `http://${window.location.host}`;
 
-const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
-  const T = dynamic(
-    () => import('../../../content/posts/how-to-write-your-own-state-management-library/Test').then((x) => x.Test),
-    {ssr: true, suspense: false},
-  );
+const ArticlePageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
   const router = useRouter();
   useRemoteRefresh({
     shouldRefresh: (path) => path.includes(router.query.slug as string),
@@ -48,10 +43,10 @@ const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>[
         `}
       />
       <Head>
-        <title>{source.frontmatter!.title} · Jude Hunter</title>
-        <meta property="og:title" content={`${source.frontmatter!.title} · Jude Hunter`} />
-        <meta name="description" content={source.frontmatter!.description} />
-        <meta property="og:description" content={source.frontmatter!.description} />
+        <title>{props.source.frontmatter!.title} · Jude Hunter</title>
+        <meta property="og:title" content={`${props.source.frontmatter!.title} · Jude Hunter`} />
+        <meta name="description" content={props.source.frontmatter!.description} />
+        <meta property="og:description" content={props.source.frontmatter!.description} />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:secure_url" content={ogImageUrl} />
         <meta name="twitter:image:src" content={ogImageUrl} />
@@ -59,46 +54,39 @@ const ArticlePageExport = ({source}: Awaited<ReturnType<typeof getStaticProps>>[
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="keywords"
-          content={[...source.frontmatter!.tags, ['Jude Hunter', 'coding', 'web development']].join(', ')}
+          content={[...props.source.frontmatter!.tags, ['Jude Hunter', 'coding', 'web development']].join(', ')}
         />
         <meta name="author" content="Jude Hunter" />
         <link rel="canonical" href={`https://judehunter.dev/blog/${slug}`} />
       </Head>
-      {/* <Suspense fallback={'test'}> */}
-      <T />
-      {/* </Suspense> */}
-      <ArticlePage {...{source}} />
+      <PagePropsContext.Provider value={props}>
+        <ArticlePage />
+      </PagePropsContext.Provider>
     </>
   );
 };
 
 export const getStaticProps = async ({params}) => {
-  const fileExists = async (path) => !!(await stat(path).catch((e) => false));
+  const {source, components} = await serverSerializePostBySlug(params.slug);
 
-  let rel = path.join('content', 'posts/', params.slug);
-  const isDir = await fileExists(rel);
-  rel = isDir ? path.join(rel, 'index.mdx') : rel + '.mdx';
-  const file = await readFile(rel, 'utf-8');
+  const allPosts = await serverSerializeAllPosts();
 
-  const {code, frontmatter} = await bundleMDX({
-    source: file,
-    cwd: isDir ? path.resolve(path.join('content', 'posts/', params.slug)) : undefined,
-    mdxOptions(options) {
-      options.remarkPlugins = [
-        ...(options.remarkPlugins ?? []),
-        () => (tree) => {
-          visit(tree, (node) => {
-            if (node.type === 'text') {
-              node.value = (node.value as string).replace(/---/g, '—').replace(/--/g, '–');
-            }
-          });
-        },
-      ];
-      return options;
+  const sortedAllPosts = allPosts.sort(
+    (a, b) =>
+      new Date(b.source.frontmatter!.createDate).getTime() - new Date(a.source.frontmatter!.createDate).getTime(),
+  );
+
+  const thisPostIdx = sortedAllPosts.findIndex((x) => x.slug === params.slug);
+
+  const nextUp = thisPostIdx === sortedAllPosts.length - 1 ? sortedAllPosts[0] : sortedAllPosts[thisPostIdx + 1];
+
+  return {
+    props: {
+      source,
+      components,
+      nextUp,
     },
-  });
-
-  return {props: {source: {code, frontmatter}}};
+  };
 };
 
 export const getStaticPaths = async () => {
