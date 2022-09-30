@@ -9,7 +9,10 @@ import path, {resolve} from 'path';
 
   for (const p of filesString) {
     let rel = path.join('content', 'posts/', p);
-    rel = (await lstat(rel)).isDirectory() ? path.join(rel, '/index.mdx') : rel;
+    const isDir = (await lstat(rel)).isDirectory();
+
+    console.log(p, isDir);
+    rel = isDir ? path.join(rel, '/index.mdx') : rel;
     const file = await readFile(rel, 'utf-8');
 
     const mdxSource = await serialize(file, {
@@ -79,7 +82,8 @@ import path, {resolve} from 'path';
         clip: {width: 1200, height: 630},
         encoding: 'base64',
       });
-      await writeFile('public/ogimages/' + p.slice(0, -4) + '.png', buffer, 'base64');
+      console.log(isDir ? p + '.png' : p.slice(0, -4) + '.png');
+      await writeFile('public/ogimages/' + (isDir ? p + '.png' : p.slice(0, -4) + '.png'), buffer, 'base64');
     } catch (e) {
       throw e;
     } finally {

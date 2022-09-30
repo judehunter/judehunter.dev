@@ -36,7 +36,7 @@ You can play around with this interactive re-render visualization.
 
 It's easy to see that in the Context API example, triggering any state changes will re-render the component with the context provider, and thus, every descendant of that component will by default always be re-rendered.
 
-In the Store example however, making state changes will only re-render the top-most component which uses that part of the state. For instance, observe that clicking the component that depends on  the C part of the state will only light up that one component. Notably, clicking on any of the components that depend on the A part of the state will light up all components, as one of those components wraps all the other ones. This can be further optimized by the user abstracting logic into sibling components.
+In the Store example however, making state changes will only re-render the top-most component which uses that part of the state. For instance, observe that clicking the component that depends on the C part of the state will only light up that one component. Notably, clicking on any of the components that depend on the A part of the state will light up all components, as one of those components wraps all the other ones. This can be further optimized by the user abstracting logic into sibling components.
 
 We will examine those mechanisms more closely in our implementation. Let's begin by looking at a popular and simple state management library, [Zustand](https://github.com/pmndrs/zustand).
 ```tsx
@@ -230,7 +230,7 @@ leader.notify({ direction: 'west', velocity: 5 });
 // Drone B changed velocity: 20
 ```
 
-In practice, this would look very different, since selectors commonly allow any value to be returned. We will include that in the actual implementation. Additionally, React's built-in equality checking will do some heavy-lifting for us.
+In practice, this would look very different, since selectors commonly allow any value to be returned. We will include that in the actual implementation. Additionally, React's built-in equality checking will do some heavy liftsing for us.
 
 ## Preventing deep re-renderes
 ...is what makes modern state management libraries efficient. To understand it better, let's first see an example with the Context&nbsp;API
