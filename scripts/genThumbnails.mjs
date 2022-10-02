@@ -11,7 +11,6 @@ import path, {resolve} from 'path';
     let rel = path.join('content', 'posts/', p);
     const isDir = (await lstat(rel)).isDirectory();
 
-    console.log(p, isDir);
     rel = isDir ? path.join(rel, '/index.mdx') : rel;
     const file = await readFile(rel, 'utf-8');
 
@@ -82,7 +81,6 @@ import path, {resolve} from 'path';
         clip: {width: 1200, height: 630},
         encoding: 'base64',
       });
-      console.log(isDir ? p + '.png' : p.slice(0, -4) + '.png');
       await writeFile('public/ogimages/' + (isDir ? p + '.png' : p.slice(0, -4) + '.png'), buffer, 'base64');
     } catch (e) {
       throw e;

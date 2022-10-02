@@ -1,7 +1,7 @@
 ---
 title: 'How to write your own state management library'
-createDate: '2022-09-30T10:00:00.000Z'
-updateDate: '2022-09-30T10:00:00.000Z'
+createDate: '2022-10-02T13:39:01.540Z'
+updateDate: '2022-10-02T13:39:01.540Z'
 thumbnail: /media/michael-dziedzic-W6l35A_rxxU-unsplash.jpg
 description: 'Ever wondered what magic happens behind the scenes of state management libraries for SPA frameworks? Jump in for a deep dive on selectors, subscribers, preventing re-renders, and more.'
 tags:
@@ -230,9 +230,9 @@ leader.notify({ direction: 'west', velocity: 5 });
 // Drone B changed velocity: 20
 ```
 
-In practice, this would look very different, since selectors commonly allow any value to be returned. We will include that in the actual implementation. Additionally, React's built-in equality checking will do some heavy liftsing for us.
+In practice, this would look very different, since selectors commonly allow any value to be returned. We will include that in the actual implementation. Additionally, React's built-in equality checking will do some heavy lifting for us.
 
-## Preventing deep re-renderes
+## Preventing deep re-renders
 ...is what makes modern state management libraries efficient. To understand it better, let's first see an example with the Context&nbsp;API
 
 ```tsx
