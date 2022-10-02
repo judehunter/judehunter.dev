@@ -63,12 +63,15 @@ const BlogEntries = () => {
   //   },
   // ];
   const entries = usePageProps<typeof IndexPageExport>()
-    .posts.sort((a, b) => new Date(b.frontmatter!.createDate).getTime() - new Date(a.frontmatter!.createDate).getTime())
+    .posts.sort(
+      (a, b) =>
+        new Date(b.source.frontmatter!.createDate).getTime() - new Date(a.source.frontmatter!.createDate).getTime(),
+    )
     .slice(0, 4)
     .map((x) => ({
-      title: x.frontmatter!.title,
-      image: x.frontmatter!.thumbnail,
-      tags: (x.frontmatter!.tags as any as string[]).map((x) => x!),
+      title: x.source.frontmatter!.title,
+      image: x.source.frontmatter!.thumbnail,
+      tags: (x.source.frontmatter!.tags as any as string[]).map((x) => x!),
       url: x.url,
       imageBlur: x.thumbnailBlurDataUrl,
     }));

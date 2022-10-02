@@ -1,11 +1,8 @@
-import {readdir, readFile} from 'fs/promises';
-import {serialize} from 'next-mdx-remote/serialize';
 import Head from 'next/head';
-import path from 'path';
-import {getPlaiceholder} from 'plaiceholder';
 import tw from 'twin.macro';
 import {IndexPage} from '../components/IndexPage/IndexPage';
 import {PagePropsContext} from '../misc/common';
+import {serverSerializeAllPosts} from '../misc/mdx';
 
 const getUrl = () =>
   process.env.NODE_ENV === 'development'
@@ -55,22 +52,7 @@ const IndexPageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['prop
   );
 };
 export const getStaticProps = async () => {
-  // const posts = await client.queries.postConnection({sort: 'createDate'});
-  const filesString = await readdir(path.join('content', 'posts/'));
-  const posts = await Promise.all(
-    filesString.map(async (x) => {
-      const mdxData = await serialize(await readFile(path.join('content', 'posts/', x), 'utf-8'), {
-        parseFrontmatter: true,
-        mdxOptions: {},
-      });
-      const {base64: thumbnailBlurDataUrl} = await getPlaiceholder(mdxData.frontmatter!.thumbnail, {size: 4});
-      return {
-        ...mdxData,
-        thumbnailBlurDataUrl,
-        url: '/blog/' + x.replace('.mdx', ''),
-      };
-    }),
-  );
+  const posts = await serverSerializeAllPosts();
   return {props: {posts}};
 };
 

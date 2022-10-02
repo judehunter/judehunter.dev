@@ -1,4 +1,4 @@
-import {readdir, readFile, writeFile} from 'fs/promises';
+import {lstat, readdir, readFile, writeFile} from 'fs/promises';
 import {visit} from 'unist-util-visit';
 import chromium from 'chrome-aws-lambda';
 import {serialize} from 'next-mdx-remote/serialize';
@@ -8,7 +8,11 @@ import path, {resolve} from 'path';
   const filesString = await readdir(path.join('content', 'posts/'));
 
   for (const p of filesString) {
-    const file = await readFile(path.join('content', 'posts/', p), 'utf-8');
+    let rel = path.join('content', 'posts/', p);
+    const isDir = (await lstat(rel)).isDirectory();
+
+    rel = isDir ? path.join(rel, '/index.mdx') : rel;
+    const file = await readFile(rel, 'utf-8');
 
     const mdxSource = await serialize(file, {
       parseFrontmatter: true,
@@ -77,7 +81,7 @@ import path, {resolve} from 'path';
         clip: {width: 1200, height: 630},
         encoding: 'base64',
       });
-      await writeFile('public/ogimages/' + p.slice(0, -4) + '.png', buffer, 'base64');
+      await writeFile('public/ogimages/' + (isDir ? p + '.png' : p.slice(0, -4) + '.png'), buffer, 'base64');
     } catch (e) {
       throw e;
     } finally {
