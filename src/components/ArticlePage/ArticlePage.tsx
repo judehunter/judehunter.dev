@@ -3,7 +3,6 @@ import tw from 'twin.macro';
 import {Footer} from '../Footer';
 import {Logo} from '../Logo';
 import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter';
-import {nord} from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import {format} from 'date-fns';
 import Img from 'next/future/image';
 import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
@@ -74,20 +73,21 @@ const DotPattern = () => {
 
 const CodeBlock = ({lang, code}) => {
   return (
-    <SyntaxHighlighter
-      language={lang}
-      style={nord}
-      customStyle={{
-        marginLeft: '-25px',
-        marginRight: '-25px',
-        paddingLeft: '25px',
-        paddingRight: '25px',
-        fontFamily: '"Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-        fontSize: '16px',
-      }}
-    >
-      {code}
-    </SyntaxHighlighter>
+    // <SyntaxHighlighter
+    //   language={lang}
+    //   style={nord}
+    //   customStyle={{
+    //     marginLeft: '-25px',
+    //     marginRight: '-25px',
+    //     paddingLeft: '25px',
+    //     paddingRight: '25px',
+    //     fontFamily: '"Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+    //     fontSize: '16px',
+    //   }}
+    // >
+    //   {code}
+    // </SyntaxHighlighter>
+    <>placeholder</>
   );
 };
 
