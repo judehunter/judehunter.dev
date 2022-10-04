@@ -3,6 +3,7 @@ import {serialize} from 'next-mdx-remote/serialize';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
 import {visit} from 'unist-util-visit';
+import * as rehypePrism from '@mapbox/rehype-prism';
 
 const dirExists = async (path) => !!(await stat(path).catch((e) => null))?.isDirectory();
 
@@ -19,6 +20,7 @@ const serverSerializeMDX = (text: string) => {
           });
         },
       ],
+      rehypePlugins: [rehypePrism],
     },
   });
 };

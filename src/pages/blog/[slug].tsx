@@ -9,6 +9,7 @@ import {useRouter} from 'next/router';
 import {useRemoteRefresh} from 'next-remote-refresh/hook';
 import {serverSerializeAllPosts, serverSerializePostBySlug} from '../../misc/mdx';
 import {PagePropsContext} from '../../misc/common';
+import {useEffect, useRef, useState} from 'react';
 // import {Suspense} from 'react';
 
 const getUrl = () =>
@@ -19,6 +20,29 @@ const getUrl = () =>
     : typeof window === 'undefined'
     ? `https://${process.env.VERCEL_URL}`
     : `http://${window.location.host}`;
+
+// let hydrated = false;
+
+const LazyLoadCSS = ({href}) => {
+  const hydratedRef = useRef(false);
+  const [, rerender] = useState(false);
+
+  useEffect(() => {
+    if (!hydratedRef.current) {
+      // hydrated = true;
+      hydratedRef.current = true;
+      rerender(true);
+    }
+  }, []);
+
+  return (
+    <Head>
+      <link rel="preconnect" href={href} />
+      <link rel="preload" as="style" href={href} />
+      <link href={href} rel="stylesheet" media={!hydratedRef.current ? 'print' : 'all'} />
+    </Head>
+  );
+};
 
 const ArticlePageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
   const router = useRouter();
@@ -59,6 +83,7 @@ const ArticlePageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['pr
         <meta name="author" content="Jude Hunter" />
         <link rel="canonical" href={`https://judehunter.dev/blog/${slug}`} />
       </Head>
+      <LazyLoadCSS href="/prismtheme.css" />
       <PagePropsContext.Provider value={props}>
         <ArticlePage />
       </PagePropsContext.Provider>

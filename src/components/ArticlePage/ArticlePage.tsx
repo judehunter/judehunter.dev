@@ -76,14 +76,14 @@ const CodeBlock = ({lang, code}) => {
     // <SyntaxHighlighter
     //   language={lang}
     //   style={nord}
-    //   customStyle={{
-    //     marginLeft: '-25px',
-    //     marginRight: '-25px',
-    //     paddingLeft: '25px',
-    //     paddingRight: '25px',
-    //     fontFamily: '"Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-    //     fontSize: '16px',
-    //   }}
+    // customStyle={{
+    //   marginLeft: '-25px',
+    //   marginRight: '-25px',
+    //   paddingLeft: '25px',
+    //   paddingRight: '25px',
+    //   fontFamily: '"Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+    //   fontSize: '16px',
+    // }}
     // >
     //   {code}
     // </SyntaxHighlighter>
@@ -152,6 +152,17 @@ const MDStyle = tw`
   [&]:(
     font-variant-ligatures[none]
   )
+  [& pre]:(
+    margin-left[-25px]!
+    margin-right[-25px]!
+    padding-left[25px]!
+    padding-right[25px]!
+    border-radius[0.3em]
+  )
+  [& pre>code]:(
+    font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
+    font-size[16px]
+  )
 `;
 
 const ContentSection = ({content, components}) => {
@@ -172,6 +183,12 @@ const ContentSection = ({content, components}) => {
     );
   return (
     <main tw="relative py-16">
+      {/* <Head>
+        <link
+          rel="stylesheet"
+          href="https://raw.githubusercontent.com/PrismJS/prism-themes/master/themes/prism-coldark-dark.css"
+        />
+      </Head> */}
       <DotPattern />
       <ArticleSideBar />
       <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
@@ -179,15 +196,15 @@ const ContentSection = ({content, components}) => {
           <MDXRemote
             {...content}
             components={{
-              pre: ({children}) => <>{children}</>,
-              code: ({className, children}) => {
-                const match = /language-(\w+)/.exec(className || '');
-                return match ? (
-                  <CodeBlock code={children} lang={match[1]} />
-                ) : (
-                  <code className={className} {...{children}} />
-                );
-              },
+              // pre: ({children}) => <>{children}</>,
+              // code: ({className, children}) => {
+              //   const match = /language-(\w+)/.exec(className || '');
+              //   return match ? (
+              //     <CodeBlock code={children} lang={match[1]} />
+              //   ) : (
+              //     <code className={className} {...{children}} />
+              //   );
+              // },
               a: (props) => (
                 <a {...props} target="_blank">
                   {props!.children}
