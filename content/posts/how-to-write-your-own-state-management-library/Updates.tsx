@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import tw from 'twin.macro';
-import {motion, useAnimation} from 'framer-motion';
+import {m, useAnimation} from 'framer-motion';
 
 const ContextExampleContext = createContext<any>(null!);
 
@@ -19,20 +19,16 @@ const ContextExampleFourth = () => {
   }, [justRerendered]);
 
   return (
-    <motion.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
-      animate={controls}
-      transition={{duration: 1}}
-    >
-      <motion.div
+    <m.div tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]" animate={controls} transition={{duration: 1}}>
+      <m.div
         tw="h-full rounded-[8px] p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
         whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">A</div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 
@@ -50,20 +46,16 @@ const ContextExampleThird = () => {
   }, [justRerendered]);
 
   return (
-    <motion.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
-      animate={controls}
-      transition={{duration: 1}}
-    >
-      <motion.div
+    <m.div tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]" animate={controls} transition={{duration: 1}}>
+      <m.div
         tw="h-full rounded-[8px] p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
         whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">C</div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 
@@ -81,13 +73,13 @@ const ContextExampleSecond = () => {
   }, [justRerendered]);
 
   return (
-    <motion.div
+    <m.div
       tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
       animate={controls}
       transition={{duration: 1}}
       onMouseEnter={(e) => e.stopPropagation()}
     >
-      <motion.div
+      <m.div
         tw="h-full rounded-[8px] flex flex-col p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
         whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
@@ -98,8 +90,8 @@ const ContextExampleSecond = () => {
           <ContextExampleThird />
           <ContextExampleFourth />
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 
@@ -124,14 +116,14 @@ const ContextExampleFirst = () => {
         <br />
         Context API
       </div>
-      <motion.div
+      <m.div
         tw="w-[270px] h-[270px] border-2 border-[rgb(46, 52, 64)] rounded-[8px] flex flex-col font-semibold cursor-pointer"
         animate={controls}
         transition={{duration: 1}}
         onMouseEnter={(e) => e.stopPropagation()}
         onClick={() => setJustRerendered((x) => x + 1)}
       >
-        <motion.div
+        <m.div
           tw="h-full rounded-[8px] flex flex-col p-4"
           animate={{backgroundColor: 'rgb(7,  12, 16)'}}
           whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
@@ -141,8 +133,8 @@ const ContextExampleFirst = () => {
           <ContextExampleContext.Provider value={{justRerendered, setJustRerendered}}>
             <ContextExampleSecond />
           </ContextExampleContext.Provider>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </div>
   );
 };
@@ -163,7 +155,7 @@ const StoreExampleFourth = () => {
   }, [state.A, state.B]);
 
   return (
-    <motion.div
+    <m.div
       tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
       animate={controls}
       transition={{duration: 1}}
@@ -172,15 +164,15 @@ const StoreExampleFourth = () => {
         setState((x) => ({...x, A: x.A + 1}));
       }}
     >
-      <motion.div
+      <m.div
         tw="h-full rounded-[8px] p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
         whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">A</div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 
@@ -198,7 +190,7 @@ const StoreExampleThird = () => {
   }, [state.C, state.A, state.B]);
 
   return (
-    <motion.div
+    <m.div
       tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
       animate={controls}
       transition={{duration: 1}}
@@ -207,15 +199,15 @@ const StoreExampleThird = () => {
         setState((x) => ({...x, C: x.C + 1}));
       }}
     >
-      <motion.div
+      <m.div
         tw="h-full rounded-[8px] p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
         whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">C</div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 
@@ -233,7 +225,7 @@ const StoreExampleSecond = () => {
   }, [state.B, state.A]);
 
   return (
-    <motion.div
+    <m.div
       tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
       animate={controls}
       transition={{duration: 1}}
@@ -243,7 +235,7 @@ const StoreExampleSecond = () => {
         setState((x) => ({...x, B: x.B + 1}));
       }}
     >
-      <motion.div
+      <m.div
         tw="h-full rounded-[8px] flex flex-col p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
         whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
@@ -254,8 +246,8 @@ const StoreExampleSecond = () => {
           <StoreExampleThird />
           <StoreExampleFourth />
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 };
 
@@ -280,14 +272,14 @@ const StoreExampleFirst = () => {
         <br />
         Stores
       </div>
-      <motion.div
+      <m.div
         tw="w-[270px] h-[270px] border-2 border-[rgb(46, 52, 64)] rounded-[8px] flex flex-col font-semibold cursor-pointer"
         animate={controls}
         transition={{duration: 1}}
         onMouseEnter={(e) => e.stopPropagation()}
         onClick={() => setState((x) => ({...x, A: x.A + 1}))}
       >
-        <motion.div
+        <m.div
           tw="h-full rounded-[8px] flex flex-col p-4"
           animate={{backgroundColor: 'rgb(7,  12, 16)'}}
           whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
@@ -297,8 +289,8 @@ const StoreExampleFirst = () => {
           <StoreExampleContext.Provider value={{state, setState}}>
             <StoreExampleSecond />
           </StoreExampleContext.Provider>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </div>
   );
 };

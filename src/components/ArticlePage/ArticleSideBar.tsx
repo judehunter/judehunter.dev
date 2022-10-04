@@ -1,7 +1,7 @@
 import {Icon} from '@iconify/react';
 import {useEffect, useRef, useState} from 'react';
 import tw from 'twin.macro';
-import {motion} from 'framer-motion';
+import {m} from 'framer-motion';
 import {useRouter} from 'next/router';
 import {evt} from '../../misc/gtag';
 
@@ -56,7 +56,7 @@ const LikeButton = () => {
         {likes}
       </div>
       {hits.map((x, i) => (
-        <motion.div
+        <m.div
           key={x}
           tw="font-semibold text-[#7fec9d] absolute top-[-24px] left-1/2 z-index[1] text-sm"
           initial="before"
@@ -79,7 +79,7 @@ const LikeButton = () => {
           }}
         >
           +{x}
-        </motion.div>
+        </m.div>
       ))}
     </div>
   );

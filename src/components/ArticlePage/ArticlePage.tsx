@@ -16,6 +16,7 @@ import {useRouter} from 'next/router';
 import {MDXRemote} from 'next-mdx-remote';
 import {usePageProps} from '../../misc/common';
 import ArticlePageExport from '../../pages/blog/[slug]';
+import {LazyMotion} from 'framer-motion';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -207,40 +208,42 @@ export const ArticlePage = () => {
 
   return (
     <>
-      <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-        <nav tw="pt-24 flex justify-center">
-          <Link href="/" passHref>
-            <a tw="flex items-center space-x-4 ml-[-10px]">
-              <Logo />
-              <span tw="font-semibold">jude hunter</span>
-            </a>
-          </Link>
-        </nav>
-        <header>
-          <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
-            <aside tw="text-center mb-5 opacity-50">
-              {format(new Date(source.frontmatter!.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
-              {(source.frontmatter!.tags.slice(0, 3) as any as string[]).map((x) => `#${x}`).join(' ')}
-            </aside>
-            <h1 tw="text-3xl text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
-              {source.frontmatter!.title}
-            </h1>
-          </div>
-          <div tw="max-w-[700px] h-[400px] mx-auto relative">
-            <Img
-              src={source.frontmatter!.thumbnail}
-              alt={'thumbnail'}
-              fill
-              priority
-              tw="rounded-[8px] object-fit[cover]"
-            />
-          </div>
-        </header>
-        <ContentSection content={source} {...{components}}></ContentSection>
+      <LazyMotion features={() => import('./motionFeatures').then((res) => res.default)} strict>
+        <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
+          <nav tw="pt-24 flex justify-center">
+            <Link href="/" passHref>
+              <a tw="flex items-center space-x-4 ml-[-10px]">
+                <Logo />
+                <span tw="font-semibold">jude hunter</span>
+              </a>
+            </Link>
+          </nav>
+          <header>
+            <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
+              <aside tw="text-center mb-5 opacity-50">
+                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
+                {(source.frontmatter!.tags.slice(0, 3) as any as string[]).map((x) => `#${x}`).join(' ')}
+              </aside>
+              <h1 tw="text-3xl text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
+                {source.frontmatter!.title}
+              </h1>
+            </div>
+            <div tw="max-w-[700px] h-[400px] mx-auto relative">
+              <Img
+                src={source.frontmatter!.thumbnail}
+                alt={'thumbnail'}
+                fill
+                priority
+                tw="rounded-[8px] object-fit[cover]"
+              />
+            </div>
+          </header>
+          <ContentSection content={source} {...{components}}></ContentSection>
 
-        <YouveReached />
-        <Footer />
-      </div>
+          <YouveReached />
+          <Footer />
+        </div>
+      </LazyMotion>
     </>
   );
 };
