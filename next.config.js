@@ -14,4 +14,8 @@ module.exports = withRemoteRefresh({
       },
     ],
   },
+  experimental: {
+    legacyBrowsers: false,
+    browsersListForSwc: true,
+  },
 });
