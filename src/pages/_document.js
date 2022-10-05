@@ -18,6 +18,9 @@ export default class MyDocument extends Doc {
             href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap"
             rel="stylesheet"
           /> */}
+          <link rel="shortcut icon" href="/favicon.ico?v=2" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
           <style data-emotion-css={this.props.ids.join(' ')} dangerouslySetInnerHTML={{__html: this.props.css}} />
         </Head>
         <body>
