@@ -75,17 +75,23 @@ type Atom<T extends string> = T extends `${number}` | string ? T : never;
 //   : T;
 // type X = Reverse<'abcdef'>;
 
-type MulDiv<T extends string, EXPR> = T extends `*${infer B extends string}`
-  ? B extends `${infer A extends string}*${infer REST extends string}`
-    ? AddSub<`*${REST}`, AddSub<B, {op: '*'; left: EXPR; right: A}>>
-    : AddSub<
+// type Letter = 'a' | 'b' | 'c' | 'd';
+// type Word<T> = T extends string ? Letter | `${Word<any>}${Letter}` : any;
+
+type MulDivLoop<
+  T extends string,
+  EXPR,
+> = T extends `* ${infer B extends string}`
+  ? B extends `${infer A extends string} * ${infer REST extends string}`
+    ? AddSubLoop<`* ${REST}`, AddSubLoop<B, {op: '*'; left: EXPR; right: A}>>
+    : AddSubLoop<
         B,
-        AddSub<
+        AddSubLoop<
           B,
           {
             op: '*';
             left: EXPR;
-            right: Atom<T> extends `*${infer REST2 extends string}`
+            right: Atom<T> extends `* ${infer REST2 extends string}`
               ? REST2
               : never;
           }
@@ -93,33 +99,38 @@ type MulDiv<T extends string, EXPR> = T extends `*${infer B extends string}`
       >
   : EXPR;
 
-type InitMulDiv<T extends string> =
-  T extends `${infer A extends string}*${infer REST extends string}`
-    ? AddSub<`*${REST}`, Atom<A>>
-    : never;
+type MulDiv<T extends string> =
+  T extends `${infer A extends string} ${infer REST extends string}`
+    ? MulDivLoop<`${REST}`, Atom<A>>
+    : Atom<T>;
 
-type AddSub<T extends string, EXPR> = T extends `+${infer B extends string}`
-  ? B extends `${infer A extends string}+${infer REST extends string}`
-    ? AddSub<`+${REST}`, AddSub<B, {op: '+'; left: EXPR; right: A}>>
-    : AddSub<
+type AddSubLoop<
+  T extends string,
+  EXPR,
+> = T extends `+ ${infer B extends string}`
+  ? B extends `${infer A extends string} + ${infer REST extends string}`
+    ? AddSubLoop<`+ ${REST}`, AddSubLoop<B, {op: '+'; left: EXPR; right: A}>>
+    : AddSubLoop<
         B,
-        AddSub<
+        AddSubLoop<
           B,
           {
             op: '+';
             left: EXPR;
-            right: T extends `+${infer REST2 extends string}` ? REST2 : never;
+            right: T extends `+ ${infer REST2 extends string}`
+              ? MulDiv<REST2>
+              : never;
           }
         >
       >
   : EXPR;
 
-type InitAddSub<T extends string> =
-  T extends `${infer A extends string}+${infer REST extends string}`
-    ? AddSub<`+${REST}`, Atom<A>>
-    : never;
+type AddSub<T extends string> =
+  T extends `${infer A extends string} ${infer REST extends string}`
+    ? AddSubLoop<`${REST}`, MulDiv<A>>
+    : MulDiv<T>;
 
-type Test = InitAddSub<'ax+byz+cad+dyb'>;
+type Test = AddSub<'ax'>;
 //   ^?
 
 // type TrimArray<T extends string[]> = { [K in keyof T]: Trim<T[K]> };
