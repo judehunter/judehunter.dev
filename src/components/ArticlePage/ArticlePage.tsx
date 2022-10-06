@@ -163,6 +163,21 @@ const MDStyle = tw`
     font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
     font-size[16px]
   )
+  [& blockquote]:(
+    bg-[rgba(127, 236, 157, 0.2)]
+    border-l-4
+    border-[rgba(127, 236, 157, 1)]
+    font-style[oblique 5deg]
+    font-weight[500]
+    rounded-r-[8px]
+    pl-5
+    pr-5
+    my-5
+    py-3
+    [& > p]:(
+      my-0
+    )
+  )
 `;
 
 const ContentSection = ({content, components}) => {

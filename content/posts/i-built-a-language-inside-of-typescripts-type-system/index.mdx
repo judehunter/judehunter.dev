@@ -1,0 +1,44 @@
+---
+title: 'I built a language inside of TypeScript''s type system'
+createDate: '2022-09-12T22:00:00.000Z'
+updateDate: '2022-09-16T18:39:19.991Z'
+thumbnail: /media/alex-varela-ackaP-7yUKE-unsplash.jpg
+description: 'I''m building an alternative to binaryen.js, a WebAssembly compilation toolkit, to advance the WASM ecosystem and provide a stellar developer experience.'
+tags:
+  - webassembly
+  - wasm
+  - wat
+  - compiler
+  - typescript
+  - javascript
+  - binaryen
+  - binaryen.js
+  - assemblyscript
+  - nodejs
+---
+
+So, don't freak out, but TypeScript's type system is advanced enough to be able to **host entire languages inside of it**, using template literal types, among other techniques.
+
+This has been done before, to varying degrees of insanity. SQL parser, etc.
+
+As this is some mind-bogglingly crazy stuff, I had to start by testing if it's even possible. I wanted to keep my brain pure from any influence and try to (re)invent this on my own, and so I did not check the source of code of any of the mentioned projects.
+
+I also wanted the code not to be a complete spaghetti trainwreck. So I laid out the usual parts of the compiler, the lexer, parser, and a tree-walking interpreter. I knew I would need a lot of string manipulation and transformation, so I began writing up some utility functions, such as `Trim` and `Split`
+
+it will even have precedence parsing
+
+For the parser, a classic recursive descent seemed like the perfect choice.
+
+One problem was left-associativity
+
+incredible complexity can arise from a set of simple rules. In this case, a set of simple features.
+
+`a-b-` is possible because `${string}` matches ``
+```tsx
+
+```
+
+
+error handling is possible
+
+On the topic of programming languages and compiler theory, you might also want to check out The journey of Queso, my programming language.
