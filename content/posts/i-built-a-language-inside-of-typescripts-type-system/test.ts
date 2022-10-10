@@ -120,11 +120,11 @@ type LexKeywordOrIdentifier<T extends string> =
     ? {type: R; val: R}
     : LexWord<T>;
 
-// type LexNumber2<T extends string> =
-//   T extends `${infer A extends number}${string}` ? A : '';
-// type LexNumber<T extends string> = LexNumber2<T> extends ''
-//   ? never
-//   : {type: 'number'; val: LexNumber2<T>};
+type LexNumber2<T extends string> =
+  T extends `${infer A extends number}${string}` ? A : '';
+type LexNumber<T extends string> = LexNumber2<T> extends ''
+  ? never
+  : {type: 'number'; val: LexNumber2<T>};
 
 type LexOperator2<T extends string> =
   T extends `${infer A extends Operator}${string}` ? A : '';
@@ -151,12 +151,12 @@ type LexCurrent<T extends string> =
         LexOperator<T>,
         ...(T extends `${R}${infer REST}` ? LexCurrent<REST> : never),
       ]
-    : /*T extends `${infer R extends LexNumber<T>['val']}${string}`
+    : T extends `${infer R extends LexNumber<T>['val']}${string}`
     ? [
         LexNumber<T>,
         ...(T extends `${R}${infer REST}` ? LexCurrent<REST> : never),
       ]
-    :*/ T extends `${infer R extends LexWhitespace<T>}${string}`
+    : T extends `${infer R extends LexWhitespace<T>}${string}`
     ? [...(T extends `${R}${infer REST}` ? LexCurrent<REST> : never)]
     : [];
 
@@ -204,98 +204,44 @@ type Subtract<A extends number, B extends number> = BuildTuple<A> extends [
   ? Length<U>
   : never;
 
-// type MulDiv<T extends Token[], EXPR = null> = T extends [
-//   ParseAtom<T[0]>,
-//   ...any[],
-// ]
-//   ? Tail<T>
+type MultiAdd<
+  N extends number,
+  A extends number,
+  I extends number,
+> = I extends 0 ? A : MultiAdd<N, Add<N, A>, Subtract<I, 1>>;
+
+type EQ<A, B> = A extends B ? (B extends A ? true : false) : false;
+type AtTerminus<A extends number, B extends number> = A extends 0
+  ? true
+  : B extends 0
+  ? true
+  : false;
+type LT<A extends number, B extends number> = AtTerminus<A, B> extends true
+  ? EQ<A, B> extends true
+    ? false
+    : A extends 0
+    ? true
+    : false
+  : LT<Subtract<A, 1>, Subtract<B, 1>>;
+
+type MultiSub<N extends number, D extends number, Q extends number> = LT<
+  N,
+  D
+> extends true
+  ? Q
+  : MultiSub<Subtract<N, D>, D, Add<Q, 1>>;
+
+type Multiply<A extends number, B extends number> = MultiAdd<A, 0, B>;
+type Divide<A extends number, B extends number> = MultiSub<A, B, 0>;
+
+// type TailToken<T extends Token[]> = T extends [any, ...infer U extends Token[]]
+//   ? U
 //   : never;
-// type AddSubLoop<
-//   T extends Token[],
-//   EXPR = null,
-//   CUR extends number = 0,
-// > = T[CUR] extends {type: '+'} ? ParseAtom<Tail<T>, null, > : EXPR;
-
-type TailToken<T extends Token[]> = T extends [any, ...infer U extends Token[]]
-  ? U
-  : never;
-type TailNToken<T extends Token[], N extends number> = N extends 0
-  ? T
-  : TailN<Tail<T>, Subtract<N, 1>> extends infer R extends Token[]
-  ? R
-  : never;
-
-// const add = (input, left) => {
-//   expr = mul(input);
-
-//   if (tail(input) == '+') {
-//     return add(tail(input, 2), expr);
-//   }
-//   return {left, right: expr};
-// };
-// add(['a', '+', 'b', '+', 'c']);
-// // 1:
-// expr = 'a'
-// return call 2, input = ['b', '+', 'c'], left = 'a'
-// 2:
-// expr = 'b'
-// return call 2, input = ['c'], left = 'a'
-
-/*
-const atom = (input) => {
-  return input[0]
-}
-const add = (input, left, op) => {
-  let expr = atom(input);
-  if (['+', '-'].includes(input.slice(1)[0])) {
-    expr = {left: expr, right: atom(input.slice(2)), op: input.slice(1)[0]};
-    return add(input.slice(4), expr, input[3])
-  }
-  return {left, right: expr, op}
-}
-add(['a', '+', 'b', '-', 'c'])
-*/
-
-// type AddSub<
-//   T extends Token[],
-//   EXPR = null,
-//   PREVOP extends Operator | null = null,
-//   TOKENS extends number = 0,
-// > = T extends never
-//   ? 'a'
-//   : ParseAtom<T> extends never
-//   ? 'b'
-//   : Tail<T>[0] extends {type: '+'}
-//   ? ParseAtom<TailNToken<T, 2>> extends never
-//     ? 'c'
-//     : [ParseAtom<T>, ParseAtom<TailNToken<T, 2>>]
-//   : 'd';
-
-// : never;
-// : AddSub<Tail<T> extends Token[] ? Tail<T> : never>;
-
-/*
-const atom = (input, cur) => {
-  return {expr: input[cur], newCur: cur + 1};
-}
-const addLoop = (input, cur, expr) => {
-  if (['+', '-'].includes(input[cur])) {
-    const op = input[cur];
-    const {expr: right, newCur} = atom(input, cur + 1);
-    cur = newCur;
-    return addLoop(input, cur, {left: expr, op, right})
-  }
-  return expr;
-}
-const add = (input, cur) => {
-  let {expr, newCur} = atom(input, cur);
-	cur = newCur;
-  console.log(cur);
-
-  return addLoop(input, cur, expr);
-}
-
-*/
+// type TailNToken<T extends Token[], N extends number> = N extends 0
+//   ? T
+//   : TailN<Tail<T>, Subtract<N, 1>> extends infer R extends Token[]
+//   ? R
+//   : never;
 
 type Atom<INPUT extends Token[], CUR extends number> = [
   Add<CUR, 1>,
@@ -312,6 +258,7 @@ type MulDivLoop<
         INPUT,
         B[0],
         {
+          type: 'binary';
           op: INPUT[CUR]['type'];
           left: EXPR;
           right: B[1];
@@ -337,6 +284,7 @@ type AddSubLoop<
         INPUT,
         B[0],
         {
+          type: 'binary';
           op: INPUT[CUR]['type'];
           left: EXPR;
           right: B[1];
@@ -352,7 +300,22 @@ type AddSub<INPUT extends Token[], CUR extends number> = MulDiv<
   ? AddSubLoop<INPUT, A[0], A[1]>
   : never;
 
-type ABC = AddSub<Lex<'a - b * c'>[0], 0>;
+type Expr<INPUT extends Token[], CUR extends number> = AddSub<
+  INPUT,
+  CUR
+> extends infer R extends [number, any] // had to add this for optimalization for some reason
+  ? R[1]
+  : never;
+type ExprStmt<INPUT extends Token[]> = Expr<INPUT, 0>;
+
+type PrintStmt<INPUT extends Token[]> = {type: 'print'; expr: Expr<INPUT, 1>};
+type Stmt<INPUT extends Token[]> = INPUT[0] extends {
+  type: 'print';
+}
+  ? PrintStmt<INPUT>
+  : ExprStmt<INPUT>;
+
+type ABC = Stmt<Lex<'print a + b'>[0]>;
 
 /*
 def atom(input, cur):
