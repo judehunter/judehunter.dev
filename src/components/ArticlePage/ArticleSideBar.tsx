@@ -97,7 +97,7 @@ export const ArticleSideBar = () => {
           tw="transform[translateX(-45px)] md:transform[translateX(-100%)] inline-block md:pr-6 pointer-events-auto"
           suppressHydrationWarning
         >
-          {typeof window !== 'undefined' && <LikeButton />}
+          {typeof window !== 'undefined' && <LikeButton key={useRouter().query.slug as any} />}
         </div>
       </div>
     </div>
