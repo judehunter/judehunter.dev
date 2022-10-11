@@ -33,18 +33,30 @@ const anim2 = keyframes`
 
 export const GooeyLoader = () => {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+    >
       <defs>
         <filter id="spinner-gF00">
           <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="y" />
-          <feColorMatrix in="y" mode="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7" result="z" />
+          <feColorMatrix
+            in="y"
+            mode="matrix"
+            values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 18 -7"
+            result="z"
+          />
           <feBlend in="SourceGraphic" in2="z" />
         </filter>
       </defs>
       <g filter="url(#spinner-gF00)">
         <circle
           css={css`
-            animation: ${anim1} 0.75s cubic-bezier(0.56, 0.52, 0.17, 0.98) infinite;
+            animation: ${anim1} 0.75s cubic-bezier(0.56, 0.52, 0.17, 0.98)
+              infinite;
             // transform: translateX(3px);
           `}
           cx="4"
@@ -53,7 +65,8 @@ export const GooeyLoader = () => {
         />
         <circle
           css={css`
-            animation: ${anim2} 0.75s cubic-bezier(0.56, 0.52, 0.17, 0.98) infinite;
+            animation: ${anim2} 0.75s cubic-bezier(0.56, 0.52, 0.17, 0.98)
+              infinite;
             // transform: translateX(0px);
           `}
           cx="15"

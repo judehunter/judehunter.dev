@@ -9,25 +9,42 @@ export const YouveReached = () => {
     <div tw="overflow-hidden mt-[-300px] pt-[300px]">
       <div tw="max-w-[700px] mx-auto flex mb-24 box-sizing[content-box] px-4">
         <div>
-          <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mb-3">HI, YOU’VE REACHED</div>
+          <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mb-3">
+            HI, YOU’VE REACHED
+          </div>
           <div tw="text-2xl mb-2 flex items-center">
             <span tw="mr-4">jude hunter</span> <OpenToWork />
           </div>
           <div tw="opacity-70">
-            An advocate of free-as-in-freedom software and an active social progressivist in dire need of building
-            empowering solutions.
+            An advocate of free-as-in-freedom software and an active social
+            progressivist in dire need of building empowering solutions.
           </div>
-          <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mt-7 mb-3">LEAVE A MESSAGE AT THE TONE</div>
+          <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mt-7 mb-3">
+            LEAVE A MESSAGE AT THE TONE
+          </div>
           <div tw="flex md:space-x-6 md:flex-row flex-col">
             <ContactInput tw="font-size[0.9em]" />
             <div tw="text-white font-size[30px] space-x-[20px] flex items-center mt-[25px] md:mt-0">
-              <a href="mailto:matisowagm@gmail.com" target="_blank" aria-label="email">
+              <a
+                href="mailto:matisowagm@gmail.com"
+                target="_blank"
+                aria-label="email"
+              >
                 <Icon icon="mdi:email-open" tw="mb-[-5px]" />
               </a>
-              <a href="https://github.com/judehunter" target="_blank" tw="font-size[27px]" aria-label="GitHub">
+              <a
+                href="https://github.com/judehunter"
+                target="_blank"
+                tw="font-size[27px]"
+                aria-label="GitHub"
+              >
                 <Icon icon="akar-icons:github-fill" />
               </a>
-              <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank" aria-label="LinkedIn">
+              <a
+                href="https://www.linkedin.com/in/jude-hunter/"
+                target="_blank"
+                aria-label="LinkedIn"
+              >
                 <Icon icon="akar-icons:linkedin-fill" />
               </a>
             </div>

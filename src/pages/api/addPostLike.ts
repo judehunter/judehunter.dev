@@ -4,7 +4,9 @@ const supabase = createClient(process.env.API_URL!, process.env.API_KEY!);
 
 export default async function handler(req: NextRequest) {
   const slug = (await req.json()).slug;
-  const {data, error} = await supabase.rpc('increment_post_likes', {row_slug: slug});
+  const {data, error} = await supabase.rpc('increment_post_likes', {
+    row_slug: slug,
+  });
   return new Response();
 }
 

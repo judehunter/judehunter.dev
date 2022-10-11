@@ -4,7 +4,10 @@ import {ContactInput} from '../ContactInput';
 
 export const WhatDoYouSay = () => {
   return (
-    <div id="contact" tw="mt-[100px] flex flex-col items-center text-white pb-[200px] text-center px-6">
+    <div
+      id="contact"
+      tw="mt-[100px] flex flex-col items-center text-white pb-[200px] text-center px-6"
+    >
       <h1 tw="text-xl md:text-3xl font-medium opacity-75">what do you say?</h1>
       <h2 tw="text-4xl md:text-5xl font-bold mt-[15px]">let’s work together</h2>
 
@@ -19,7 +22,11 @@ export const WhatDoYouSay = () => {
         <a href="mailto:matisowagm@gmail.com" target="_blank">
           <Icon icon="mdi:email-open" tw="mb-[-5px]" />
         </a>
-        <a href="https://github.com/judehunter" target="_blank" tw="font-size[35px]">
+        <a
+          href="https://github.com/judehunter"
+          target="_blank"
+          tw="font-size[35px]"
+        >
           <Icon icon="akar-icons:github-fill" />
         </a>
         <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">

@@ -12,7 +12,8 @@ export const BlogIndexPage = () => {
   const entries = posts
     .sort(
       (a, b) =>
-        new Date(b.source.frontmatter!.createDate).getTime() - new Date(a.source.frontmatter!.createDate).getTime(),
+        new Date(b.source.frontmatter!.createDate).getTime() -
+        new Date(a.source.frontmatter!.createDate).getTime(),
     )
     .map((x) => ({
       title: x.source.frontmatter!.title,
@@ -48,8 +49,16 @@ export const BlogIndexPage = () => {
           </Link>
         </nav>
         <main tw="pb-[100px] mt-[100px] grid md:grid-template-columns[repeat(4, 1fr)] grid-template-columns[repeat(1, 1fr)] gap[50px 30px] max-w-[1300px] px-6 mx-auto">
-          <ArticleCard tw="md:grid-column[1 / 3]" css={bigTileStyles} {...entries[0]} />
-          <ArticleCard tw="md:grid-column[3 / 5]" css={bigTileStyles} {...entries[1]} />
+          <ArticleCard
+            tw="md:grid-column[1 / 3]"
+            css={bigTileStyles}
+            {...entries[0]}
+          />
+          <ArticleCard
+            tw="md:grid-column[3 / 5]"
+            css={bigTileStyles}
+            {...entries[1]}
+          />
           {entries.slice(2).map((x, i) => (
             <ArticleCard
               //   tw="

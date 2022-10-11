@@ -20,7 +20,9 @@ const LikeButton = () => {
     getLikes().then(setLikes);
   }, []);
 
-  const personalLikes = useRef(JSON.parse(localStorage.getItem(`likes:${slug}`) ?? '0'));
+  const personalLikes = useRef(
+    JSON.parse(localStorage.getItem(`likes:${slug}`) ?? '0'),
+  );
   const [hits, setHits] = useState<number[]>([personalLikes.current]);
 
   const giveLike = async () => {
@@ -31,7 +33,10 @@ const LikeButton = () => {
     evt({action: 'like_post', category: 'engagement', label: slug});
     setLikes((x) => x! + 1);
     personalLikes.current += 1;
-    localStorage.setItem(`likes:${slug}`, JSON.stringify(personalLikes.current));
+    localStorage.setItem(
+      `likes:${slug}`,
+      JSON.stringify(personalLikes.current),
+    );
     setHits((x) => [...x, personalLikes.current]);
     setTimeout(() => setHits(([discarded, ...x]) => x), 3000);
   };
@@ -39,7 +44,10 @@ const LikeButton = () => {
   return (
     <div
       tw="flex flex-col items-center cursor-pointer opacity-100 transition-all select-none hover:text-[#7fec9d] relative"
-      css={[likes == null && tw`opacity-0`, likes! < SHOW_THRESHOLD && tw`mt-3`]}
+      css={[
+        likes == null && tw`opacity-0`,
+        likes! < SHOW_THRESHOLD && tw`mt-3`,
+      ]}
       className="group"
       onClick={giveLike}
     >
@@ -97,7 +105,9 @@ export const ArticleSideBar = () => {
           tw="transform[translateX(-45px)] md:transform[translateX(-100%)] inline-block md:pr-6 pointer-events-auto"
           suppressHydrationWarning
         >
-          {typeof window !== 'undefined' && <LikeButton key={useRouter().query.slug as any} />}
+          {typeof window !== 'undefined' && (
+            <LikeButton key={useRouter().query.slug as any} />
+          )}
         </div>
       </div>
     </div>

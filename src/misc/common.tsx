@@ -1,4 +1,12 @@
-import {Dispatch, SetStateAction, useEffect, useLayoutEffect, useState, createContext, useContext} from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  createContext,
+  useContext,
+} from 'react';
 
 export const useMergeState = <T extends Record<string, any>>(init: T) => {
   const [state, setState] = useState(init);
@@ -23,7 +31,8 @@ export const useMergeState = <T extends Record<string, any>>(init: T) => {
   return [state, update, updateRaw] as const;
 };
 
-export const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+export const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 export const log = (val) => {
   console.log(val);
@@ -31,4 +40,6 @@ export const log = (val) => {
 };
 
 export const PagePropsContext = createContext<any>(null);
-export const usePageProps = <T extends (...any: any) => any>(): Parameters<T>[0] => useContext(PagePropsContext);
+export const usePageProps = <
+  T extends (...any: any) => any,
+>(): Parameters<T>[0] => useContext(PagePropsContext);

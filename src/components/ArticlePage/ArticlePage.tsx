@@ -40,10 +40,21 @@ const DotPattern = () => {
               height={20}
               patternUnits="userSpaceOnUse"
             >
-              <rect x={0} y={0} width={4} height={4} tw="text-[#2a3b4c]" fill="currentColor" />
+              <rect
+                x={0}
+                y={0}
+                width={4}
+                height={4}
+                tw="text-[#2a3b4c]"
+                fill="currentColor"
+              />
             </pattern>
           </defs>
-          <rect width={404} height={384} fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)" />
+          <rect
+            width={404}
+            height={384}
+            fill="url(#f210dbf6-a58d-4871-961e-36d5016a0f49)"
+          />
         </svg>
         <svg
           tw="absolute bottom-12 left-full transform translate-x-32"
@@ -61,10 +72,21 @@ const DotPattern = () => {
               height={20}
               patternUnits="userSpaceOnUse"
             >
-              <rect x={0} y={0} width={4} height={4} tw="text-[#2a3b4c]" fill="currentColor" />
+              <rect
+                x={0}
+                y={0}
+                width={4}
+                height={4}
+                tw="text-[#2a3b4c]"
+                fill="currentColor"
+              />
             </pattern>
           </defs>
-          <rect width={404} height={384} fill="url(#d3eb07ae-5182-43e6-857d-35c643af9034)" />
+          <rect
+            width={404}
+            height={384}
+            fill="url(#d3eb07ae-5182-43e6-857d-35c643af9034)"
+          />
         </svg>
       </div>
     </div>
@@ -174,10 +196,16 @@ const ContentSection = ({content, components}) => {
         x = x.replace('.tsx', '');
         return [
           x,
-          dynamic(() => import(`../../../content/posts/${slug}/${x}.tsx`).then((x) => x.default), {
-            ssr: true,
-            suspense: false,
-          }),
+          dynamic(
+            () =>
+              import(`../../../content/posts/${slug}/${x}.tsx`).then(
+                (x) => x.default,
+              ),
+            {
+              ssr: true,
+              suspense: false,
+            },
+          ),
         ];
       }),
     );
@@ -225,7 +253,10 @@ export const ArticlePage = () => {
 
   return (
     <>
-      <LazyMotion features={() => import('./motionFeatures').then((res) => res.default)} strict>
+      <LazyMotion
+        features={() => import('./motionFeatures').then((res) => res.default)}
+        strict
+      >
         <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
           <nav tw="pt-24 flex justify-center">
             <Link href="/" passHref>
@@ -238,8 +269,11 @@ export const ArticlePage = () => {
           <header>
             <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
               <aside tw="text-center mb-5 opacity-50">
-                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')} <span tw="mx-4">·</span>{' '}
-                {(source.frontmatter!.tags.slice(0, 3) as any as string[]).map((x) => `#${x}`).join(' ')}
+                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')}{' '}
+                <span tw="mx-4">·</span>{' '}
+                {(source.frontmatter!.tags.slice(0, 3) as any as string[])
+                  .map((x) => `#${x}`)
+                  .join(' ')}
               </aside>
               <h1 tw="text-3xl text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
                 {source.frontmatter!.title}

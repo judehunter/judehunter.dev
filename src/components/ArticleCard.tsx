@@ -17,7 +17,11 @@ export const ArticleCard = ({
 }) => {
   return (
     <Link passHref href={url}>
-      <a tw="flex flex-col cursor-pointer" {...rest} className={`${(rest as any).className ?? ''} group`}>
+      <a
+        tw="flex flex-col cursor-pointer"
+        {...rest}
+        className={`${(rest as any).className ?? ''} group`}
+      >
         <div tw="flex items-end flex-grow">
           <div tw="">
             <h1
@@ -47,7 +51,10 @@ export const ArticleCard = ({
             tw="bg-center bg-cover w-full aspect-ratio[3 / 4] rounded-[8px]"
             style={{backgroundImage: `url('${image}')`}}
           /> */}
-          <div tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]" className="thumbnail">
+          <div
+            tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]"
+            className="thumbnail"
+          >
             <Img
               src={image}
               alt={title}

@@ -52,7 +52,11 @@ export const ContactInput = ({...rest}) => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <Button tw="flex-shrink-0 margin[-2px]" {...({type: 'submit'} as any)} css={sending && tw`pointer-events-none`}>
+        <Button
+          tw="flex-shrink-0 margin[-2px]"
+          {...({type: 'submit'} as any)}
+          css={sending && tw`pointer-events-none`}
+        >
           Get in contact
         </Button>
       </form>

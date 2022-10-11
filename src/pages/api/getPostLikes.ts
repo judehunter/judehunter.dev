@@ -4,7 +4,10 @@ const supabase = createClient(process.env.API_URL!, process.env.API_KEY!);
 
 export default async function handler(req: NextRequest) {
   const slug = (await req.json()).slug;
-  let {data: postData, error} = await supabase.from('post_data').select('likes').eq('slug', slug);
+  let {data: postData, error} = await supabase
+    .from('post_data')
+    .select('likes')
+    .eq('slug', slug);
   if (!postData![0]) {
     await supabase.from('post_data').insert([{slug}]);
     return new Response('0');

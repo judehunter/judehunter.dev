@@ -5,7 +5,8 @@ import {getPlaiceholder} from 'plaiceholder';
 import {visit} from 'unist-util-visit';
 import * as rehypePrism from '@mapbox/rehype-prism';
 
-const dirExists = async (path) => !!(await stat(path).catch((e) => null))?.isDirectory();
+const dirExists = async (path) =>
+  !!(await stat(path).catch((e) => null))?.isDirectory();
 
 const serverSerializeMDX = (text: string) => {
   return serialize(text, {
@@ -15,7 +16,10 @@ const serverSerializeMDX = (text: string) => {
         () => (tree) => {
           visit(tree, (node) => {
             if (node.type === 'text') {
-              node.value = (node.value as string).replace(/---/g, '—').replace(/--/g, '–').replace(/'/g, '’');
+              node.value = (node.value as string)
+                .replace(/---/g, '—')
+                .replace(/--/g, '–')
+                .replace(/'/g, '’');
             }
           });
         },
@@ -28,12 +32,16 @@ const serverSerializeMDX = (text: string) => {
 export const serverSerializePostBySlug = async (slug: string) => {
   let slugPath = path.join('content', 'posts/', slug);
   const isSlugPathDir = await dirExists(slugPath);
-  let filePath = isSlugPathDir ? path.join(slugPath, 'index.mdx') : slugPath + '.mdx';
+  let filePath = isSlugPathDir
+    ? path.join(slugPath, 'index.mdx')
+    : slugPath + '.mdx';
   const file = await readFile(filePath, 'utf-8');
 
   const source = await serverSerializeMDX(file);
 
-  const components = isSlugPathDir ? (await readdir(slugPath)).filter((x) => x.endsWith('.tsx')) : null;
+  const components = isSlugPathDir
+    ? (await readdir(slugPath)).filter((x) => x.endsWith('.tsx'))
+    : null;
 
   return {source, components};
 };
@@ -53,7 +61,10 @@ export const serverSerializeAllPosts = async () => {
 
       const source = await serverSerializeMDX(file);
 
-      const {base64: thumbnailBlurDataUrl} = await getPlaiceholder(source.frontmatter!.thumbnail, {size: 4});
+      const {base64: thumbnailBlurDataUrl} = await getPlaiceholder(
+        source.frontmatter!.thumbnail,
+        {size: 4},
+      );
 
       return {
         source,

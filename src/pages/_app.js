@@ -9,7 +9,10 @@ const App = ({Component, pageProps}) => {
       <GlobalStyles />
       {process.env.NODE_ENV === 'production' && (
         <>
-          <Script strategy="afterInteractive" src={`https://www.googletagmanager.com/gtag/js?id=G-VF7DM82296`} />
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=G-VF7DM82296`}
+          />
           <Script
             id="gtag-init"
             strategy="afterInteractive"

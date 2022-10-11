@@ -27,7 +27,14 @@ const HeroImage = () => {
             animate={{y: 0, opacity: 1}}
             transition={{delay: 0.6, duration: 0.6, ease: 'easeOut'}}
           >
-            <Img priority src="/outline.png" alt="Avatar photo of Jude Hunter" tw="w-full" width={980} height={980} />
+            <Img
+              priority
+              src="/outline.png"
+              alt="Avatar photo of Jude Hunter"
+              tw="w-full"
+              width={980}
+              height={980}
+            />
           </motion.div>
         </div>
       </div>
@@ -54,7 +61,8 @@ const MeetYour = () => {
         // animate={{y: 0, opacity: 1}}
         // transition={{delay: 0.2, ease: 'easeInOut'}}
       >
-        <PullUpText delay={0}>Meet</PullUpText> <PullUpText delay={0.06}>your</PullUpText>{' '}
+        <PullUpText delay={0}>Meet</PullUpText>{' '}
+        <PullUpText delay={0.06}>your</PullUpText>{' '}
         <PullUpText delay={0.12}>next</PullUpText>{' '}
       </motion.h1>
       <motion.h1
@@ -128,7 +136,12 @@ const AboutMe = () => {
       tw="z-index[1] relative padding-bottom[50px]"
       initial={{y: 50, opacity: 0.001}}
       animate={{y: 0, opacity: 1}}
-      transition={{ease: 'easeOut', duration: 0.7, delay: 0.9, opacity: {times: [null, 0.7]}}}
+      transition={{
+        ease: 'easeOut',
+        duration: 0.7,
+        delay: 0.9,
+        opacity: {times: [null, 0.7]},
+      }}
     >
       <div tw="relative max-width[1150px] mx-auto px-4 box-sizing[content-box] z-index[1] text-white">
         <div tw="padding-left[1rem] md:padding-left[90px] margin-bottom[10px] flex items-center">
@@ -171,21 +184,22 @@ const AboutMe = () => {
         >
           <div>
             <em tw="font-semibold mb-1 block">
-              I’m looking for a new professional relationship <OpenToWork tw="relative top-[-2px]" />
+              I’m looking for a new professional relationship{' '}
+              <OpenToWork tw="relative top-[-2px]" />
             </em>
-            Currently a Full-Stack Engineer at <b>Millie Group</b> and Ex&nbsp;Frontend Engineer at{' '}
-            <b>Playbook Technologies</b>.
+            Currently a Full-Stack Engineer at <b>Millie Group</b> and
+            Ex&nbsp;Frontend Engineer at <b>Playbook Technologies</b>.
           </div>
           <p>
             Pursuing a <b>Computer Science BSc</b> degree at <b>LNU, Sweden</b>.
           </p>
           <p>
-            An advocate of free-as-in-freedom software and an active social progressivist in dire need of building
-            empowering solutions.
+            An advocate of free-as-in-freedom software and an active social
+            progressivist in dire need of building empowering solutions.
           </p>
           <p>
-            Working with <i>ones and zeros</i> since the age of 10, I’m looking for that <em>perfect fit</em> and a
-            long-term relationship.
+            Working with <i>ones and zeros</i> since the age of 10, I’m looking
+            for that <em>perfect fit</em> and a long-term relationship.
           </p>
 
           <div tw="flex md:flex-row flex-col items-center space-x-[min(3vh, 20px)] margin-top[40px] font-size[1rem]">
@@ -203,10 +217,17 @@ const AboutMe = () => {
               <a href="mailto:matisowagm@gmail.com" target="_blank">
                 <Icon icon="mdi:email-open" tw="mb-[-5px]" />
               </a>
-              <a href="https://github.com/judehunter" target="_blank" tw="font-size[27px]">
+              <a
+                href="https://github.com/judehunter"
+                target="_blank"
+                tw="font-size[27px]"
+              >
                 <Icon icon="akar-icons:github-fill" />
               </a>
-              <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
+              <a
+                href="https://www.linkedin.com/in/jude-hunter/"
+                target="_blank"
+              >
                 <Icon icon="akar-icons:linkedin-fill" />
               </a>
             </div>

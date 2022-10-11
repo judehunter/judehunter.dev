@@ -7,7 +7,10 @@ import {Global} from '@emotion/react';
 import Head from 'next/head';
 import {useRouter} from 'next/router';
 import {useRemoteRefresh} from 'next-remote-refresh/hook';
-import {serverSerializeAllPosts, serverSerializePostBySlug} from '../../misc/mdx';
+import {
+  serverSerializeAllPosts,
+  serverSerializePostBySlug,
+} from '../../misc/mdx';
 import {PagePropsContext} from '../../misc/common';
 import {useEffect, useRef, useState} from 'react';
 // import {Suspense} from 'react';
@@ -39,12 +42,18 @@ const LazyLoadCSS = ({href}) => {
     <Head>
       <link rel="preconnect" href={href} />
       <link rel="preload" as="style" href={href} />
-      <link href={href} rel="stylesheet" media={!hydratedRef.current ? 'print' : 'all'} />
+      <link
+        href={href}
+        rel="stylesheet"
+        media={!hydratedRef.current ? 'print' : 'all'}
+      />
     </Head>
   );
 };
 
-const ArticlePageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
+const ArticlePageExport = (
+  props: Awaited<ReturnType<typeof getStaticProps>>['props'],
+) => {
   const router = useRouter();
   useRemoteRefresh({
     shouldRefresh: (path) => path.includes(router.query.slug as string),
@@ -68,9 +77,18 @@ const ArticlePageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['pr
       />
       <Head>
         <title>{props.source.frontmatter!.title} · Jude Hunter</title>
-        <meta property="og:title" content={`${props.source.frontmatter!.title} · Jude Hunter`} />
-        <meta name="description" content={props.source.frontmatter!.description} />
-        <meta property="og:description" content={props.source.frontmatter!.description} />
+        <meta
+          property="og:title"
+          content={`${props.source.frontmatter!.title} · Jude Hunter`}
+        />
+        <meta
+          name="description"
+          content={props.source.frontmatter!.description}
+        />
+        <meta
+          property="og:description"
+          content={props.source.frontmatter!.description}
+        />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:secure_url" content={ogImageUrl} />
         <meta name="twitter:image:src" content={ogImageUrl} />
@@ -78,7 +96,10 @@ const ArticlePageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['pr
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="keywords"
-          content={[...props.source.frontmatter!.tags, ['Jude Hunter', 'coding', 'web development']].join(', ')}
+          content={[
+            ...props.source.frontmatter!.tags,
+            ['Jude Hunter', 'coding', 'web development'],
+          ].join(', ')}
         />
         <meta name="author" content="Jude Hunter" />
         <link rel="canonical" href={`https://judehunter.dev/blog/${slug}`} />
@@ -98,12 +119,16 @@ export const getStaticProps = async ({params}) => {
 
   const sortedAllPosts = allPosts.sort(
     (a, b) =>
-      new Date(b.source.frontmatter!.createDate).getTime() - new Date(a.source.frontmatter!.createDate).getTime(),
+      new Date(b.source.frontmatter!.createDate).getTime() -
+      new Date(a.source.frontmatter!.createDate).getTime(),
   );
 
   const thisPostIdx = sortedAllPosts.findIndex((x) => x.slug === params.slug);
 
-  const nextUp = thisPostIdx === sortedAllPosts.length - 1 ? sortedAllPosts[0] : sortedAllPosts[thisPostIdx + 1];
+  const nextUp =
+    thisPostIdx === sortedAllPosts.length - 1
+      ? sortedAllPosts[0]
+      : sortedAllPosts[thisPostIdx + 1];
 
   return {
     props: {

@@ -27,8 +27,14 @@ const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
         <motion.h1
           tw="text-xl font-semibold margin-bottom[10px]"
           variants={{
-            rest: {fontVariationSettings: '"slnt" 0', transition: {duration: 0.3}},
-            hover: {fontVariationSettings: '"slnt" -10', transition: {duration: 0.3}},
+            rest: {
+              fontVariationSettings: '"slnt" 0',
+              transition: {duration: 0.3},
+            },
+            hover: {
+              fontVariationSettings: '"slnt" -10',
+              transition: {duration: 0.3},
+            },
           }}
         >
           {title}
@@ -65,7 +71,8 @@ const BlogEntries = () => {
   const entries = usePageProps<typeof IndexPageExport>()
     .posts.sort(
       (a, b) =>
-        new Date(b.source.frontmatter!.createDate).getTime() - new Date(a.source.frontmatter!.createDate).getTime(),
+        new Date(b.source.frontmatter!.createDate).getTime() -
+        new Date(a.source.frontmatter!.createDate).getTime(),
     )
     .slice(0, 4)
     .map((x) => ({
@@ -144,9 +151,19 @@ const BlogEntries = () => {
   );
 };
 
-const SectionTitle = ({children, variant, ...rest}: {children: ReactNode; variant: 'line-dedent'}) => {
+const SectionTitle = ({
+  children,
+  variant,
+  ...rest
+}: {
+  children: ReactNode;
+  variant: 'line-dedent';
+}) => {
   return (
-    <div tw="flex items-baseline text-white margin-left[30px] text-4xl" {...rest}>
+    <div
+      tw="flex items-baseline text-white margin-left[30px] text-4xl"
+      {...rest}
+    >
       <div>
         <div tw="width[80px] margin-right[30px] height[1px] bg-white opacity-50 margin-top[-0.4em]" />
       </div>

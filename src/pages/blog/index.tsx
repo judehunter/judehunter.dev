@@ -12,7 +12,9 @@ const getUrl = () =>
     ? `https://${process.env.VERCEL_URL}`
     : `http://${window.location.host}`;
 
-const BlogIndexPageExport = (props: Awaited<ReturnType<typeof getStaticProps>>['props']) => {
+const BlogIndexPageExport = (
+  props: Awaited<ReturnType<typeof getStaticProps>>['props'],
+) => {
   const ogImageUrl = `${getUrl()}/ogimages/homepage.png`;
 
   return (

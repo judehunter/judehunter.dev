@@ -3,7 +3,15 @@ import tw, {css} from 'twin.macro';
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
 
-export const Tooltip = ({target, children, side}: {target: ReactNode; children: ReactNode; side: Side}) => {
+export const Tooltip = ({
+  target,
+  children,
+  side,
+}: {
+  target: ReactNode;
+  children: ReactNode;
+  side: Side;
+}) => {
   return (
     <div tw="relative" className="group">
       {target}
@@ -24,7 +32,8 @@ export const Tooltip = ({target, children, side}: {target: ReactNode; children: 
               top: 0;
               left: 50%;
               padding-bottom: 5px;
-              transform: translateX(-50%) translateY(calc(-100% + 10px)) scale(0.9);
+              transform: translateX(-50%) translateY(calc(-100% + 10px))
+                scale(0.9);
               .group:hover & {
                 transform: translateX(-50%) translateY(-100%) scale(1);
               }

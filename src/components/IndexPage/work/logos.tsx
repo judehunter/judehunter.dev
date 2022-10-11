@@ -32,19 +32,31 @@ export const PlaybookLogo = (props) => (
         <mask id="b" fill="#fff">
           <use xlinkHref="#a" />
         </mask>
-        <path fill="currentColor" d="M.379 11.358h11.299V.058H.379z" mask="url(#b)" />
+        <path
+          fill="currentColor"
+          d="M.379 11.358h11.299V.058H.379z"
+          mask="url(#b)"
+        />
       </g>
       <g transform="translate(15.552 .159)">
         <mask id="d" fill="#fff">
           <use xlinkHref="#c" />
         </mask>
-        <path fill="currentColor" d="M.324 11.069H11.36V.19H.324z" mask="url(#d)" />
+        <path
+          fill="currentColor"
+          d="M.324 11.069H11.36V.19H.324z"
+          mask="url(#d)"
+        />
       </g>
       <g transform="translate(0 15.135)">
         <mask id="f" fill="#fff">
           <use xlinkHref="#e" />
         </mask>
-        <path fill="currentColor" d="M.157 9.713h26.95V.007H.158z" mask="url(#f)" />
+        <path
+          fill="currentColor"
+          d="M.157 9.713h26.95V.007H.158z"
+          mask="url(#f)"
+        />
       </g>
       <path
         fill="currentColor"
@@ -61,8 +73,15 @@ export const MillieLogo = (props) => (
   </svg>
 );
 
-export const IntersoLogo = (props) => <img src="/interso.png" alt="Interso Company Logo" {...props} />;
+export const IntersoLogo = (props) => (
+  <img src="/interso.png" alt="Interso Company Logo" {...props} />
+);
 
 export const ZwierciadlaLogo = (props) => (
-  <img src="/zwierciadla.png" alt="Zwierciadla Company Logo" tw="margin-left[-7px] margin-bottom[-10px]" {...props} />
+  <img
+    src="/zwierciadla.png"
+    alt="Zwierciadla Company Logo"
+    tw="margin-left[-7px] margin-bottom[-10px]"
+    {...props}
+  />
 );

@@ -100,8 +100,11 @@ const useScrollInterpolation = ({
     }
     const listener = () => {
       if (!ref.current) return;
-      const elemPos = ref.current.getBoundingClientRect().top + document.documentElement.scrollTop;
-      const topScrollBottomEdge = document.documentElement.scrollTop + globalThis.window.innerHeight;
+      const elemPos =
+        ref.current.getBoundingClientRect().top +
+        document.documentElement.scrollTop;
+      const topScrollBottomEdge =
+        document.documentElement.scrollTop + globalThis.window.innerHeight;
 
       // prettier-ignore
       const eased =
@@ -131,19 +134,34 @@ const useScrollInterpolation = ({
   return {ref, value};
 };
 
-export const ScrollInterpolationPullUp = ({children, length, speed = 1, ...rest}) => {
+export const ScrollInterpolationPullUp = ({
+  children,
+  length,
+  speed = 1,
+  ...rest
+}) => {
   const {ref, value} = useScrollInterpolation({speed, length});
 
   return (
     <div {...rest} {...{ref}}>
-      <div style={{transform: `translateY(${value * length}px)`}}>{children}</div>
+      <div style={{transform: `translateY(${value * length}px)`}}>
+        {children}
+      </div>
     </div>
   );
 };
 
-export const ScrollInterpolationWorkTech = ({children, length, speed = 1, ...rest}) => {
+export const ScrollInterpolationWorkTech = ({
+  children,
+  length,
+  speed = 1,
+  ...rest
+}) => {
   const {ref: ref1, value: value1} = useScrollInterpolation({speed, length});
-  const {ref: ref2, value: value2} = useScrollInterpolation({speed, length: length / 2});
+  const {ref: ref2, value: value2} = useScrollInterpolation({
+    speed,
+    length: length / 2,
+  });
 
   return (
     <div
@@ -154,7 +172,12 @@ export const ScrollInterpolationWorkTech = ({children, length, speed = 1, ...res
         ref2.current = node;
       }}
     >
-      <div style={{transform: `translateX(${(-value1 * length) / 4}px)`, opacity: (1 - value2).toFixed(1)}}>
+      <div
+        style={{
+          transform: `translateX(${(-value1 * length) / 4}px)`,
+          opacity: (1 - value2).toFixed(1),
+        }}
+      >
         {children}
       </div>
     </div>

@@ -1,5 +1,10 @@
 import {DatePeriod, ScrollInterpolationWorkTech} from './misc';
-import {IntersoLogo, MillieLogo, PlaybookLogo, ZwierciadlaLogo} from './work/logos';
+import {
+  IntersoLogo,
+  MillieLogo,
+  PlaybookLogo,
+  ZwierciadlaLogo,
+} from './work/logos';
 import tw from 'twin.macro';
 import {ReactNode} from 'react';
 import {icons} from './work/icons';
@@ -64,11 +69,13 @@ const workItems: WorkItem[] = [
         },
         description: (
           <>
-            I developed Millie’s entire pivotal student portal with scalability in mind to allow for tens of thousands
-            of concurrent real-time users.
+            I developed Millie’s entire pivotal student portal with scalability
+            in mind to allow for tens of thousands of concurrent real-time
+            users.
             <br />
-            <br />I designed, architected, and spearheaded the implementation of a variety of crucial tooling to propel
-            Millie into the EdTech industry.
+            <br />I designed, architected, and spearheaded the implementation of
+            a variety of crucial tooling to propel Millie into the EdTech
+            industry.
           </>
         ),
       },
@@ -128,7 +135,14 @@ const workItems: WorkItem[] = [
           'I’ve led the IT&Photo team during the 16th edition of Zwierciadła - the largest and most recognizable nation-wide theatre event for the youth. We’ve successfully revived the event’s social media & website and dealt with multiple partners and sponsors. That edition was a great success and attracted 1000+ spectators at just one venue.',
       },
     ],
-    tech: [icons.wordpress, icons.python, icons.photoshop, icons.lightroom, icons.indesign, icons.affinitydesigner],
+    tech: [
+      icons.wordpress,
+      icons.python,
+      icons.photoshop,
+      icons.lightroom,
+      icons.indesign,
+      icons.affinitydesigner,
+    ],
   },
 ];
 
@@ -146,7 +160,10 @@ const WorkSectionItemTech = ({tech}: {tech: WorkItem['tech']}) => {
                 icon={x.icon}
                 height={BIG_SIZE}
                 width={BIG_SIZE}
-                css={[x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[5px]`, x.style]}
+                css={[
+                  x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[5px]`,
+                  x.style,
+                ]}
               />
             }
             side="top"
@@ -164,7 +181,10 @@ const WorkSectionItemTech = ({tech}: {tech: WorkItem['tech']}) => {
                 icon={x.icon}
                 height={SMALL_SIZE}
                 width={SMALL_SIZE}
-                css={[x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[3px]`, x.style]}
+                css={[
+                  x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[3px]`,
+                  x.style,
+                ]}
               />
             }
             side="top"
@@ -209,7 +229,10 @@ const WorkSectionItem = ({item}: {item: WorkItem}) => {
         </h1> */}
       </div>
       {/* </ScrollInterpolationPullUp> */}
-      <ScrollInterpolationWorkTech length={450} tw="flex-grow flex align-self[stretch] z-index[0] [& > *]:flex-grow">
+      <ScrollInterpolationWorkTech
+        length={450}
+        tw="flex-grow flex align-self[stretch] z-index[0] [& > *]:flex-grow"
+      >
         <div tw="md:block h-full hidden">
           <WorkSectionItemTech tech={item.tech} />
         </div>
@@ -222,7 +245,9 @@ export const WorkSection = () => {
   return (
     <div tw="text-white mt-[-80px] pt-[80px]" id="work">
       <div tw="relative max-width[1000px] mx-auto px-4 box-sizing[content-box] padding-top[100px]">
-        <h1 tw="mb-[50px] text-center font-semibold text-4xl">professional experience</h1>
+        <h1 tw="mb-[50px] text-center font-semibold text-4xl">
+          professional experience
+        </h1>
         {/* <div tw="flex items-start">
           <div tw="sticky top-[150px] height[200px] width[60px] flex-shrink-0 hidden md:block">
             <h1 tw="transform[translateX(-85px) translateY(80px) rotate(-90deg)] text-4xl font-semibold absolute left-0 top-0">
