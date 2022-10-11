@@ -47,6 +47,9 @@ export const YouveReached = () => {
               >
                 <Icon icon="akar-icons:linkedin-fill" />
               </a>
+              <a href="https://twitter.com/judehunterdev" target="_blank">
+                <Icon icon="akar-icons:twitter-fill" tw="ml-[-3px]" />
+              </a>
             </div>
           </div>
         </div>
@@ -57,7 +60,7 @@ export const YouveReached = () => {
               tw="w-auto h-auto rounded-full"
               width={270}
               height={270}
-              alt="Avaatar photo of the blog post author Jude Hunter"
+              alt="Avatar photo of the blog post author Jude Hunter"
             />
           </div>
         </div>

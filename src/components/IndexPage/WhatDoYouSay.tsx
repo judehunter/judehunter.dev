@@ -32,6 +32,9 @@ export const WhatDoYouSay = () => {
         <a href="https://www.linkedin.com/in/jude-hunter/" target="_blank">
           <Icon icon="akar-icons:linkedin-fill" />
         </a>
+        <a href="https://twitter.com/judehunterdev" target="_blank">
+          <Icon icon="akar-icons:twitter-fill" tw="ml-[-4px]" />
+        </a>
       </div>
     </div>
   );

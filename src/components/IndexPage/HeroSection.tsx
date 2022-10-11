@@ -230,6 +230,9 @@ const AboutMe = () => {
               >
                 <Icon icon="akar-icons:linkedin-fill" />
               </a>
+              <a href="https://twitter.com/judehunterdev" target="_blank">
+                <Icon icon="akar-icons:twitter-fill" tw="ml-[-3px]" />
+              </a>
             </div>
           </div>
         </div>
