@@ -21,8 +21,8 @@ const Input = ({val, onChange}) => {
       >
         <Icon
           icon="fluent:arrow-curve-down-left-16-regular"
-          fontSize={34}
-          tw="text-white text-[rgb(127, 236, 157)] transition-colors relative bottom[-7px] left-[-6px]  transform[rotate(210deg)] "
+          fontSize={33}
+          tw="text-white text-[rgb(127, 236, 157)] transition-colors relative bottom[-6.3px] left-[-6px]  transform[rotate(209deg)] "
         />
       </button>
     </div>
