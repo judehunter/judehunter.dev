@@ -74,7 +74,6 @@ export const ContactInput = ({...rest}) => {
       >
         <GooeyLoader />
       </div>
-      {sending}
     </div>
   );
 };

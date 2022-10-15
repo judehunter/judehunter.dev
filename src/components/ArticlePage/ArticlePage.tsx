@@ -16,6 +16,7 @@ import {MDXRemote} from 'next-mdx-remote';
 import {usePageProps} from '../../misc/common';
 import ArticlePageExport from '../../pages/blog/[slug]';
 import {LazyMotion} from 'framer-motion';
+import {SubscribeCTA} from './SubscribeCTA';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -289,7 +290,8 @@ export const ArticlePage = () => {
               />
             </div>
           </header>
-          <ContentSection content={source} {...{components}}></ContentSection>
+          <ContentSection content={source} {...{components}} />
+          <SubscribeCTA />
 
           <YouveReached />
           <Footer />
