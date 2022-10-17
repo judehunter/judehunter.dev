@@ -53,14 +53,18 @@ export const SubscribeCTA = () => {
     }, 3000);
   };
   return (
-    <div tw="max-w-[416px] mb-[100px] mx-auto px-2">
+    <div tw="max-w-[416px] mb-[20px] mx-auto px-2 mt-8">
       <form
-        tw="py-10 border-0 border-[rgb(127, 236, 157)] rounded-lg bg-[#192732]"
+        tw="py-10 border-0 border-[rgb(127, 236, 157)] rounded-lg bg-[#192732] relative"
         onSubmit={(e) => {
           e.preventDefault();
           submit();
         }}
       >
+        <Icon
+          icon="noto:rolled-up-newspaper"
+          tw="absolute left-[-20px] top-[35px] font-size[3rem] hidden md:block"
+        />
         <h1 tw="font-semibold text-xl md:font-size[1.4rem] px-[32px] md:px-[43px]">
           Subscribe to my newsletter
         </h1>

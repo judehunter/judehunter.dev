@@ -7,10 +7,8 @@ import ArticlePageExport from '../../pages/blog/[slug]';
 export const ArticleBottomNav = () => {
   const {nextUp} = usePageProps<typeof ArticlePageExport>();
   return (
-    <footer>
-      <hr />
-      <nav tw="flex items-center md:flex-col flex-col">
-        <span tw="flex-grow">Thanks for reading.</span>
+    <>
+      <nav tw="flex items-center md:flex-col flex-col text-lg md:px-0 pl-6 pr-6">
         <Link passHref href={nextUp.url}>
           <a
             tw="
@@ -28,6 +26,7 @@ export const ArticleBottomNav = () => {
                 text-[#7fec9d]!
                 border-[#7fec9d]
               )
+              line-height[32px]
               mt-8
               // md:mt-0
             "
@@ -59,10 +58,10 @@ export const ArticleBottomNav = () => {
         <div tw="text-sm opacity-70 mt-3">
           or{' '}
           <Link passHref href="/blog">
-            <a tw="text-[rgba(218, 223, 231)]!">see all articles</a>
+            <a tw="text-[rgba(218, 223, 231)]! underline">see all articles</a>
           </Link>
         </div>
       </nav>
-    </footer>
+    </>
   );
 };

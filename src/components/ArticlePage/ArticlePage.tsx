@@ -211,7 +211,7 @@ const ContentSection = ({content, components}) => {
       }),
     );
   return (
-    <main tw="relative py-16">
+    <main tw="relative pt-16">
       {/* <Head>
         <link
           rel="stylesheet"
@@ -242,7 +242,8 @@ const ContentSection = ({content, components}) => {
               ...dynamics,
             }}
           />
-          <ArticleBottomNav />
+          <hr />
+          <div tw="text-center">Thanks for reading.</div>
         </div>
       </div>
     </main>
@@ -291,8 +292,14 @@ export const ArticlePage = () => {
             </div>
           </header>
           <ContentSection content={source} {...{components}} />
-          <SubscribeCTA />
 
+          <footer>
+            <SubscribeCTA />
+
+            <ArticleBottomNav />
+          </footer>
+
+          <div tw="h-16" />
           <YouveReached />
           <Footer />
         </div>
