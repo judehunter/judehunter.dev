@@ -130,11 +130,13 @@ export const getStaticProps = async ({params}) => {
       ? sortedAllPosts[0]
       : sortedAllPosts[thisPostIdx + 1];
 
+  const slimNextUp = {url: nextUp.url, title: nextUp.source.frontmatter!.title};
+
   return {
     props: {
       source,
       components,
-      nextUp,
+      nextUp: slimNextUp,
     },
   };
 };

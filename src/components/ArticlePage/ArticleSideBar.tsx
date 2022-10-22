@@ -98,18 +98,30 @@ const LikeButton = () => {
 
 export const ArticleSideBar = () => {
   return (
-    <div tw="absolute left-0 top[-381px] md:top-[-401px] bottom-0 right-0 h-full pointer-events-none z-index[99999]">
-      {/* <div tw="w-[563px] " */}
-      <div tw="sticky top[50px] md:top-[50px] pointer-events-none max-w-[700px] mx-auto flex justify-end md:justify-start">
-        <div
-          tw="transform[translateX(-45px)] md:transform[translateX(-100%)] inline-block md:pr-6 pointer-events-auto"
-          suppressHydrationWarning
-        >
-          {typeof window !== 'undefined' && (
-            <LikeButton key={useRouter().query.slug as any} />
-          )}
+    <>
+      <div tw="absolute left-0 top[-381px] md:top-[-401px] bottom-0 right-0 h-full pointer-events-none z-index[99999]">
+        {/* <div tw="w-[563px] " */}
+        <div tw="sticky top[50px] md:top-[50px] pointer-events-none max-w-[700px] mx-auto flex justify-end md:justify-start">
+          <div
+            tw="transform[translateX(-45px)] md:transform[translateX(-100%)] inline-block md:pr-6 pointer-events-auto"
+            suppressHydrationWarning
+          >
+            {typeof window !== 'undefined' && (
+              <LikeButton key={useRouter().query.slug as any} />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      {/* <div tw="absolute left-0 top-0 bottom-0 right-0 pointer-events-none z-index[99999]">
+        <div tw="sticky top-[300.9px] pointer-events-none max-w-[600px] mx-auto flex justify-end md:justify-start">
+          <div
+            tw="md:transform[translateX(-100%) translateY(-50%)] inline-block pointer-events-auto"
+            suppressHydrationWarning
+          >
+            <SubscribeCTA />
+          </div>
+        </div>
+      </div> */}
+    </>
   );
 };

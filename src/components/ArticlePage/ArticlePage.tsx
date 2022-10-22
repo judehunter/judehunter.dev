@@ -94,26 +94,6 @@ const DotPattern = () => {
   );
 };
 
-const CodeBlock = ({lang, code}) => {
-  return (
-    // <SyntaxHighlighter
-    //   language={lang}
-    //   style={nord}
-    // customStyle={{
-    //   marginLeft: '-25px',
-    //   marginRight: '-25px',
-    //   paddingLeft: '25px',
-    //   paddingRight: '25px',
-    //   fontFamily: '"Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-    //   fontSize: '16px',
-    // }}
-    // >
-    //   {code}
-    // </SyntaxHighlighter>
-    <>placeholder</>
-  );
-};
-
 const MDStyle = tw`
   [& h1]:(
     text-3xl
@@ -294,7 +274,7 @@ export const ArticlePage = () => {
           <ContentSection content={source} {...{components}} />
 
           <footer>
-            <SubscribeCTA />
+            <SubscribeCTA tw="mx-auto px-2 mt-8" />
 
             <ArticleBottomNav />
           </footer>

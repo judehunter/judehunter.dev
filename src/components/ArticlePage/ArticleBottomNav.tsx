@@ -38,7 +38,7 @@ export const ArticleBottomNav = () => {
               </div>
             </div>
             <div tw="flex items-center">
-              <span tw="text-sm">{nextUp.source.frontmatter!.title}</span>
+              <span tw="text-sm">{nextUp.title}</span>
               <Icon
                 icon="la:long-arrow-alt-right"
                 tw="

@@ -6,8 +6,8 @@ import {evt} from '../../misc/gtag';
 
 const Input = ({val, onChange}) => {
   return (
-    <div tw="flex justify-center mt-6 px-8">
-      <div tw="border-b-[2px] border-b-[rgb(127, 236, 157)] max-w-[342px] flex-grow">
+    <div tw="flex justify-center mt-6 px-[32px] md:px-[43px]">
+      <div tw="border-b-[2px] border-b-[rgb(127, 236, 157)] flex-grow">
         <input
           tw="background[none] w-full h-full focus:outline-none text-lg"
           placeholder="Your email here, please"
@@ -29,7 +29,7 @@ const Input = ({val, onChange}) => {
   );
 };
 
-export const SubscribeCTA = () => {
+export const SubscribeCTA = ({...rest}) => {
   const [email, setEmail] = useState('');
   const [justSubmitted, setJustSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
@@ -53,7 +53,7 @@ export const SubscribeCTA = () => {
     }, 3000);
   };
   return (
-    <div tw="max-w-[416px] mb-[20px] mx-auto px-2 mt-8">
+    <div tw="max-w-[416px] mb-[20px]" {...rest}>
       <form
         tw="py-10 border-0 border-[rgb(127, 236, 157)] rounded-lg bg-[#192732] relative"
         onSubmit={(e) => {
