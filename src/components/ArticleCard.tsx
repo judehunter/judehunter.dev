@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import Img from 'next/image';
+import tw from 'twin.macro';
+import {Icon} from '@iconify/react';
+import {useEffect, useState} from 'react';
 
 export const ArticleCard = ({
   title,
@@ -7,6 +10,7 @@ export const ArticleCard = ({
   tags,
   url,
   imageBlur,
+  slug,
   ...rest
 }: {
   title: string;
@@ -14,7 +18,20 @@ export const ArticleCard = ({
   image: string;
   imageBlur: string;
   url: string;
+  slug: string;
 }) => {
+  const [likes, setLikes] = useState<number | null>(null);
+
+  const getLikes = async () =>
+    fetch('/api/getPostLikes', {
+      method: 'POST',
+      body: JSON.stringify({slug}),
+    }).then((x) => x.json());
+
+  useEffect(() => {
+    getLikes().then(setLikes);
+  }, []);
+
   return (
     <Link passHref href={url}>
       <a
@@ -51,6 +68,13 @@ export const ArticleCard = ({
             tw="bg-center bg-cover w-full aspect-ratio[3 / 4] rounded-[8px]"
             style={{backgroundImage: `url('${image}')`}}
           /> */}
+          <div tw="absolute left-3 top-3 z-index[1] backdrop-filter[blur(3px)] bg-green-900 bg-opacity-50 px-4 py-3 rounded-lg flex space-x-2 items-center">
+            <Icon
+              icon="ph:hands-clapping-bold"
+              tw="font-size[1.5rem] ml-[-2px]"
+            />
+            <span>{likes}</span>
+          </div>
           <div
             tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]"
             className="thumbnail"
@@ -65,7 +89,6 @@ export const ArticleCard = ({
               priority
             />
           </div>
-          {/* <img tw="rounded-[8px] w-full" src={image} /> */}
           <div
             tw="
               absolute left-0 top-0 right-0 bottom-0

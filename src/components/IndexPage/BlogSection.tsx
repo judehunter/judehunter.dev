@@ -81,6 +81,7 @@ const BlogEntries = () => {
       tags: (x.source.frontmatter!.tags as any as string[]).map((x) => x!),
       url: x.url,
       imageBlur: x.thumbnailBlurDataUrl,
+      slug: x.slug,
     }));
   return (
     // <div tw="flex space-x-[40px] height[400px] padding-right[20px] margin-top[-58px] overflow-hidden">
