@@ -21,6 +21,7 @@ export const BlogIndexPage = () => {
       tags: (x.source.frontmatter!.tags as any as string[]).map((x) => x!),
       url: x.url,
       imageBlur: x.thumbnailBlurDataUrl,
+      slug: x.slug,
     }));
 
   const tileStyles = tw`
