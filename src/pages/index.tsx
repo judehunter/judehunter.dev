@@ -55,18 +55,11 @@ const IndexPageExport = (
 };
 export const getStaticProps = async () => {
   const posts = await serverSerializeAllPosts();
-  return {props: {posts}};
+  const slimPosts = posts.map((x) => {
+    const {source, ...rest} = x;
+    return {...rest, source: {frontmatter: source.frontmatter}};
+  });
+  return {props: {posts: slimPosts}};
 };
-
-// export const getStaticProps = async () => {
-//   // const postsResponse = await client.queries;
-//   // console.log(postsResponse);
-//   // const posts = postsResponse.data.postConnection.edges.map((x) => {
-//   // return {filename: x.node._sys.filename};
-//   // });
-//   // return {
-//   // posts,
-//   // };
-// };
 
 export default IndexPageExport;

@@ -52,7 +52,11 @@ const BlogIndexPageExport = (
 
 export const getStaticProps = async () => {
   const posts = await serverSerializeAllPosts();
-  return {props: {posts}};
+  const slimPosts = posts.map((x) => {
+    const {source, ...rest} = x;
+    return {...rest, source: {frontmatter: source.frontmatter}};
+  });
+  return {props: {posts: slimPosts}};
 };
 
 export default BlogIndexPageExport;
