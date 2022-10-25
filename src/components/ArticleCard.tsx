@@ -68,13 +68,15 @@ export const ArticleCard = ({
             tw="bg-center bg-cover w-full aspect-ratio[3 / 4] rounded-[8px]"
             style={{backgroundImage: `url('${image}')`}}
           /> */}
-          <div tw="absolute left-3 top-3 z-index[1] backdrop-filter[blur(3px)] bg-green-900 bg-opacity-50 px-4 py-3 rounded-lg flex space-x-2 items-center">
-            <Icon
-              icon="ph:hands-clapping-bold"
-              tw="font-size[1.5rem] ml-[-2px]"
-            />
-            <span>{likes}</span>
-          </div>
+          {likes !== null ? (
+            <div tw="absolute left-3 top-3 z-index[1] backdrop-filter[blur(3px)] bg-green-900 bg-opacity-50 px-4 py-3 rounded-lg flex space-x-2 items-center">
+              <Icon
+                icon="ph:hands-clapping-bold"
+                tw="font-size[1.5rem] ml-[-2px]"
+              />
+              <span>{likes}</span>
+            </div>
+          ) : null}
           <div
             tw="relative w-full aspect-ratio[3 / 4] rounded-[8px]"
             className="thumbnail"
