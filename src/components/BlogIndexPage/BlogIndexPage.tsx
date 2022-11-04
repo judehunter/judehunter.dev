@@ -1,10 +1,9 @@
 import tw from 'twin.macro';
-import Link from 'next/link';
-import {Logo} from '../Logo';
 import {ArticleCard} from '../ArticleCard';
 import {usePageProps} from '../../misc/common';
 import BlogIndexPageExport from '../../pages/blog';
 import {Footer} from '../Footer';
+import {NavBar} from '../NavBar';
 
 export const BlogIndexPage = () => {
   const {posts} = usePageProps<typeof BlogIndexPageExport>();
@@ -40,15 +39,8 @@ export const BlogIndexPage = () => {
   return (
     <>
       <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-        <nav tw="pt-24 flex justify-center">
-          <Link href="/" passHref>
-            <a tw="flex items-center space-x-4 ml-[-10px]">
-              <span tw="font-semibold">the </span>
-              <Logo />
-              <span tw="font-semibold">jude hunter blog</span>
-            </a>
-          </Link>
-        </nav>
+        <div tw="pt-24"></div>
+        <NavBar />
         <main tw="pb-[100px] mt-[100px] grid md:grid-template-columns[repeat(4, 1fr)] grid-template-columns[repeat(1, 1fr)] gap[50px 30px] max-w-[1300px] px-6 mx-auto">
           <ArticleCard
             tw="md:grid-column[1 / 3]"

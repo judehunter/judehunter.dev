@@ -1,9 +1,9 @@
-import {motion} from 'framer-motion';
+import {m} from 'framer-motion';
 import tw from 'twin.macro';
 
 const Line = ({width, i}) => {
   return (
-    <motion.div
+    <m.div
       tw="background-color[white] height[1px]"
       css={{width}}
       animate={{opacity: [0, 0.5, 0.5, 0]}}

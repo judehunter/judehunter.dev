@@ -1,7 +1,5 @@
-import Link from 'next/link';
 import tw from 'twin.macro';
 import {Footer} from '../Footer';
-import {Logo} from '../Logo';
 import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {format} from 'date-fns';
 import Img from 'next/future/image';
@@ -17,6 +15,7 @@ import {usePageProps} from '../../misc/common';
 import ArticlePageExport from '../../pages/blog/[slug]';
 import {LazyMotion} from 'framer-motion';
 import {SubscribeCTA} from './SubscribeCTA';
+import {NavBar} from '../NavBar';
 
 SyntaxHighlighter.registerLanguage('ts', ts);
 SyntaxHighlighter.registerLanguage('tsx', tsx);
@@ -239,15 +238,9 @@ export const ArticlePage = () => {
         features={() => import('./motionFeatures').then((res) => res.default)}
         strict
       >
+        <NavBar />
         <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-          <nav tw="pt-24 flex justify-center">
-            <Link href="/" passHref>
-              <a tw="flex items-center space-x-4 ml-[-10px]">
-                <Logo />
-                <span tw="font-semibold">jude hunter</span>
-              </a>
-            </Link>
-          </nav>
+          <div tw="pt-32 flex"></div>
           <header>
             <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
               <aside tw="text-center mb-5 opacity-50">

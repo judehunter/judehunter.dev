@@ -1,11 +1,11 @@
 import {format} from 'date-fns';
-import {motion} from 'framer-motion';
+import {m} from 'framer-motion';
 import {useRef, useState, useEffect} from 'react';
 import tw from 'twin.macro';
 
 export const AnimText = ({text, overlayStyle, delay, ...rest}) => {
   return (
-    <motion.span
+    <m.span
       tw="inline-block relative before:(block absolute z-index[0] opacity[var(--opacity)])"
       css={{
         '&:before': {
@@ -22,7 +22,7 @@ export const AnimText = ({text, overlayStyle, delay, ...rest}) => {
       }}
       {...rest}
     >
-      <motion.span
+      <m.span
         tw="bg-clip-text -webkit-text-fill-color[transparent] relative z-index[1]"
         css={overlayStyle}
         animate={{opacity: [0, 1, 1, 0]} as any}
@@ -35,15 +35,15 @@ export const AnimText = ({text, overlayStyle, delay, ...rest}) => {
         }}
       >
         {text}
-      </motion.span>
-    </motion.span>
+      </m.span>
+    </m.span>
   );
 };
 
 export const PullUpText = ({delay, children}) => {
   return (
     // <span tw="inline-block height[1.2em] overflow-hidden">
-    //   <motion.span
+    //   <m.span
     //     tw="overflow-hidden inline-block"
     //     initial={{height: '0.2em'}}
     //     animate={{height: '1.1em'}}
@@ -55,7 +55,7 @@ export const PullUpText = ({delay, children}) => {
     //       },
     //     }}
     //   >
-    <motion.span
+    <m.span
       tw="inline-block"
       initial={{y: '0.4em', opacity: 0.001}}
       animate={{y: '0em', opacity: 1}}
@@ -69,8 +69,8 @@ export const PullUpText = ({delay, children}) => {
       }}
     >
       {children}
-    </motion.span>
-    //   </motion.span>
+    </m.span>
+    //   </m.span>
     // </span>
   );
 };

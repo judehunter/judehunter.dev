@@ -1,5 +1,5 @@
 import {Icon} from '@iconify/react';
-import {motion} from 'framer-motion';
+import {m} from 'framer-motion';
 import tw from 'twin.macro';
 import {ContactInput} from '../ContactInput';
 import {AnimText, CapsPreTitle, PullUpText} from './misc';
@@ -12,7 +12,7 @@ const HeroImage = () => {
       <div tw="absolute left-0 top-0 right-0 height[100vh] overflow-hidden z-index[0]">
         <div tw="background[linear-gradient(0deg, rgba(7, 12, 16, 1) 0%, rgba(7, 12, 16, 0) 19%)] absolute left-0 top-0 bottom-0 right-0 z-index[1]" />
         <div tw="relative max-width[1150px] mx-auto padding-top[280px] px-4 box-sizing[content-box]">
-          <motion.div
+          <m.div
             tw="
               absolute
               left[500px] top[100px] width[min(100vh - 100px, 980px)]
@@ -35,7 +35,7 @@ const HeroImage = () => {
               width={980}
               height={980}
             />
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@ const HeroImage = () => {
 const MeetYour = () => {
   return (
     <div tw="relative max-width[1150px] mx-auto px-8 box-sizing[content-box] padding-top[min(280px, 30vh)] z-index[1]">
-      <motion.h1
+      <m.h1
         tw="
           select-none
           text-white font-semibold
@@ -64,8 +64,8 @@ const MeetYour = () => {
         <PullUpText delay={0}>Meet</PullUpText>{' '}
         <PullUpText delay={0.06}>your</PullUpText>{' '}
         <PullUpText delay={0.12}>next</PullUpText>{' '}
-      </motion.h1>
-      <motion.h1
+      </m.h1>
+      <m.h1
         tw="select-none text-white font-size[3rem] md:font-size[min(6.8rem, 11vh)] line-height[1] font-semibold ml-[0] pr-12
         md:margin-left[90px]"
         // initial={{y: 30, opacity: 0}}
@@ -90,15 +90,15 @@ const MeetYour = () => {
           />
           .
         </PullUpText>
-      </motion.h1>
-      <motion.div
+      </m.h1>
+      <m.div
         tw="mt-[73px] md:margin-left[90px] text-white opacity[0]"
         animate={{opacity: 1}}
         transition={{delay: 1.5, duration: 1}}
       >
         <div tw="md:margin-top[min(17vh)]" />
         {/* <ScrollDownPlease /> */}
-      </motion.div>
+      </m.div>
     </div>
   );
 };
@@ -113,18 +113,18 @@ const JudeHunterAnim = () => {
   return (
     <div tw="padding-left[1rem] md:padding-left[90px] flex space-x-2 md:space-x-6">
       <h1 tw="text-4xl md:text-6xl">
-        <motion.span {...getAnimProps(100)}>j</motion.span>
-        <motion.span {...getAnimProps(200)}>u</motion.span>
-        <motion.span {...getAnimProps(300)}>d</motion.span>
-        <motion.span {...getAnimProps(400)}>e</motion.span>
+        <m.span {...getAnimProps(100)}>j</m.span>
+        <m.span {...getAnimProps(200)}>u</m.span>
+        <m.span {...getAnimProps(300)}>d</m.span>
+        <m.span {...getAnimProps(400)}>e</m.span>
       </h1>
       <h1 tw="text-4xl md:text-6xl">
-        <motion.span {...getAnimProps(450)}>h</motion.span>
-        <motion.span {...getAnimProps(500)}>u</motion.span>
-        <motion.span {...getAnimProps(600)}>n</motion.span>
-        <motion.span {...getAnimProps(700)}>t</motion.span>
-        <motion.span {...getAnimProps(800)}>e</motion.span>
-        <motion.span {...getAnimProps(900)}>r</motion.span>
+        <m.span {...getAnimProps(450)}>h</m.span>
+        <m.span {...getAnimProps(500)}>u</m.span>
+        <m.span {...getAnimProps(600)}>n</m.span>
+        <m.span {...getAnimProps(700)}>t</m.span>
+        <m.span {...getAnimProps(800)}>e</m.span>
+        <m.span {...getAnimProps(900)}>r</m.span>
       </h1>
     </div>
   );
@@ -132,7 +132,7 @@ const JudeHunterAnim = () => {
 
 const AboutMe = () => {
   return (
-    <motion.div
+    <m.div
       tw="z-index[1] relative padding-bottom[50px]"
       initial={{y: 50, opacity: 0.001}}
       animate={{y: 0, opacity: 1}}
@@ -160,7 +160,8 @@ const AboutMe = () => {
               margin-top[40px]
               padding[20px 24px]
               md:padding[34px 56px]
-              background-color[#0E151C]
+              background-image[linear-gradient(to bottom, #0e151cff 0%, #070c10ee 30%)]
+              backdrop-filter[blur(4px)]
               border-radius[7px]
               text-xl
               line-height[1.8]
@@ -237,7 +238,7 @@ const AboutMe = () => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 

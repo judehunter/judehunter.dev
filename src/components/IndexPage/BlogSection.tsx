@@ -1,4 +1,3 @@
-import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 import tw, {css} from 'twin.macro';
 import {ArticleCard} from '../ArticleCard';
@@ -10,7 +9,7 @@ import Link from 'next/link';
 const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
   return (
     <ScrollInterpolationPullUp length={250}>
-      <motion.div
+      <m.div
         tw="
           border-radius[7px] background-color[#0E151C] text-white width[414px] padding[27px 34px]
           cursor-pointer
@@ -24,7 +23,7 @@ const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
         whileHover="hover"
         animate="rest"
       >
-        <motion.h1
+        <m.h1
           tw="text-xl font-semibold margin-bottom[10px]"
           variants={{
             rest: {
@@ -38,9 +37,9 @@ const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
           }}
         >
           {title}
-        </motion.h1>
+        </m.h1>
         <div tw="font-light">#javascript</div>
-      </motion.div>
+      </m.div>
     </ScrollInterpolationPullUp>
   );
 };
