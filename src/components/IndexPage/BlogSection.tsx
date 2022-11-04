@@ -5,6 +5,7 @@ import {usePageProps} from '../../misc/common';
 import IndexPageExport from '../../pages';
 import {ScrollInterpolationPullUp} from './misc';
 import Link from 'next/link';
+import {m} from 'framer-motion';
 
 const BlogEntryCard2 = ({title, tags}: {title: string; tags?: string[]}) => {
   return (
