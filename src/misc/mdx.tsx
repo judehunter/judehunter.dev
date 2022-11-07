@@ -4,6 +4,10 @@ import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
 import {visit} from 'unist-util-visit';
 import * as rehypePrism from '@mapbox/rehype-prism';
+import {devCache} from './devCache';
+
+export const devMdxCache =
+  devCache<Awaited<ReturnType<typeof serverSerializeMDX>>>();
 
 const dirExists = async (path) =>
   !!(await stat(path).catch((e) => null))?.isDirectory();
@@ -37,7 +41,12 @@ export const serverSerializePostBySlug = async (slug: string) => {
     : slugPath + '.mdx';
   const file = await readFile(filePath, 'utf-8');
 
-  const source = await serverSerializeMDX(file);
+  let source = devMdxCache.get(file);
+
+  if (!source) {
+    source = await serverSerializeMDX(file);
+    devMdxCache.set(file, source);
+  }
 
   const components = isSlugPathDir
     ? (await readdir(slugPath)).filter((x) => x.endsWith('.tsx'))
@@ -59,7 +68,12 @@ export const serverSerializeAllPosts = async () => {
 
       const file = await readFile(filePath, 'utf-8');
 
-      const source = await serverSerializeMDX(file);
+      let source = devMdxCache.get(file);
+
+      if (!source) {
+        source = await serverSerializeMDX(file);
+        devMdxCache.set(file, source);
+      }
 
       const {base64: thumbnailBlurDataUrl} = await getPlaiceholder(
         source.frontmatter!.thumbnail,
