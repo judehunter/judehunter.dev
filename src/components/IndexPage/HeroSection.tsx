@@ -160,9 +160,10 @@ const AboutMe = () => {
               margin-top[40px]
               padding[20px 24px]
               md:padding[34px 56px]
-              background-image[linear-gradient(to bottom, #0e151cff 0%, #070c10ee 30%)]
-              backdrop-filter[blur(4px)]
-              border-radius[7px]
+              background-image[linear-gradient(to bottom, #0e151cff 0%, #070c1044 30%)]
+              backdrop-filter[blur(6px)]
+              rounded-3xl
+              // border-radius[7px]
               text-xl
               line-height[1.8]
               font-normal
@@ -204,8 +205,8 @@ const AboutMe = () => {
           </p>
 
           <div tw="flex md:flex-row flex-col items-center space-x-[min(3vh, 20px)] margin-top[40px] font-size[1rem]">
-            <ContactInput />
-            <div tw="md:flex-grow" />
+            {/* <ContactInput /> */}
+            {/* <div tw="md:flex-grow" /> */}
             {/* <div tw="flex space-x-[min(3vh, 20px)] mt-[45px] md:mt-0">
               <a href="https://github.com/judehunter" target="_blank">
                 <FaGithub tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
@@ -214,7 +215,7 @@ const AboutMe = () => {
                 <FaLinkedinIn tw="width[min(4vh, 35px)] height[min(4vh, 35px)]" />
               </a>
             </div> */}
-            <div tw="text-white font-size[30px] space-x-[20px] flex items-center mt-[35px] mb-[15px] md:mb-0 md:mt-0">
+            <div tw="text-white font-size[30px] space-x-[26px] flex items-center mt-[35px] mb-[15px] md:mb-0 md:mt-0">
               <a href="mailto:matisowagm@gmail.com" target="_blank">
                 <Icon icon="mdi:email-open" tw="mb-[-5px]" />
               </a>

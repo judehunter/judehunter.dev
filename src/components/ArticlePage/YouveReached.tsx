@@ -22,8 +22,8 @@ export const YouveReached = () => {
           <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mt-7 mb-3">
             LEAVE A MESSAGE AT THE TONE
           </div>
-          <div tw="flex md:space-x-6 md:flex-row flex-col">
-            <ContactInput tw="font-size[0.9em]" />
+          <div tw="">
+            {/* <ContactInput tw="font-size[0.9em]" /> */}
             <div tw="text-white font-size[30px] space-x-[20px] flex items-center mt-[25px] md:mt-0">
               <a
                 href="mailto:matisowagm@gmail.com"
