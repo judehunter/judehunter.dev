@@ -1,7 +1,6 @@
 import {Icon} from '@iconify/react';
 import {m} from 'framer-motion';
 import tw from 'twin.macro';
-import {ContactInput} from '../ContactInput';
 import {AnimText, CapsPreTitle, PullUpText} from './misc';
 import Img from 'next/future/image';
 import {OpenToWork} from '../OpenToWork';
@@ -160,10 +159,8 @@ const AboutMe = () => {
               margin-top[40px]
               padding[20px 24px]
               md:padding[34px 56px]
-              background-image[linear-gradient(to bottom, #0e151cff 0%, #070c1044 30%)]
-              backdrop-filter[blur(6px)]
+              background-image[linear-gradient(to bottom, #0e151cff 0%, #070c10ee 30%)]
               rounded-3xl
-              // border-radius[7px]
               text-xl
               line-height[1.8]
               font-normal
