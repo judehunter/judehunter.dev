@@ -1,6 +1,5 @@
 import {Icon} from '@iconify/react';
 import tw from 'twin.macro';
-import {ContactInput} from '../ContactInput';
 import Img from 'next/future/image';
 import {OpenToWork} from '../OpenToWork';
 

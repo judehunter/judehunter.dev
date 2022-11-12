@@ -5,6 +5,7 @@ import {getPlaiceholder} from 'plaiceholder';
 import {visit} from 'unist-util-visit';
 import * as rehypePrism from '@mapbox/rehype-prism';
 import {devCache} from './devCache';
+import remarkGfm from 'remark-gfm';
 
 export const devMdxCache =
   devCache<Awaited<ReturnType<typeof serverSerializeMDX>>>();
@@ -17,6 +18,7 @@ const serverSerializeMDX = (text: string) => {
     parseFrontmatter: true,
     mdxOptions: {
       remarkPlugins: [
+        remarkGfm,
         () => (tree) => {
           visit(tree, (node) => {
             if (node.type === 'text') {

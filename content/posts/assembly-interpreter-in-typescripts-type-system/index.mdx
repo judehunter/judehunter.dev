@@ -1,0 +1,438 @@
+---
+title: 'Assembly interpreter inside of TypeScript''s type system'
+createDate: '2022-09-12T22:00:00.000Z'
+updateDate: '2022-09-16T18:39:19.991Z'
+thumbnail: https://images.unsplash.com/photo-1655720845034-b8f615109b5b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2064&q=80
+description: ''
+tags:
+  - typescript
+  - compiler theory
+---
+
+So, don't freak out, but TypeScript's type system is advanced enough to be able to **host entire programming languages inside of it**, using template literal types and conditional types, among other techniques.
+
+This has been done before, to varying degrees of insanity. Check out [ts-sql](https://github.com/codemix/ts-sql) and [typefuck](https://github.com/susisu/typefuck).
+
+As this is some mind-bogglingly crazy stuff, I had to start by testing if it's even possible for more complex languages. At first, I tried creating a full programming language similar to Lua and Python. This was mostly successful but due to the fact that it required an operator precedence parser, it got complicated and slow pretty fast.
+
+I decided to revisit that later and pursue something with a simpler grammar first. I settled on a dialect of Assembly inspired by RISC and ARMv7.
+
+Don't worry if you're not familiar with Assembly though. At it's core, it's a relatively simple language of statements that instruct the processor which atomic operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
+
+```js
+// put the number 2 (10 in binary) in register 0
+MOV r0, #00000010
+// put the number 3 in register 1
+MOV r1, #00000011
+// add the numbers in registers 0 and 1
+// and put the result in register 2
+ADD r2, r0, r1
+// subtract the number 1 from the number in register 2
+// and put the result in register 2 again
+SUB r2, r2, #00000001
+```
+
+## Intro
+{/* As mentioned, the dialact of Assembly I created is a simple one based on ARM. */}
+
+My artificial TypeScript processor will operate on 8-bit binary numbers. [Attempts have been made](https://itnext.io/implementing-arithmetic-within-typescripts-type-system-a1ef140a6f6f) to simulate arithmetic operations on decimal numbers by generating tuples. This is not a viable option for larger numbers though, since for any number `N`, it recursively creates `N` type instances.
+
+Regardless, that's the way actual processors work. It should be able to perform bitwise logic on the numbers stored in the registers.
+
+If you're familiar with [String Literal Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types) and [Template Literal Types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html), you know that TypeScript treats string constants as their own types and allows us to transform them to a surprising degree.
+
+For instance, we can make a function that only accepts these particular strings:
+```ts
+type VerticalDirection = 'north' | 'south'
+type HorizontalDirection = 'west' | 'east'
+type Direction = VerticalDirection | HorizontalDirection
+const foo = (direction: Direction) => {};
+
+foo('north') // OK!
+foo('up') // ERR!
+```
+
+We can also generate new literal types by combining them like so:
+```ts
+type MixedDirection =
+  | Direction
+  | `${VerticalDirection}-${HorizontalDirection}`
+
+// the generated type is equivalent to:
+type MixedDirection =
+  | 'north' | 'south' | 'west' | 'east'
+  | 'north-west' | 'north-east'
+  | 'south-west' | 'south-east'
+```
+
+We can then use [Conditional Types](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html) to transform types based on their value.
+```ts
+// creates a string literal type that's the first
+// character of the T string
+type FirstCharacter<T> =
+  T extends `${infer First}${string}` ? First : never;
+
+FirstCharacter<'abcdef'> // 'a'
+
+// same thing, just with the last character.
+// due to how these template types work,
+// we need to use recursive types to achieve this.
+type LastCharacter<T> =
+  T extends `${string}${infer Rest}`
+    ? Rest extends ''
+      ? T
+      : LastCharacter<Rest>
+    : never;
+
+LastCharacter<'abcdef'> // 'f'
+```
+
+All that to say, we can replicate exactly what a real processor does by manipulating strings of ones and zeros.
+
+As a proof of concept, I began prototyping a Binary Adder, i.e. a circuit that given two input bits, adds them together, and spits out the result, as well as the carry.
+
+### Adder
+While a real processor performs this operation using multiple logic gates, we can instead define a table of input and output values for our adder circuit and implement it using all the aforementioned techniques.
+
+- `A` and `B` represent our input bits.
+- `C` represents our input carry bit. This is used so that we can chain adders to create the Full Adder. So the adder actually adds three bits.
+- `Result` represents our result output bit.
+- `Carry` represents the carry output bit, which we can pipe into another adder.
+
+<center>
+| A | B | C | Result | Carry |
+|---|---|---|---|---|
+| 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 1 | 1 | 0 |
+| 0 | 1 | 0 | 1 | 0 |
+| 0 | 1 | 1 | 0 | 1 |
+| 1 | 0 | 0 | 1 | 0 |
+| 1 | 0 | 1 | 0 | 1 |
+| 1 | 1 | 0 | 0 | 1 |
+| 1 | 1 | 1 | 1 | 1 |
+</center>
+
+The implementation is actually quite simple, as it directly follows this table.
+
+```ts
+type Adder<A, B, C> =
+    [A, B, C] extends
+    ['0', '0', '0']
+  ? {result: '0'; carry: '0'}
+  // else if
+  : [A, B, C] extends
+    ['1', '0', '0'] | ['0', '1', '0'] | ['0', '0', '1']
+  ? {result: '1'; carry: '0'}
+  // else if
+  : [A, B, C] extends
+    ['1', '1', '0'] | ['1', '0', '1'] | ['0', '1', '1']
+  ? {result: '0'; carry: '1'}
+  // else
+  : {result: '1'; carry: '1'};
+```
+```ts
+// some tests:
+Adder<'0', '0', '0'> // {result: '0', carry: '0'}
+Adder<'0', '0', '1'> // {result: '1', carry: '0'}
+Adder<'0', '1', '0'> // {result: '1', carry: '0'}
+Adder<'0', '1', '1'> // {result: '0', carry: '1'}
+Adder<'1', '0', '0'> // {result: '1', carry: '0'}
+Adder<'1', '0', '1'> // {result: '0', carry: '1'}
+Adder<'1', '1', '0'> // {result: '0', carry: '1'}
+Adder<'1', '1', '1'> // {result: '1', carry: '1'}
+```
+
+Following the first Great Idea in Computer Architecture --- abstraction, we can then build incredibly complex systems on top of this adder.
+
+Quite easily, we can create a Full Adder circuit that adds two 8-bit numbers together. First however, we need to create a couple of utility types.
+
+Recall how we extracted the last character from a string literal type. This way, we can add the two last bits of our two input numbers, and then use the carry to add the two second-to-last bits of our numbers. And so on. 
+Our type needs to be thus recursive.
+
+```ts
+// this is our FirstCharacter type
+type Head<T> = type Head<T> =
+  T extends `${infer R}${string}` ? R : never;
+
+// this is different.
+// the type returns a string made up of
+// all but the first character of the string.
+type Tail<T> = 
+  T extends `${string}${infer R extends string}`
+    ? R extends ''
+      ? never
+      : R
+    : never;
+
+Tail<'abcdef'> // 'bcdef'
+```
+
+The algorithm for our recursive `FullAdder<A, B>` type is roughly as follows:
+- Given binary string inputs `A` and `B`, if `A` and `B` are single-bit numbers, simply return their sum with no input carry bit, `Adder<A, B, '0'>`
+- Otherwise, calculate `FullAdder` for the `Tail`s of `A` and `B` (`ATail` and `BTail`). Using the result and the output carry bit of that, calculate the return value:
+- Add the left-most bits of `A` and `B`, as well as the output carry bit of the tail (so, `Adder<Head<A>, Head<B>, TailAdded['carry']>`).
+- For the result, concatenate the `result` of the above operation with the result of the tail.
+- For the carry, simply use the `carry` of the above operation.
+
+Quite convoluted, I know. Or I might just be bad at explaining. Let's just jump into the implementation.
+
+```ts
+export type FullAdder<A, B> =
+  [Tail<A>, Tail<B>] extends [infer ATail, infer BTail]
+    ? [ATail, BTail] extends [never, never]
+      // if the tail doesn't exist,
+      // we're dealing with a 1-bit number
+      ? Adder<A, B, '0'>
+      // otherwise, we recursively call FullAdder
+      // with the tails of both numberes
+      : FullAdder<ATail, BTail>
+        // and give it an alias:
+        extends infer TailAdded
+        // don't worry about this.
+        // it is a sort of type assertion
+        // so that we can access these fields later
+        extends {carry: any; result: any}
+      // then, add the left-most bits of A and B
+      // along with the carry of the tail
+      ? Adder<
+          Head<A>,
+          Head<B>,
+          TailAdded['carry']
+        >
+        // alias:
+        extends infer Current
+        // same as above
+        extends {carry: any; result: any}
+        // finally, the return value:
+        ? {
+            result:
+            `${Current['result']}${TailAdded['result']}`;
+            carry: Current['carry'];
+          }
+        : never
+      : never
+    : never;
+```
+
+Voilà! We have a Full Adder that can handle binary numbers of any length.
+
+```ts
+// some tests:
+
+FullAdder<'01', '01'>
+  // {result: '10', carry: '0'}
+
+FullAdder<'00100110', '00000010'>
+  // {result: '00101000', carry: '0'}
+
+FullAdder<'11111111', '00000001'>
+  // {result: '00000000', carry: '1'}
+```
+
+The last test in particular shows that we can actually cause overflow! This could be a useful thing to track with flag registers, but in the scope of this project, we won't be adding that complexity.
+
+---
+
+The ability to add two numbers is of course an important operation that the user should be able to perform. It is also however instrumental to how our artificial processor works. For instance, we need to keep track of which instruction to execute next. With that behind us, we can move on to the more practical parts of the project.
+
+## The parser
+
+In short, we want to transform each Assembly instruction into an object describing that instruction. Conveniently, an instruction is always one line long. The object will contain the instruction type, as well as its operands, be it the register numbers, or immediate (i.e. constant) values.
+
+First things first, let's then define those two operand types.
+
+```ts
+export type Register =
+  | 'r0'
+  | 'r1'
+  | 'r2'
+  | 'r3'
+  | 'r4'
+  | 'r5'
+  | 'r6'
+  | 'r7'
+  // the stack pointer
+  | 'sp'
+  // the link register
+  | 'lr'
+  // the program counter
+  | 'pc';
+
+// simply an alias for string.
+// we could theoretically also enforce
+// this string to be made up of 8 bits.
+// (left as an exercise to the reader)
+export type Immediate = string;
+```
+
+Apart from eight numbered registers, we also have access to three special registers `sp`, `lr`, and `pc`. You might already be familiar with them. We will revisit those later.
+
+Probably the simplest instruction to implement is the Move instruction. It has two variants, `MOV (immediate)` and `MOV (register)`, which dictate the type of the second operand.
+
+```ts
+// MOV (immediate)
+// puts the immediate (constant) value #00010110 in r0
+MOV r2, #00010110
+// MOV (register)
+// copies the value from r1 to r0
+MOV r0, r1
+```
+
+As you can see, the instruction type is clearly stated at the beginning of the line. This makes parsing extremely easy. However, typically for Assembly dialects, including my dialect, we need to do some more work to figure out the actual variant, be it `MOV (immediate)` or `MOV (register)`.
+
+To make things easier and less bug-prone down the line, let's define the object types for those two instruction variants.
+
+```ts
+// MOV Rd, #imm
+export type MovImmediateInstr<
+  Rd extends Register,
+  imm extends Immediate
+> = {
+  type: 'MovImmediate';
+  // the destination register
+  Rd: Rd;
+  // the immediate value
+  imm: imm;
+};
+
+// MOV Rd, Rm
+export type MovRegisterInstr<
+  Rd extends Register, Rm extends Register
+> = {
+  type: 'MovRegister';
+  Rd: Rd;
+  // the 'from' register.
+  // value will be copied from Rm to Rd
+  Rm: Rm;
+};
+```
+
+The terms `Rd`, `Rm` (also `Rn`, `Rt`, `Rs`) come from the ARM Assembly grammar. Typically,
+- `Rd` stands for `destination register`,
+- `Rn` and `Rm` refer to the first and second operation operands (so second and third instruction operands),
+- `Rt` is used for instructions dealing with memory, and
+- `Rs` stands for `shift amount register`.
+
+---
+
+Onto the parsing. We will define generic types (you can think of them as functions that take types as arguments and return a type) for every instruction and instruction variant.
+
+If we find a match, the function should return the object type, such as a `MovRegisterInstr` type. Otherwise, it should return `never`. This is a clever trick that will let us narrow down on the matching parsing rule without resorting to nested conditional types.
+
+```ts
+// T is our instruction string (one line)
+// We implement the parsing of our instruction
+// with a union of our parser types
+type ParseInstr<T> =
+  | ParseMovImmediateInstr<T>
+  | ParseMovRegisterInstr<T>;
+
+type ParseMovImmediateInstr<T> =
+  // parses "MOV " + register + ", #" + immediate
+  T extends `MOV ${
+    infer Rd extends Register
+  }, #${
+    infer imm extends Immediate
+  }`
+    // create the object
+    ? MovImmediateInstr<Rd, imm>
+    // return never if it's not a match
+    : never;
+
+type ParseMovRegisterInstr<T> =
+  T extends `MOV ${
+    infer Rd extends Register
+  }, ${
+    infer Rm extends Register
+  }`
+    ? MovRegisterInstr<Rd, Rm>
+    : never;
+```
+
+Let's test these bad boys out.
+
+```ts
+ParseInstr<'MOV r3, r4'>
+^?  {
+      type: 'MovRegister',
+      Rd: 'r3',
+      Rm: 'r4'
+    }
+
+ParseInstr<'MOV r5, #00001000'>
+^?  {
+      type: 'MovImmediate',
+      Rd: 'r5',
+      imm: '00001000'
+    }
+
+// a non-matching instruction
+ParseInstr<'ADD something, bla bla'>
+^?  never
+```
+
+Perfect! Oh, by the way, if you're wondering about that union pattern in `type ParseInstr<T>`, it works because for this grammar, we should only have one instruction match. Thus, only one parsing type (like `ParseMovRegisterInstr` or maybe `ParseAddImmediateInstr`) will return an object and all the others will return never.
+
+This leverages the fact that TypeScript will remove the `never` variants from the union, leaving us with just the generated object.
+```ts
+type Foo = bar | buzz | never | yeet | never;
+     ^?  bar | buzz | yeet;
+
+type Bar = never | 123 | never | never;
+     ^?  123
+```
+
+
+```js
+// move value from Rn to Rd
+MOV Rd, Rn
+
+// move immediate value to Rd
+MOV Rd, #00000001
+
+// add values from Rn and Rm and save in Rd
+ADD Rd, Rn, Rm
+
+// add value from Rn with an immediate value and save in Rd
+ADD Rd, Rn, #00000001
+
+// similarly, other arithmetic and logical operations,
+// with register and immediate variants:
+SUB Rd, Rn, Rm
+SUB Rd, Rn, #00000001
+AND Rd, Rn, Rm
+AND Rd, Rn, #00000001
+OR Rd, Rn, Rm
+OR Rd, Rn, #00000001
+XOR Rd, Rn, Rm
+XOR Rd, Rn, #00000001
+NOT Rd, Rn
+NOT Rd, #00000001
+
+
+
+// push to stack
+```
+
+I also wanted the code not to be a complete spaghetti trainwreck. So I laid out the usual parts of the compiler, the lexer, parser, and a tree-walking interpreter. I knew I would need a lot of string manipulation and transformation, so I began writing up some utility functions, such as `Trim` and `Split`
+
+it will even have precedence parsing
+
+For the parser, a classic recursive descent seemed like the perfect choice.
+
+One problem was left-associativity
+
+recursive descent, precedence climbing, recursion instead of while loop, lambda lifting (show original js algo)
+
+incredible complexity can arise from a set of simple rules. In this case, a set of simple features.
+
+`a-b-` is possible because `${string}` matches ``
+
+lang name insom?
+
+
+
+
+error handling is possible
+
+On the topic of programming languages and compiler theory, you might also want to check out The journey of Queso, my programming language.

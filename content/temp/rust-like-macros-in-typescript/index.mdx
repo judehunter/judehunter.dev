@@ -1,0 +1,343 @@
+---
+title: 'Rust-like macros in TypeScript are here'
+createDate: '2022-10-02T13:39:01.540Z'
+updateDate: '2022-10-05T15:37:42.432Z'
+thumbnail: https://images.unsplash.com/photo-1527873722743-67759f0854aa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80
+description: ''
+tags:
+  - typescript
+---
+
+I'm sure I'm not alone when I say I routinely go looking for a way to extend the capabilities of TypeScript through metaprogramming.
+
+Vanilla JavaScript has had ways to achieve that with libraries such as [Sweet.js](https://www.sweetjs.org/). For TypeScript users, this wasn't previously possible, but a brand new transformer plugin -- [ts-macros](https://github.com/GoogleFeud/ts-macros) promises to bring Rust's `macro_rules!` to TypeScript in its full glory.
+
+Let's examine just how powerful these macros can be.
+
+---
+
+The great thing about state management libraries is that only the relevant components will be re-rendered once the state is modified. This is in contrast to the Context API, where any update will result in all of the Context Consumers and their descendants being re-rendered. Without proper optimizations or memoization, in some cases the whole sub-tree starting from the Context Provider will be re-rendered as well.
+
+You can play around with this interactive re-render visualization.
+
+- The diagrams depict a component hierarchy.
+- The letters represent which part of state a given component uses. Those parts are contained within one context or store.
+- Click on a component to trigger the respective state change it depends on and observe which components in the tree get re-rendered.
+
+<Updates />
+
+It's easy to see that in the Context API example, the outer-most component is a consumer, and thus, every descendant of that component will by default always be re-rendered.
+
+In the Store example however, making state changes will only re-render the top-most component which uses that part of the state. For instance, observe that clicking the component that depends on the C part of the state will only light up that one component. Notably, clicking on any of the components that depend on the A part of the state will light up all components, as one of those components wraps all the other ones. This can be further optimized by the user abstracting logic into sibling components.
+
+We will examine those mechanisms more closely in our implementation. Let's begin by looking at a popular and simple state management library, [Zustand](https://github.com/pmndrs/zustand).
+
+```tsx
+const useUserStore = create((set) => ({
+  user: null,
+  setUser: (user) => set({user}),
+  unsetUser: () => set({user: null}),
+}));
+```
+
+```tsx
+const Profile = () => {
+  const user = useUserStore((s) => s.user);
+  const unsetUser = useUserStore((s) => s.unsetUser);
+
+  return (
+    <div>
+      {user.firstName} {user.lastName}
+      <button onClick={unsetUser}>Log out</button>
+    </div>
+  );
+};
+```
+
+Let's design a simple API for our own state management library. Similar to Zustand, we will have stores that can contain multiple state values. For good TypeScript support, we will split the store into state and actions, i.e. methods that modify the state.
+
+```tsx
+const counterStore = createStore(
+  {
+    counter: 0,
+  },
+  (set) => ({
+    setCounter: (counter) => set({counter}),
+    increment: () =>
+      set((state) => ({
+        counter: state.counter + 1,
+      })),
+  }),
+);
+```
+
+```tsx
+const Counter = () => {
+  const counter = useSelector(counterStore, (s) => s.counter);
+
+  return <button onClick={counterStore.increment}>{counter}</button>;
+};
+```
+
+We then start working backward to implement this API. But how do we actually proceed? We need to understand what goes on behind the scenes.
+
+## Subscribers
+
+This design pattern is often called the Observer pattern. A typical state management library uses it to broadcast changes in the store to the store's subscribers. The subscribers are also often called listeners instead. Queue my contrived analogy&nbsp;---
+
+Imagine a **swarm of drones** following the **leader**. The leader receives information from mission control, such as the destination and velocity. To make it even more advanced, mission control can at any time assign more drones to the swarm. In case of any changes to said destination and velocity, the whole swarm must receive the new information.
+
+One solution is for the drones to poll the leader, i.e. frequently ask if there have been any changes. As you can imagine, this is not very efficient. We could flip this scenario around. The drones can simply notify the leader that they have joined (or left) the swarm and that they expect the leader to **notify** them about any new information coming from mission control.
+
+_Please_, don't mind my analogy-making skills. Let's jump into the code for this example:
+
+```tsx
+const createLeader = () => {
+  let info = {
+    direction: 'north',
+    velocity: 10,
+  };
+
+  // drones are just callback functions
+  // which we will invoke with the new data
+  // whenever it changes
+  type Drone = (newInfo: typeof info) => void;
+
+  const drones: Drone[] = [];
+
+  // add a drone to the drones array
+  const joinSwarm = (drone: Drone) => drones.push(drone);
+
+  // remove a drone from the drones array
+  const leaveSwarm = (drone: Drone) => drones.splice(drones.indexOf(drone), 1);
+
+  // mission control uses this to make the leader
+  // and subsequently the swarm aware of new information
+  const notify = (newInfo: typeof info) => {
+    info = newInfo;
+
+    for (const drone of drones) {
+      drone(info);
+    }
+  };
+
+  return {joinSwarm, leaveSwarm, notify};
+};
+```
+
+```tsx
+const leader = createLeader();
+
+leader.joinSwarm((newInfo) => console.log('Drone A:', newInfo));
+leader.joinSwarm((newInfo) => console.log('Drone B:', newInfo));
+
+leader.notify({direction: 'west', velocity: 5});
+// prints:
+// Drone A: { direction: 'west', velocity: 5 }
+// Drone B: { direction: 'west', velocity: 5 }
+```
+
+In essence, just like with event emitters and listeners, you register a subscriber, which then gets called when the event (here, a state change) is emitted. Below we will transform this analogy into a concrete implementation.
+
+## Selectors
+
+A selector defines which part of the state the given component should subscribe to. Additionally, the selector might define a value that's derived from the state instead. In other words, the subscriber should be invoked _only when_ the selected value has been changed.
+
+We could imagine a special drone that adjusts its own velocity based on environmental factors, and not mission control's command. Thus, this drone only cares about changes in direction. Sending the changes in velocity would simply be inefficient.
+
+```tsx
+const createLeader = () => {
+  let info = {
+    direction: 'north',
+    velocity: 10,
+  };
+
+  // A selector is commonly a function that
+  // when given the whole state,
+  // returns just the part it cares about
+  // Here, we simplify it so that the subscriber only
+  // specifies the key of the state they want to select
+  type Selector = keyof typeof info;
+
+  // the drones now also contain the selector
+  type Drone = [selector: Selector, callback: (val) => void];
+  const drones: Drone[] = [];
+
+  const joinSwarm = (selector: Selector, callback: (val) => void) =>
+    drones.push([selector, callback]);
+
+  const notify = (newInfo: typeof info) => {
+    for (const [selector, callback] of drones) {
+      // check if direction has changed since
+      // the last `notify` call
+      // if so, notify all drones
+      // with the 'direction' selector
+      if (info.direction !== newInfo.direction && selector === 'direction') {
+        callback(newInfo.direction);
+      }
+      // check if velocity has changed since
+      // the last `notify` call
+      // if so, notify all drones
+      // with the 'velocity' selector
+      else if (info.velocity !== newInfo.velocity && selector === 'velocity') {
+        callback(newInfo.velocity);
+      }
+    }
+
+    info = newInfo;
+  };
+
+  return {joinSwarm, notify};
+};
+```
+
+```tsx
+const leader = createLeader();
+
+leader.joinSwarm('direction', (direction) =>
+  console.log('Drone A changed direction:', direction),
+);
+leader.joinSwarm('velocity', (velocity) =>
+  console.log('Drone B changed velocity:', velocity),
+);
+
+// changing direction, but not velocity
+leader.notify({direction: 'south', velocity: 10});
+// Drone A changed direction: south
+
+// changing velocity, but not direction
+leader.notify({direction: 'south', velocity: 20});
+// Drone B changed velocity: 20
+
+// changing direction and velocity
+leader.notify({direction: 'west', velocity: 5});
+// Drone A changed direction: south
+// Drone B changed velocity: 20
+```
+
+In practice, this would look very different, since selectors commonly allow any value to be returned. We will include that in the actual implementation. Additionally, React's built-in equality checking will do some heavy lifting for us.
+
+## Preventing unnecessary re-renders
+
+...is what makes modern state management libraries efficient.
+
+The problem with the Context API is that upon triggering a state change, all the components that use `useContext` will be re-rendered. Moreover, often times, if you don't refactor your provider and state into a separate component that wraps your children, or otherwise don't use memoization, your provider acts similarly to a consumer, re-rendering everything below it.
+
+While it is possible to avoid some of that with the Context API, using selectors is currently the only way to prevent re-renders based on only parts of the state changing.
+
+Thus, state management libraries re-render the exact components that subscribed to the part of the state using a selector. For React, this is done by combining `useState` with the subscribers.
+
+---
+
+Now that we have the backbone of required knowledge, let's jump into --
+
+## The implementation
+
+We can now translate my bad drone analogy into real application code.
+
+```tsx
+const createStore = <STATE, ACTIONS>(
+  initialState: STATE,
+  actions: (
+    set: (
+      state: // either pass a partial state:
+      | Partial<STATE>
+        // or a setState-like callback for derived values:
+        | ((current: STATE) => Partial<STATE>),
+    ) => void,
+  ) => ACTIONS,
+) => {
+  // initialize the state with the user-defined defaults
+  let state = initialState;
+
+  type Subscriber = (state: STATE) => void;
+
+  // we can remove the selector code here
+  // and move it to the implementation of useSelector.
+  const subscribers: Subscriber[] = [];
+
+  const subscribe = (subscriber: Subscriber) => {
+    subscribers.push(subscriber);
+
+    // instead of an unsubscribe method,
+    // we use the common pattern of returning
+    // a cleanup function,
+    // which is the unsubscribe method
+    return () => subscribers.splice(subscribers.indexOf(subscriber), 1);
+  };
+
+  // we don't expose (return) this function
+  // directly anymore
+  // instead, we will expose the user-defined
+  // actions only
+  const notify = (newState: STATE) => {
+    for (const subscriber of subscribers) {
+      // again, we don't care about selectors here
+      subscriber(newState);
+    }
+
+    state = newState;
+  };
+
+  // pass the setState function to the actions.
+  // basically your usual React setState,
+  // with the addition of merging the state,
+  // like in Zustand
+  const actualActions = actions((setStateAction) => {
+    const newVal =
+      typeof setStateAction === 'function'
+        ? setStateAction(state)
+        : setStateAction;
+
+    notify({...state, ...newVal});
+  });
+
+  return {state, subscribe, ...actualActions};
+};
+```
+
+This implementation could be -- at a high level -- how major state management libraries implement their stores for the vanilla JS portion of their library. Next, we will go framework-specific and implement the `useSelector` hook. This is where the magic happens. Or rather, you will see there's not much magic involved. We simply update a `useState` whenever the store's state changes using a store subscriber.
+
+```tsx
+// we use the type of the state parameter
+// of the subscribe method defined in the last code block
+// to define our STATE type
+const useSelector = <STATE,>(
+  store: {state: STATE; subscribe: any},
+  selector: (state: STATE) => any,
+) => {
+  // we use the current state value to set the
+  // initial value for our state
+  const [selectedValue, setSelectedValue]
+    = useState(selector(store.state))
+
+  useEffect(() => {
+    // if the return part is confusing to you,
+    // double back to the previous code block
+    // to see that calling the subscribe method
+    // returns the unsubscribe method,
+    // which lets us use this convenient pattern
+    return store.subscribe(newState => {
+      // React will take care of handling
+      // equality checks, making sure
+      // this setState only triggers a re-render
+      // when necessary
+      setSelectedValue(
+        selector(newState);
+      );
+    });
+  }, []);
+
+  return selectedValue;
+}
+```
+
+That's just it. In fact, there are more comments here than actual code! This should give you a good knowledge base if you actually do want to create your own library. Otherwise, I just hope you had fun reading.
+
+---
+
+### Addendum
+
+Keep in mind this high-level overview only scratches the surface of the actual implementation. In reality, without proper optimizations and strategies, this implementation in and of itself can lead to surprising behavior when combined with JS frameworks.
+
+I encourage you to dive deep into codebases of projects such as [Redux](https://github.com/reduxjs/redux), [Zustand](https://github.com/pmndrs/zustand) and [Jotai](https://github.com/pmndrs/jotai) to learn more.

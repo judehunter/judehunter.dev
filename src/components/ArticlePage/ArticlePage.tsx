@@ -1,10 +1,7 @@
 import tw from 'twin.macro';
 import {Footer} from '../Footer';
-import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {format} from 'date-fns';
 import Img from 'next/future/image';
-import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
-import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import {YouveReached} from './YouveReached';
 import {ArticleBottomNav} from './ArticleBottomNav';
 import {ArticleSideBar} from './ArticleSideBar';
@@ -17,8 +14,9 @@ import {LazyMotion} from 'framer-motion';
 import {SubscribeCTA} from './SubscribeCTA';
 import {NavBar} from '../NavBar';
 
-SyntaxHighlighter.registerLanguage('ts', ts);
-SyntaxHighlighter.registerLanguage('tsx', tsx);
+// SyntaxHighlighter.registerLanguage('ts', ts);
+// SyntaxHighlighter.registerLanguage('tsx', tsx);
+// SyntaxHighlighter.registerLanguage('asm', asm);
 
 const DotPattern = () => {
   return (
@@ -164,6 +162,21 @@ const MDStyle = tw`
   [& pre>code]:(
     font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
     font-size[16px]
+  )
+  [& blockquote]:(
+    bg-[rgba(127, 236, 157, 0.2)]
+    border-l-4
+    border-[rgba(127, 236, 157, 1)]
+    font-style[oblique 5deg]
+    font-weight[500]
+    rounded-r-[8px]
+    pl-5
+    pr-5
+    my-5
+    py-3
+    [& > p]:(
+      my-0
+    )
   )
 `;
 
