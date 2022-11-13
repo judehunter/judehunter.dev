@@ -51,7 +51,7 @@ export const serverSerializePostBySlug = async (slug: string) => {
   }
 
   const components = isSlugPathDir
-    ? (await readdir(slugPath)).filter((x) => x.endsWith('.tsx'))
+    ? Object.keys(await import(`../../content/posts/${slug}/components.tsx`))
     : null;
 
   return {source, components};

@@ -14,10 +14,6 @@ import {LazyMotion} from 'framer-motion';
 import {SubscribeCTA} from './SubscribeCTA';
 import {NavBar} from '../NavBar';
 
-// SyntaxHighlighter.registerLanguage('ts', ts);
-// SyntaxHighlighter.registerLanguage('tsx', tsx);
-// SyntaxHighlighter.registerLanguage('asm', asm);
-
 const DotPattern = () => {
   return (
     <div tw="hidden lg:block lg:absolute lg:inset-y-0 lg:h-full lg:w-full overflow-hidden">
@@ -191,8 +187,8 @@ const ContentSection = ({content, components}) => {
           x,
           dynamic(
             () =>
-              import(`../../../content/posts/${slug}/${x}.tsx`).then(
-                (x) => x.default,
+              import(`../../../content/posts/${slug}/components.tsx`).then(
+                (y) => y[x],
               ),
             {
               ssr: true,

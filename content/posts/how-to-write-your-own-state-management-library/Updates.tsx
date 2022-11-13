@@ -19,7 +19,11 @@ const ContextExampleFourth = () => {
   }, [justRerendered]);
 
   return (
-    <m.div tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]" animate={controls} transition={{duration: 1}}>
+    <m.div
+      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      animate={controls}
+      transition={{duration: 1}}
+    >
       <m.div
         tw="h-full rounded-[8px] p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
@@ -46,7 +50,11 @@ const ContextExampleThird = () => {
   }, [justRerendered]);
 
   return (
-    <m.div tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]" animate={controls} transition={{duration: 1}}>
+    <m.div
+      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      animate={controls}
+      transition={{duration: 1}}
+    >
       <m.div
         tw="h-full rounded-[8px] p-4"
         animate={{backgroundColor: 'rgb(7,  12, 16)'}}
@@ -130,7 +138,9 @@ const ContextExampleFirst = () => {
           transition={{duration: 0.1, ease: 'linear'}}
         >
           <div tw="text-center mb-4">A</div>
-          <ContextExampleContext.Provider value={{justRerendered, setJustRerendered}}>
+          <ContextExampleContext.Provider
+            value={{justRerendered, setJustRerendered}}
+          >
             <ContextExampleSecond />
           </ContextExampleContext.Provider>
         </m.div>
@@ -295,7 +305,7 @@ const StoreExampleFirst = () => {
   );
 };
 
-export default () => {
+export const Updates = () => {
   return (
     <>
       <div tw="flex flex-col md:flex-row justify-center items-center md:justify-between py-10 select-none -webkit-tap-highlight-color[transparent]">

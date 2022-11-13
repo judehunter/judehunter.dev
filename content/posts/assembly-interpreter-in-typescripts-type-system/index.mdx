@@ -17,6 +17,8 @@ As this is some mind-bogglingly crazy stuff, I had to start by testing if it's e
 
 I decided to revisit that later and pursue something with a simpler grammar first. I settled on a dialect of Assembly inspired by RISC and ARMv7.
 
+And thus, [ts-asm](https://github.com/judehunter/ts-asm) was born.
+
 Don't worry if you're not familiar with Assembly though. At it's core, it's a relatively simple language of statements that instruct the processor which atomic operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
 
 ```js
@@ -32,7 +34,7 @@ ADD r2, r0, r1
 SUB r2, r2, #00000001
 ```
 
-## Intro
+# Intro
 {/* As mentioned, the dialact of Assembly I created is a simple one based on ARM. */}
 
 My artificial TypeScript processor will operate on 8-bit binary numbers. [Attempts have been made](https://itnext.io/implementing-arithmetic-within-typescripts-type-system-a1ef140a6f6f) to simulate arithmetic operations on decimal numbers by generating tuples. This is not a viable option for larger numbers though, since for any number `N`, it recursively creates `N` type instances.
@@ -43,26 +45,27 @@ If you're familiar with [String Literal Types](https://www.typescriptlang.org/do
 
 For instance, we can make a function that only accepts these particular strings:
 ```ts
-type VerticalDirection = 'north' | 'south'
-type HorizontalDirection = 'west' | 'east'
-type Direction = VerticalDirection | HorizontalDirection
+type VerticalDirection = 'north' | 'south';
+type HorizontalDirection = 'west' | 'east';
+type Direction = VerticalDirection | HorizontalDirection;
+
 const foo = (direction: Direction) => {};
 
-foo('north') // OK!
-foo('up') // ERR!
+foo('north'); // OK!
+foo('up'); // ERR!
 ```
 
 We can also generate new literal types by combining them like so:
 ```ts
 type MixedDirection =
   | Direction
-  | `${VerticalDirection}-${HorizontalDirection}`
+  | `${VerticalDirection}-${HorizontalDirection}`;
 
 // the generated type is equivalent to:
 type MixedDirection =
   | 'north' | 'south' | 'west' | 'east'
   | 'north-west' | 'north-east'
-  | 'south-west' | 'south-east'
+  | 'south-west' | 'south-east';
 ```
 
 We can then use [Conditional Types](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html) to transform types based on their value.
@@ -91,7 +94,7 @@ All that to say, we can replicate exactly what a real processor does by manipula
 
 As a proof of concept, I began prototyping a Binary Adder, i.e. a circuit that given two input bits, adds them together, and spits out the result, as well as the carry.
 
-### Adder
+## Adder
 While a real processor performs this operation using multiple logic gates, we can instead define a table of input and output values for our adder circuit and implement it using all the aforementioned techniques.
 
 - `A` and `B` represent our input bits.
@@ -142,7 +145,9 @@ Adder<'1', '1', '0'> // {result: '0', carry: '1'}
 Adder<'1', '1', '1'> // {result: '1', carry: '1'}
 ```
 
-Following the first Great Idea in Computer Architecture --- abstraction, we can then build incredibly complex systems on top of this adder.
+Incredible complexity can arise from a set of simple rules. We can build surprisingly sophisticate systems on top of this adder.
+
+## Full Adder
 
 Quite easily, we can create a Full Adder circuit that adds two 8-bit numbers together. First however, we need to create a couple of utility types.
 
@@ -171,7 +176,7 @@ The algorithm for our recursive `FullAdder<A, B>` type is roughly as follows:
 - Given binary string inputs `A` and `B`, if `A` and `B` are single-bit numbers, simply return their sum with no input carry bit, `Adder<A, B, '0'>`
 - Otherwise, calculate `FullAdder` for the `Tail`s of `A` and `B` (`ATail` and `BTail`). Using the result and the output carry bit of that, calculate the return value:
 - Add the left-most bits of `A` and `B`, as well as the output carry bit of the tail (so, `Adder<Head<A>, Head<B>, TailAdded['carry']>`).
-- For the result, concatenate the `result` of the above operation with the result of the tail.
+- For the result, concatenate the `result` of the above operation with the `result` of the tail.
 - For the carry, simply use the `carry` of the above operation.
 
 Quite convoluted, I know. Or I might just be bad at explaining. Let's just jump into the implementation.
@@ -214,11 +219,9 @@ export type FullAdder<A, B> =
     : never;
 ```
 
-Voilà! We have a Full Adder that can handle binary numbers of any length.
+Voilà! We have a Full Adder that can handle binary numbers of any length. Let's see it in practice.
 
 ```ts
-// some tests:
-
 FullAdder<'01', '01'>
   // {result: '10', carry: '0'}
 
@@ -233,9 +236,9 @@ The last test in particular shows that we can actually cause overflow! This coul
 
 ---
 
-The ability to add two numbers is of course an important operation that the user should be able to perform. It is also however instrumental to how our artificial processor works. For instance, we need to keep track of which instruction to execute next. With that behind us, we can move on to the more practical parts of the project.
+The ability to add two numbers is of course an important operation that the user should be able to perform. It is also however instrumental to how our artificial processor works. For instance, we will need it to increment the Program Counter. With that behind us, we can move on to the more practical parts of the project.
 
-## The parser
+# The parser
 
 In short, we want to transform each Assembly instruction into an object describing that instruction. Conveniently, an instruction is always one line long. The object will contain the instruction type, as well as its operands, be it the register numbers, or immediate (i.e. constant) values.
 
@@ -265,14 +268,16 @@ export type Register =
 export type Immediate = string;
 ```
 
-Apart from eight numbered registers, we also have access to three special registers `sp`, `lr`, and `pc`. You might already be familiar with them. We will revisit those later.
-
+<Note>
+  Apart from eight numbered registers, we also have access to three special registers `sp`, `lr`, and `pc`. You might already be familiar with them. We will revisit those soon&#8482;
+</Note>
 Probably the simplest instruction to implement is the Move instruction. It has two variants, `MOV (immediate)` and `MOV (register)`, which dictate the type of the second operand.
 
 ```ts
 // MOV (immediate)
-// puts the immediate (constant) value #00010110 in r0
+// puts the immediate (constant) value 00010110 in r2
 MOV r2, #00010110
+
 // MOV (register)
 // copies the value from r1 to r0
 MOV r0, r1
@@ -285,8 +290,7 @@ To make things easier and less bug-prone down the line, let's define the object 
 ```ts
 // MOV Rd, #imm
 export type MovImmediateInstr<
-  Rd extends Register,
-  imm extends Immediate
+  Rd extends Register, imm extends Immediate
 > = {
   type: 'MovImmediate';
   // the destination register
@@ -340,6 +344,7 @@ type ParseMovImmediateInstr<T> =
     : never;
 
 type ParseMovRegisterInstr<T> =
+  // parses "MOV " + register + ", " + register
   T extends `MOV ${
     infer Rd extends Register
   }, ${
@@ -349,7 +354,13 @@ type ParseMovRegisterInstr<T> =
     : never;
 ```
 
+In short, we differentiate between the two instruction with the presence or absence of the `#` character to indicate an immediate value for the second operand.
+
 Let's test these bad boys out.
+
+<Info>
+  I will use the `^?` notation to show the final generated type.
+</Info>
 
 ```ts
 ParseInstr<'MOV r3, r4'>
@@ -371,7 +382,7 @@ ParseInstr<'ADD something, bla bla'>
 ^?  never
 ```
 
-Perfect! Oh, by the way, if you're wondering about that union pattern in `type ParseInstr<T>`, it works because for this grammar, we should only have one instruction match. Thus, only one parsing type (like `ParseMovRegisterInstr` or maybe `ParseAddImmediateInstr`) will return an object and all the others will return never.
+Perfect! Oh, by the way, if you're wondering about that union pattern in `type ParseInstr<T>`, it works because for this grammar, we should only have one instruction match at all times. Thus, only one parsing type (like `ParseMovRegisterInstr` or maybe `ParseAddImmediateInstr`) will return an object and all the others will return `never`.
 
 This leverages the fact that TypeScript will remove the `never` variants from the union, leaving us with just the generated object.
 ```ts
@@ -382,6 +393,310 @@ type Bar = never | 123 | never | never;
      ^?  123
 ```
 
+### Parsing multiple instructions
+Obviously, our program needs to be able to parse more than one instruction at a time.
+
+```ts
+ParseProgram<`
+  MOV r1, #00001111
+  MOV r0, r1
+`>
+```
+
+We just need a couple of utility types to achieve that. First let's get rid of the surrounding whitespace.
+
+```ts
+// trims spaces/newlines from the left side of a string
+type TrimLeft<T> = T extends
+  `${' ' | '\n'}${infer R}`
+    ? TrimLeft<R>
+    : T;
+
+// same thing with the right side
+type TrimRight<T> = T extends
+  `${infer R}${' ' | '\n'}`
+  ? TrimRight<R>
+  : T;
+
+// trims both sides
+type Trim<T> = TrimRight<TrimLeft<T>>;
+```
+
+Then let's split our multi-line string into an array of single lines.
+
+```ts
+// splits a string based on a separator string
+type Split<T, Sep extends string> = T extends
+  `${infer Line}${Sep}${infer Rest}`
+    ? [Line, ...Split<Rest, Sep>]
+    : [T];
+
+// splits a string based on the newline character
+type SplitLines<T> = Split<T, '\n'>;
+```
+
+Finally, gluing everything together, using [Mapped Types](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html).
+
+```ts
+type ParseLine<LineString> =
+  ParseInstr<Trim<LineString>>;
+
+type ParseProgram<ProgramString> =
+  SplitLines<Trim<ProgramString>> extends infer R
+    ? {
+        [K in keyof R]: ParseLine<R[K]>
+      }
+    : never;
+```
+Big wow, it works 🎉.
+```ts
+ParseProgram<`
+  MOV r1, #00001111
+  MOV r0, r1
+`>
+ ^? [
+      {
+        type: 'MovImmediate',
+        Rd: 'r1',
+        imm: '00001111',
+      },
+      {
+        type: 'MovRegister',
+        Rd: 'r0',
+        Rm: 'r1',
+      },
+    ]
+```
+
+### Instruction indices
+Our parser could very well just work for a basic assembly format where instructions are executed from top to bottom, always. However, if we want our interpreter to support the Branch instruction, we need to design it around the concept of a Program Counter, which is a special register that stores the index of the current instruction.
+
+<Note>
+  a Branch or a Jump instruction tells the processor to continue execution from a different place in the program, instead of the next instruction.
+</Note>
+
+Since we're using binary numbers stored in strings, we cannot simply index into the above array. Rather, we have to add the index of each element in binary format into the element itself.
+
+Perhaps surprisingly, we will be using the Full Adder in the parser and not just in the interpreter itself.
+
+Since our `MovImmediateInstr` and `MovRegisterInstr` types don't have an `idx` (index) field, let's create a utility wrapper type to handle that.
+
+```ts
+export type Indexed<T, idx extends string> =
+  T & {idx: idx};
+```
+
+Then to actually index all of our instructions, we create a recursive type that increments the index in binary format on every recursive call.
+
+```ts
+type ParseLoop<
+  T extends any[],
+  // start with index 0
+  idx extends string = '00000000'
+> =
+  // extract the first element, and the rest
+  T extends [
+    infer Current,
+    ...infer Rest,
+  ]
+    ? [
+        // index the first instruction
+        Indexed<ParseLine<Current>, idx>,
+        // merge the result of the recursively call for
+        // the rest of the instructions
+        ...ParseLoop<
+          Rest,
+          // pass the incremented counter
+          FullAdder<idx, '00000001'>['result']
+        >,
+      ]
+    // this is our base case.
+    // return an empty array if there's nothing left
+    : [];
+
+export type ParseProgram<T> =
+  SplitLines<Trim<T>> extends infer R extends any[]
+    ? ParseLoop<R>
+    : never;
+```
+
+Now our parsed program will contain this information.
+
+```ts
+ParseProgram<`
+  MOV r1, #00001111
+  MOV r0, r1
+`>
+ ^? [
+      {
+        type: 'MovImmediate',
+        Rd: 'r1',
+        imm: '00001111',
+        idx: '00000000',
+      },
+      {
+        type: 'MovRegister',
+        Rd: 'r0',
+        Rm: 'r1',
+        idx: '00000001',
+      },
+    ]
+```
+
+# The interpreter
+Our parser is far from being done. But we should already be able to evaluate the `MOV` instruction with an interpreter.
+
+### Registers and memory
+As you know, our processor can operate on registers and memory. To evaluate an instruction, we pass our current registers and memory to the evaluating type (similar to our parsing types). After performing the necessary calculations, the type will return the new state of the registers and memory.
+
+Let's define those in a type.
+
+```ts
+type Context = {
+  registers: {
+    r0: string;
+    r1: string;
+    r2: string;
+    r3: string;
+    r4: string;
+    r5: string;
+    r6: string;
+    r7: string;
+    sp: string;
+    lr: string;
+    pc: string;
+  };
+  memory: Record<string, string>;
+};
+```
+
+Notice that our memory is an object instead of an array. This is because our indices are strings representing binary numbers. It also saves a lot of space, as only the used memory slots will be represented.
+
+### Evaluating one instruction
+```ts
+EvalInstr<
+  ParseInstr<'MOV r0, #00001111'>,
+  StartingContext
+>;
+```
+
+No need to evaluate the whole program at once. Let's see if we can create an interpreter that, given a starting `Context`, can manipulate it. In our case, we will start with `r0 = 00000000`, and we want to end up with `r0 = 00001111`.
+
+We will use that same union pattern we used for the parser.
+
+```ts
+type EvalInstr<Instr, Ctx extends Context> =
+  | EvalMovImmediateInstr<Instr, Ctx>
+  | EvalMovRegisterInstr<Instr, Ctx>;
+```
+
+Now, for the hard part. Remember that we want to transform the `Ctx` so that the return value contains our immediate value in `r0`. This means that we will need to overwrite some register and memory values.
+
+There isn't a very easy way to do that in TypeScript, since the intersection operator `&` takes the first value it sees, and we want the opposite behavior. It's time for another utility type.
+
+```ts
+type Overwrite<
+  A extends Record<string, any>,
+  B extends Record<string, any>,
+> =
+  // simply omit any keys in the first object,
+  // which are also present in the second object.
+  // then the intersection operator will
+  // work as we want it to.
+  Omit<A, keyof B> & B;
+
+Overwrite<{r0: '00000000'}, {r0: '00001111'}>;
+^?  {
+      r0: '00001111' 
+    }
+```
+
+Finally, the evaluating type.
+
+```ts
+type EvalMovImmediateInstr<Instr, Ctx extends Context> = 
+  Instr extends MovImmediateInstr<
+    infer Rd,
+    infer imm
+  >
+    ? {
+        // no changes to memory
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          // we use the Record type here
+          // since our Rd is dynamic.
+          //
+          // this is similar to creating an object with
+          // a dynamic key using the {[Rd]: imm}
+          // notation in JavaScript.
+          Record<Rd, imm>
+        >;
+      }
+    // if the `type` field is not a match,
+    // return never
+    : never;
+```
+
+<Idea>
+  Notice how those instruction object types we created earlier come in handy now. We can simply infer all the defined fields. TypeScript will determine if the instruction is a match using the `type` field.
+</Idea>
+
+Are you still here? Hope this isn't too crazy. The evaluating type for our other variant, `MOV (register)` will be nearly identical.
+
+```ts
+type EvalMovRegisterInstr<Instr, Ctx extends Context> =
+  Instr extends MovRegisterInstr<
+    infer Rd,
+    infer Rm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          Record<
+            Rd,
+            // instead of passing it directly,
+            // simply take the value from Rm
+            Ctx['registers'][Rm]
+          >
+        >;
+      }
+    : never;
+```
+
+Please work, please work, please work.
+
+```ts
+type StartingContext = {
+  registers: {
+    r0: '00000000';
+    // ...
+  };
+  memory: {};
+};
+
+EvalInstr<
+  ParseInstr<'MOV r0, #00001111'>,
+  StartingContext
+>;
+^?  {
+      registers: {
+        r0: '00001111';
+      };
+      memory: {};
+    }
+```
+
+We did it ~~gamers~~ coders. Now, onto --
+
+### Evaluating the whole program
+
+
+
+---
+---
+---
 
 ```js
 // move value from Rn to Rd
