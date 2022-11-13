@@ -92,7 +92,7 @@ LastCharacter<'abcdef'> // 'f'
 
 All that to say, we can replicate exactly what a real processor does by manipulating strings of ones and zeros.
 
-As a proof of concept, I began prototyping a Binary Adder, i.e. a circuit that given two input bits, adds them together, and spits out the result, as well as the carry.
+As a proof of concept, I began prototyping a Binary Adder, i.e. a circuit that, given two input bits, adds them together and spits out the result, as well as the carry.
 
 ## Adder
 While a real processor performs this operation using multiple logic gates, we can instead define a table of input and output values for our adder circuit and implement it using all the aforementioned techniques.
@@ -415,8 +415,8 @@ type TrimLeft<T> = T extends
 // same thing with the right side
 type TrimRight<T> = T extends
   `${infer R}${' ' | '\n'}`
-  ? TrimRight<R>
-  : T;
+    ? TrimRight<R>
+    : T;
 
 // trims both sides
 type Trim<T> = TrimRight<TrimLeft<T>>;
@@ -692,7 +692,219 @@ We did it ~~gamers~~ coders. Now, onto --
 
 ### Evaluating the whole program
 
+Our program is simply an array of indexed instruction objects. As I mentioned multiple times now (hope you're paying attention), the `pc` Program Counter register will contain the current instruction to be processed.
 
+Our instructions should then modify that `pc` register so that the interpreter can process the next instruction and we don't end up with an infinite loop. For normal instructions, it should simply increment the `pc` register. Special instructions, such as `Branch`, will instead modify the Program Counter so the processor can continue execution from a different place.
+
+<Idea>
+  There's one gotcha. We want to allow our `MOV` instruction to modify the `pc` register as well. To solve that, in our `Ctx`, we first overwrite `pc` and only then do we overwrite `Rd`. This way, it will be incremented by default, or as defined in the instruction.
+</Idea>
+
+```ts
+type EvalMovImmediateInstr<Instr, Ctx extends Context> =
+  T extends MovImmediateInstr<
+    infer Rd,
+    infer imm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            {
+              // increment pc
+              pc: FullAdder<
+                Ctx['registers']['pc'], '00000001'
+              >['result']
+            }
+          >,
+          // then do the actual MOV
+          Record<Rd, imm>
+        >;
+      }
+    : never;
+```
+
+I'll spare you the implementation of the `EvalMovRegisterInstr`, as it is again nearly identical.
+
+Now we need our interpreter to actually have a program loop and pick the right instruction in each iteration. It should halt as soon as the instruction with a given index does not exist.
+
+TypeScript was giving me a hard time with this one, so the code is a bit hacky. But it works.
+
+```ts
+// when translated to JS, this would like:
+// instrs.filter(x => x.idx === PC)[0]
+type FindInstrByIdx<Instrs, PC> = {
+  [K in keyof Instrs as K extends number ? K : never]:
+    FindInstrByIdxPredicate<
+      Instrs[K],
+      PC
+    >;
+}[any];
+
+type FindInstrByIdxPredicate<T, PC> =
+  T extends {idx: PC} ? T : never;
+```
+
+Bask in the glory of the pièce de résistance.
+
+```ts
+type EvalProgram<
+  Instrs,
+  Ctx extends Context = StartingContext
+> =
+  FindInstrByIdx<
+    Instrs,
+    Ctx['registers']['pc']
+    // due to some weird TypeScript quirk,
+    // I had to use never here and essentially
+    // reverse the conditional,
+    // so I couldn't alias this expression.
+  > extends never
+    // if the instruction at the current pc
+    // doesn't exist, return the final context
+    ? Ctx
+    // evaluate the current instruction and recursively
+    // call EvalProgram with the new context
+    : EvalProgram<
+        Instrs,
+        EvalInstr<
+          FindInstrByIdx<
+            Instrs,
+            Ctx['registers']['pc']
+          >,
+          Ctx
+        >
+      >;
+```
+
+```ts
+EvalProgram<
+  ParseProgram<`
+    MOV r0, #00001111
+    MOV r1, #11110000
+    MOV r2, r0
+  `>
+>
+^?  {
+      r0: '00001111';
+      r1: '11110000';
+      r2: '00001111';
+      pc: '00000011';
+      // ...
+    }
+```
+
+# More instructions
+
+We can't do much with just the `MOV` instruction. We should support a plethora of arithmetic and logical operations, as well as implement branching so that we can write programs with loops and conditional statements.
+
+### Addition
+
+Let's start small --- the `ADD` instruction. Just like `MOV`, it has an `immediate` and `register` variant, which determines the type of the third and last operand.
+
+```ts
+ADD r0, r1, #00001111
+ADD r0, r1, r2
+```
+
+The majority of the boilerplate will feel quite familiar. Let's go through the most important stuff one last time.
+
+```ts
+export type AddImmediateInstr<
+  Rd extends Register,
+  Rn extends Register,
+  imm extends Immediate,
+> = {
+  type: 'AddImmediate';
+  Rd: Rd;
+  Rn: Rn;
+  imm: imm;
+};
+
+export type AddRegisterInstr<
+  Rd extends Register,
+  Rn extends Register,
+  Rm extends Register,
+> = {
+  type: 'AddRegister';
+  Rd: Rd;
+  Rn: Rn;
+  Rm: Rm;
+};
+```
+```ts
+type ParseAddImmediateInstr<T> =
+  T extends `ADD ${
+    infer Rd extends Register
+  }, ${
+    infer Rn extends Register
+  }, #${
+    infer imm extends Immediate
+  }`
+    ? AddImmediateInstr<Rd, Rn, imm>
+    : never;
+
+type ParseAddRegisterInstr<T> =
+  T extends `ADD ${
+    infer Rd extends Register
+  }, ${
+    infer Rn extends Register
+  }, ${
+    infer Rm extends Register
+  }`
+    ? AddRegisterInstr<Rd, Rn, Rm>
+    : never;
+```
+
+Here's where it's a bit different. For the evaluation, instead of simply putting the value into the desired register, we use the FullAdder to apply addition.
+
+```ts
+type EvalAddImmediateInstr<T, Ctx extends Context> =
+  T extends AddImmediataeInstr<
+    infer Rd,
+    infer Rn,
+    infer imm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            {pc: FullAdder<
+                Ctx['registers']['pc'],
+                '00000001'
+              >['result']}
+          >,
+          Record<
+            Rd,
+*           FullAdder<
+*             Ctx['registers'][Rn],
+*             imm
+*           >['result']
+          >
+        >;
+      }
+    : never;
+```
+
+As you can see, it's not too difficult to add more functionality to our parser and interpreter. Going forward, I will only show the nitty gritty stuff and skip this boilerplate.
+
+```ts
+EvalProgram<
+  ParseProgram<`
+    MOV r0, #00000110
+    MOV r1, #00001010
+    ADD r2, r0, r1
+  `>
+>
+^?  {
+      r0: '00000110';
+      r1: '00001010';
+      r2: '00010000';
+      // ...
+    }
+```
 
 ---
 ---
