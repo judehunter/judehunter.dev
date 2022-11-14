@@ -172,7 +172,7 @@ type Tail<T> =
 Tail<'abcdef'> // 'bcdef'
 ```
 
-The algorithm for our recursive `FullAdder<A, B>` type is roughly as follows:
+The algorithm for our recursive `Add<A, B>` type is roughly as follows:
 - Given binary string inputs `A` and `B`, if `A` and `B` are single-bit numbers, simply return their sum with no input carry bit, `Adder<A, B, '0'>`
 - Otherwise, calculate `FullAdder` for the `Tail`s of `A` and `B` (`ATail` and `BTail`). Using the result and the output carry bit of that, calculate the return value:
 - Add the left-most bits of `A` and `B`, as well as the output carry bit of the tail (so, `Adder<Head<A>, Head<B>, TailAdded['carry']>`).
@@ -182,15 +182,15 @@ The algorithm for our recursive `FullAdder<A, B>` type is roughly as follows:
 Quite convoluted, I know. Or I might just be bad at explaining. Let's just jump into the implementation.
 
 ```ts
-export type FullAdder<A, B> =
+export type Add<A, B> =
   [Tail<A>, Tail<B>] extends [infer ATail, infer BTail]
     ? [ATail, BTail] extends [never, never]
       // if the tail doesn't exist,
       // we're dealing with a 1-bit number
       ? Adder<A, B, '0'>
-      // otherwise, we recursively call FullAdder
+      // otherwise, we recursively call Add
       // with the tails of both numberes
-      : FullAdder<ATail, BTail>
+      : Add<ATail, BTail>
         // and give it an alias:
         extends infer TailAdded
         // don't worry about this.
@@ -222,13 +222,13 @@ export type FullAdder<A, B> =
 Voilà! We have a Full Adder that can handle binary numbers of any length. Let's see it in practice.
 
 ```ts
-FullAdder<'01', '01'>
+Add<'01', '01'>
   // {result: '10', carry: '0'}
 
-FullAdder<'00100110', '00000010'>
+Add<'00100110', '00000010'>
   // {result: '00101000', carry: '0'}
 
-FullAdder<'11111111', '00000001'>
+Add<'11111111', '00000001'>
   // {result: '00000000', carry: '1'}
 ```
 
@@ -509,7 +509,7 @@ type ParseLoop<
         ...ParseLoop<
           Rest,
           // pass the incremented counter
-          FullAdder<idx, '00000001'>['result']
+          Add<idx, '00000001'>['result']
         >,
       ]
     // this is our base case.
@@ -715,7 +715,7 @@ type EvalMovImmediateInstr<Instr, Ctx extends Context> =
             Ctx['registers'],
             {
               // increment pc
-              pc: FullAdder<
+              pc: Add<
                 Ctx['registers']['pc'], '00000001'
               >['result']
             }
@@ -728,6 +728,13 @@ type EvalMovImmediateInstr<Instr, Ctx extends Context> =
 ```
 
 I'll spare you the implementation of the `EvalMovRegisterInstr`, as it is again nearly identical.
+
+This pattern of incrementing `pc` will be so universal that we should use abstract it with a utility type.
+
+```ts
+type IncrementPC<Ctx extends Context> =
+  Add<Ctx['registers']['pc'], '00000001'>['result'];
+```
 
 Now we need our interpreter to actually have a program loop and pick the right instruction in each iteration. It should halt as soon as the instruction with a given index does not exist.
 
@@ -875,8 +882,8 @@ type ParseAddRegisterInstr<T> =
 Here's where it's a bit different. For the evaluation, instead of simply putting the value into the desired register, we use the Full Adder to apply addition.
 
 ```ts
-type EvalAddImmediateInstr<T, Ctx extends Context> =
-  T extends AddImmediateInstr<
+type EvalAddImmediateInstr<Instr, Ctx extends Context> =
+  Instr extends AddImmediateInstr<
     infer Rd,
     infer Rn,
     infer imm
@@ -886,16 +893,11 @@ type EvalAddImmediateInstr<T, Ctx extends Context> =
         registers: Overwrite<
           Overwrite<
             Ctx['registers'],
-            {
-              pc: FullAdder<
-                Ctx['registers']['pc'],
-                '00000001'
-              >['result'];
-            }
+            {pc: IncrementPC<Ctx>}
           >,
           Record<
             Rd,
-*           FullAdder<
+*           Add<
 *             Ctx['registers'][Rn],
 *             imm
 *           >['result']
@@ -942,13 +944,13 @@ type OnesComplement<T> = T extends ''
   : never;
 
 // Two's Complement is One's Complement plus one
-type TwosComplement<T> = FullAdder<
+type TwosComplement<T> = Add<
   OnesComplement<T>,
   '00000001'
 >['result'];
 
 // add the minuend and the opposite of the subtrahend
-type Subtract<A, B> = FullAdder<A, TwosComplement<B>>;
+type Subtract<A, B> = Add<A, TwosComplement<B>>;
 ```
 ```ts
 InterpretProgram<`
@@ -993,8 +995,8 @@ STR r0, [r1, #00000001]
 For the `LDR` instruction, we simply get the desired value from memory and place it in the register. 
 
 ```ts
-type EvalLdrImmediateInstr<T, Ctx extends Context> =
-  T extends LdrImmediateInstr<
+type EvalLdrImmediateInstr<Instr, Ctx extends Context> =
+  Instr extends LdrImmediateInstr<
     // Rt is our target register
     infer Rt,
     // Rn is our base address register
@@ -1007,17 +1009,12 @@ type EvalLdrImmediateInstr<T, Ctx extends Context> =
         registers: Overwrite<
           Overwrite<
             Ctx['registers'],
-            {
-              pc: FullAdder<
-                Ctx['registers']['pc'],
-                '00000001'
-              >['result'];
-            }
+            {pc: IncrementPC<Ctx>}
           >,
           Record<
             Rt,
             Ctx['memory'][
-              FullAdder<
+              Add<
                 Ctx['registers'][Rn],
                 imm
               >['result']
@@ -1031,8 +1028,8 @@ type EvalLdrImmediateInstr<T, Ctx extends Context> =
 For `STR`, it's the opposite --- get the value from the register and put it in the desired place in memory.
 
 ```ts
-type EvalStrImmediateInstr<T, Ctx extends Context> =
-  T extends StrImmediateInstr<
+type EvalStrImmediateInstr<Instr, Ctx extends Context> =
+  Instr extends StrImmediateInstr<
     infer Rt,
     infer Rn,
     infer imm
@@ -1041,7 +1038,7 @@ type EvalStrImmediateInstr<T, Ctx extends Context> =
         memory: Overwrite<
           Ctx['memory'],
           Record<
-            FullAdder<
+            Add<
               Ctx['registers'][Rn],
               imm
             >['result'],
@@ -1050,12 +1047,7 @@ type EvalStrImmediateInstr<T, Ctx extends Context> =
         >;
         registers: Overwrite<
           Ctx['registers'],
-          {
-            pc: FullAdder<
-              Ctx['registers']['pc'],
-              '00000001'
-            >['result'];
-          }
+          {pc: IncrementPC<Ctx>}
         >;
       }
     : never;
@@ -1184,11 +1176,8 @@ type EvalPushInstr<Instr, Ctx extends Context> =
           Ctx['registers'],
           // increment pc and decrement sp
           {
-            pc: FullAdder<
-              Ctx['registers']['pc'],
-              '00000001'
-            >['result'];
-            sp: Subtract<
+            pc: IncrementPC<Ctx>;
+            sp: Add<
               Ctx['registers']['sp'],
               '00000001'
             >['result'];
@@ -1211,11 +1200,8 @@ type EvalPopInstr<Instr, Ctx extends Context> =
             Ctx['registers'],
             // increment both pc and sp
             {
-              pc: FullAdder<
-                Ctx['registers']['pc'],
-                '00000001'
-              >['result'];
-              sp: FullAdder<
+              pc: IncrementPC<Ctx>
+              sp: Add<
                 Ctx['registers']['sp'],
                 '00000001'
               >['result'];
@@ -1225,9 +1211,9 @@ type EvalPopInstr<Instr, Ctx extends Context> =
           Record<
             Rm,
             Ctx['memory'][
-              // notice that this addition happends
+              // notice that this addition happens
               // due to the pre-incrementation
-              FullAdder<
+              Add<
                 Ctx['registers']['sp'],
                 '00000001'
               >['result']
@@ -1340,18 +1326,13 @@ type FindLabelPredicate<T, name> =
 Then, we just need to make the label a no-op in the interpreter. And by no-op I mean that it should simply increment the Program Counter.
 
 ```ts
-type EvalLabelInstr<T, Ctx extends Context> =
-  T extends LabelInstr<string>
+type EvalLabelInstr<Instr, Ctx extends Context> =
+  Instr extends LabelInstr<string>
     ? {
         memory: Ctx['memory'];
         registers: Overwrite<
           Ctx['registers'],
-          {
-            pc: EvalAdd<
-              Ctx['registers']['pc'],
-              '00000001'
-            >['result']
-          }
+          {pc: IncrementPC<Ctx>}
         >;
       }
     : never;
@@ -1368,60 +1349,147 @@ type InterpretProgram<T> =
   >
 ```
 
----
----
----
+Cool.
 
-```js
-// move value from Rn to Rd
-MOV Rd, Rn
-
-// move immediate value to Rd
-MOV Rd, #00000001
-
-// add values from Rn and Rm and save in Rd
-ADD Rd, Rn, Rm
-
-// add value from Rn with an immediate value and save in Rd
-ADD Rd, Rn, #00000001
-
-// similarly, other arithmetic and logical operations,
-// with register and immediate variants:
-SUB Rd, Rn, Rm
-SUB Rd, Rn, #00000001
-AND Rd, Rn, Rm
-AND Rd, Rn, #00000001
-OR Rd, Rn, Rm
-OR Rd, Rn, #00000001
-XOR Rd, Rn, Rm
-XOR Rd, Rn, #00000001
-NOT Rd, Rn
-NOT Rd, #00000001
-
-
-
-// push to stack
+```ts
+InterpretProgram<`
+  MOV r1, #00001111
+  MOV r2, #11110000
+  B exit
+  ADD r0, r1, r2
+  exit:
+`>['registers']
+^?  {
+      r0: '00000000',
+      r1: '00001111',
+      r2: '11110000',
+      // ...
+    }
 ```
 
-I also wanted the code not to be a complete spaghetti trainwreck. So I laid out the usual parts of the compiler, the lexer, parser, and a tree-walking interpreter. I knew I would need a lot of string manipulation and transformation, so I began writing up some utility functions, such as `Trim` and `Split`
+### Conditional branching
 
-it will even have precedence parsing
+Branching by itself isn't all that useful. To write if statements, we need a way to branch only when a condition is met. Let's add two more instructions, `Compare and Branch If Zero` and<br/>`Compare and Branch If Not Zero`. They will read the value from the specified register to determine whether or not to branch.
 
-For the parser, a classic recursive descent seemed like the perfect choice.
+```ts
+MOV r0, #00000000
+CBZ r0, mylabel  // branches
+CBNZ r0, mylabel // does not branch
+```
 
-One problem was left-associativity
+This time, we do need to make changes to the interpreter, as there's no way to desugar this into any set of other instructions. Since the two instructions are similar, I used just one object type `BranchIf` to denote them.
 
-recursive descent, precedence climbing, recursion instead of while loop, lambda lifting (show original js algo)
+```ts
+type EvalBranchIfInstr<Instr, Ctx extends Context> =
+  Instr extends BranchIf<
+    infer type,
+    infer Rn,
+    infer address
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          {
+            // if the value is 0, ...
+            pc: Ctx['registers'][Rn] extends '00000000'
+              // and the instruction is CBZ, ...
+              ? type extends 'BranchIfZero'
+                // jump to the label
+                ? address
+                // otherwise if the instruction is CBNZ,
+                // do nothing (increment the pc as usual)
+                : IncrementPC<Ctx>
+              // else if the value is truthy, ...
+              // and the instruction is CBZ, ...
+              : type extends 'BranchIfZero'
+                // do nothing
+                ? IncrementPC<Ctx>
+                // otherwise if the instruction is CBNZ,
+                // jump to the label
+                : address;
+          }
+        >;
+      }
+    : never;
+```
 
-incredible complexity can arise from a set of simple rules. In this case, a set of simple features.
+The possibilities are now endless. Have a look at this program that multiplies a number by `2` raised to any power --- `r0 * 2^r1`.
 
-`a-b-` is possible because `${string}` matches ``
+```ts
+InterpretProgram<`
+  MOV r0, #00000011
+  MOV r1, #00000100
+  loop:
+    CBZ r1, exit
+    ADD r0, r0, r0
+    SUB r1, r1, #00000001
+    B loop
+  exit:
+`>['registers']
+^?  {
+      r0: '00110000', // 3 * 2^4 = 48
+      r1: '00000000',
+      // ...
+    }
+```
 
-lang name insom?
+### Branching with links
 
+You've waited long enough. Say hi to the `lr` Link Register. Labels? More like subroutines, am I right coders?
 
+<Note>
+The Link Register is used as a way to store the Program Counter temporarily before branching so that you can branch back (return) to it later.
+</Note>
 
+You can imagine a makeshift way to return from a subroutine like so. The program calls a subroutine to negate a number in `r0`.
 
-error handling is possible
+```ts
+MOV r0, #00001101
+MOV lr, pc
+// when we return, we should continue from the next
+// instruction after the branch
+ADD lr, lr, #00000011
+B negate
+// ... we return here
+// r0 now contains -r0
+// branch to exit so that we don't negate twice
+B exit
+negate:
+  MOV r1, r0
+  SUB r0, r0, r1
+  SUB r0, r0, r1
+  // return from the subroutine 
+  MOV pc, lr
+exit:
+```
 
-On the topic of programming languages and compiler theory, you might also want to check out The journey of Queso, my programming language.
+With a little bit of syntax sugar, we can make this a lot nicer.
+
+```ts
+MOV r0, #00001101
+// branch with link,
+// which saves the next pc in lr and branches
+BL negate
+// ... we return here
+// r0 now contains -r0
+// branch to exit so that we don't negate twice
+B exit
+negate:
+  MOV r1, r0
+  SUB r0, r0, r1
+  SUB r0, r0, r1
+  // return from the subroutine.
+  // BR stands for Branch to Register
+  // `BR Rm` is sugar for `MOV pc, Rm `
+  BR lr
+exit:
+```
+
+The desugaring and evaluation of `BL` and `BR` is trivial.
+
+# Fin
+
+Once a daunting task, now a distant memory. You can check the whole codebase for the project in the official repository, [ts-asm](https://github.com/judehunter/ts-asm).
+
+On the topic of programming languages and compiler theory, you might also want to check out [The journey of Queso, my programming language](/blog/the-journey-of-queso-my-programming-language).
