@@ -236,7 +236,9 @@ The last test in particular shows that we can actually cause overflow! This coul
 
 ---
 
-The ability to add two numbers is of course an important operation that the user should be able to perform. It is also however instrumental to how our artificial processor works. For instance, we will need it to increment the Program Counter. With that behind us, we can move on to the more practical parts of the project.
+The ability to add two numbers is of course an important operation that the user should be able to perform. It is also however instrumental to how our artificial processor works. For instance, we will need it to increment the Program Counter.
+
+With that behind us, we can move on to the more practical parts of the project.
 
 # The parser
 
@@ -785,7 +787,7 @@ EvalProgram<
     MOV r1, #11110000
     MOV r2, r0
   `>
->
+>['registers']
 ^?  {
       r0: '00001111';
       r1: '11110000';
@@ -793,6 +795,17 @@ EvalProgram<
       pc: '00000011';
       // ...
     }
+```
+
+### API glue
+
+Since `EvalProgram<ParseProgram<...` is awkward to use, let's define a type that glues everything together. This will also prove useful after we add more compiler steps into the mix.
+
+```ts
+type InterpretProgram<T> =
+  EvalProgram<
+    ParseProgram<T>
+  >
 ```
 
 # More instructions
@@ -804,7 +817,9 @@ We can't do much with just the `MOV` instruction. We should support a plethora o
 Let's start small --- the `ADD` instruction. Just like `MOV`, it has an `immediate` and `register` variant, which determines the type of the third and last operand.
 
 ```ts
+// r0 = r1 + 00001111
 ADD r0, r1, #00001111
+// r0 = r1 + r2
 ADD r0, r1, r2
 ```
 
@@ -857,11 +872,11 @@ type ParseAddRegisterInstr<T> =
     : never;
 ```
 
-Here's where it's a bit different. For the evaluation, instead of simply putting the value into the desired register, we use the FullAdder to apply addition.
+Here's where it's a bit different. For the evaluation, instead of simply putting the value into the desired register, we use the Full Adder to apply addition.
 
 ```ts
 type EvalAddImmediateInstr<T, Ctx extends Context> =
-  T extends AddImmediataeInstr<
+  T extends AddImmediateInstr<
     infer Rd,
     infer Rn,
     infer imm
@@ -871,10 +886,12 @@ type EvalAddImmediateInstr<T, Ctx extends Context> =
         registers: Overwrite<
           Overwrite<
             Ctx['registers'],
-            {pc: FullAdder<
+            {
+              pc: FullAdder<
                 Ctx['registers']['pc'],
                 '00000001'
-              >['result']}
+              >['result'];
+            }
           >,
           Record<
             Rd,
@@ -891,19 +908,464 @@ type EvalAddImmediateInstr<T, Ctx extends Context> =
 As you can see, it's not too difficult to add more functionality to our parser and interpreter. Going forward, I will only show the nitty gritty stuff and skip this boilerplate.
 
 ```ts
-EvalProgram<
-  ParseProgram<`
-    MOV r0, #00000110
-    MOV r1, #00001010
-    ADD r2, r0, r1
-  `>
->
+InterpretProgram<`
+  MOV r0, #00000110
+  MOV r1, #00001010
+  ADD r2, r0, r1
+`>['registers'];
 ^?  {
       r0: '00000110';
       r1: '00001010';
       r2: '00010000';
       // ...
     }
+```
+
+### Subtraction
+
+To subtract one binary number from another, we need to add the minuend and the number opposite to the subtrahend, using [Two's Complement](https://en.wikipedia.org/wiki/Two%27s_complement).
+
+<Note>
+  Two's Complement is a way to represent negative numbers in binary. Simply flip all the bits of your number and add 1 to get the number opposite to it.
+</Note>
+
+```ts
+// One's Complement is just flipping the bits.
+// To achieve this, we flip the first bit in the number,
+// then recurse and concatenate the rest
+type OnesComplement<T> = T extends ''
+  ? ''
+  : T extends `0${infer Rest}`
+  ? `1${OnesComplement<Rest>}`
+  : T extends `1${infer Rest}`
+  ? `0${OnesComplement<Rest>}`
+  : never;
+
+// Two's Complement is One's Complement plus one
+type TwosComplement<T> = FullAdder<
+  OnesComplement<T>,
+  '00000001'
+>['result'];
+
+// add the minuend and the opposite of the subtrahend
+type Subtract<A, B> = FullAdder<A, TwosComplement<B>>;
+```
+```ts
+InterpretProgram<`
+  MOV r0, #00000110
+  MOV r1, #00001010
+  SUB r2, r1, r0
+`>['registers'];
+^?  {
+      r0: '00000110';
+      r1: '00001010';
+*     r2: '00000100';
+      // ...
+    }
+```
+
+### Memory instructions
+
+We want to be able to store and load values from memory addresses into registers and the other way around. Easy enough. Since our processor architecture works with 8-bit registers, we don't have to worry about memory alignment and different instructions for saving bytes, words, etc.
+
+Let's have a look at the syntax.
+
+```ts
+// memory[r1 + 00000000] = r0
+LDR r0, [r1]
+// memory[r1 + r2] = r0
+LDR r0, [r1, r2]
+// memory[r1 + 00000001] = r0
+LDR r0, [r1, #00000001]
+
+// r0 = memory[r1 + 00000000]
+STR r0, [r1]
+// r0 = memory[r1 + r2]
+STR r0, [r1, r2]
+// r0 = memory[r1 + 00000001]
+STR r0, [r1, #00000001]
+```
+
+<Idea>
+  The reason we can have two values between the brackets is so that the first one could point to the base of an array in memory, while the second could be incremented for indexing.
+</Idea>
+
+For the `LDR` instruction, we simply get the desired value from memory and place it in the register. 
+
+```ts
+type EvalLdrImmediateInstr<T, Ctx extends Context> =
+  T extends LdrImmediateInstr<
+    // Rt is our target register
+    infer Rt,
+    // Rn is our base address register
+    infer Rn,
+    // imm is used for the offset
+    infer imm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            {
+              pc: FullAdder<
+                Ctx['registers']['pc'],
+                '00000001'
+              >['result'];
+            }
+          >,
+          Record<
+            Rt,
+            Ctx['memory'][
+              FullAdder<
+                Ctx['registers'][Rn],
+                imm
+              >['result']
+            ]
+          >
+        >;
+      }
+    : never;
+```
+
+For `STR`, it's the opposite --- get the value from the register and put it in the desired place in memory.
+
+```ts
+type EvalStrImmediateInstr<T, Ctx extends Context> =
+  T extends StrImmediateInstr<
+    infer Rt,
+    infer Rn,
+    infer imm
+  >
+    ? {
+        memory: Overwrite<
+          Ctx['memory'],
+          Record<
+            FullAdder<
+              Ctx['registers'][Rn],
+              imm
+            >['result'],
+            Ctx['registers'][Rt]
+          >
+        >;
+        registers: Overwrite<
+          Ctx['registers'],
+          {
+            pc: FullAdder<
+              Ctx['registers']['pc'],
+              '00000001'
+            >['result'];
+          }
+        >;
+      }
+    : never;
+```
+
+We can now save values for later in memory, and even start the program with an allocated data section by modifying the `StartingContext`.
+
+Here's a program that swaps the values in two registers using the memory.
+
+```ts
+InterpretProgram<`
+  MOV r0, #11110000
+  MOV r1, #00001111
+  MOV r2, #10000000
+  STR r0, [r2, #00000000]
+  STR r1, [r2, #00000001]
+  LDR r0, [r2, #00000001]
+  LDR r1, [r2, #00000000]
+`>;
+^?  {
+      registers:{
+        r0: '00001111';
+        r1: '11110000';
+        r2: '10000000';
+        // ...
+      };
+      memory: {
+        '10000000': '11110000';
+        '10000001': '00001111'
+      };
+    } 
+```
+
+There's still more instructions to be added. There is something we need to deal with first though.
+
+# The Little Big Problem
+
+As the interpreter complexity kept growing, I encountered a problem I hoped wouldn't pop up in this project. It's that same problem that plagued me in my original project of implementing a full programming language inside of TypeScript's type system.
+
+```text
+Type instantiation is excessively deep
+and possibly infinite. ts(2589)
+```
+
+The error would present itself for programs that had about 30 instructions, or more. This is because our program loop is a recursive type that needs to evaluate one line at a time and pass the result to the next line.
+
+Clearly, we've gone too far. <Fools />. No human should be able to wield such power.
+
+I found a solution. Just don't tell anyone. Some say the best way to fix an error is to disable it. And so, I found the code responsible for generating that error in TypeScript's codebase.
+
+```ts
+if (
+  instantiationDepth === 100 ||
+  instantiationCount >= 5000000
+) {
+```
+
+Yeaaah, let's just bring that up to a more *sane* number.
+
+```ts
+if (
+  instantiationDepth === 100 * 10 ||
+  instantiationCount >= 5000000 * 10
+) {
+```
+
+Whaddaya know! We can now run about 300 instructions. We can also increase this number even more, if need be.
+
+<Idea>
+  I attempted this patch-fix when I was working on the original full programming language project. For some reason I couldn't get it to work. Then, suddenly, it started working on its own. I suspect VS Code was doing some caching behind the scenes.
+</Idea>
+
+Right, where were we?
+
+# The stack
+
+The time has come to revisit one of the other special registers I mentioned earlier, `sp` --- the Stack Pointer register.
+
+<Note>
+Processors equipped with a Stack Pointer automatically maintain a stack data structure in their memory that we can use to push and pop elements.
+</Note>
+
+The user could of course manually manage such a structure. The way to do it would basically be to keep track of where in memory the stack starts, which is a constant, and where it ends, which changes based on how many elements in the stack there are.
+
+The need for a stack structure though is so common, that processors tend to implement it anyway (not to mention it can be used by the processor itself).
+
+One use for them is pushing values from registers before subroutine calls, and popping them back into registers to restore their state after the subroutine returns. We will see this in practice after we implement the `Branch` instruction.
+
+<Note>
+This managed stack typically grows downwards, i.e. the top of the stack is earlier in memory than the bottom.
+</Note>
+
+In our case, the stack base is at the end of our memory -- at address `11111111`. The Stack Pointer is initialized to this value as well.
+
+Pushing additional elements onto the stack places them at the memory position dictated by the Stack Pointer and post-decrements the Stack Pointer.
+
+Popping does the opposite --- it pre-increments the Stack Pointer and retrieves the value from the memory position dictated by the Stack Pointer.
+
+The syntax of the two instructions is simple.
+
+```ts
+// pushes the value in r0 onto the stack
+PUSH {r0}
+
+// pops the value and places is in r0
+POP {r0}
+```
+
+The implementation is somewhat similar to the `LDR` and `STR` instructions, with the caveat of having to manage the `sp` register.
+
+```ts
+type EvalPushInstr<Instr, Ctx extends Context> =
+  Instr extends PushInstr<infer Rm>
+    ? {
+        memory: Overwrite<
+          Ctx['memory'],
+          Record<
+            // the address contained in sp is the key
+            Ctx['registers']['sp'],
+            // the value in the register will be
+            // set as the value of that key
+            Ctx['registers'][Rm]
+          >
+        >;
+        registers: Overwrite<
+          Ctx['registers'],
+          // increment pc and decrement sp
+          {
+            pc: FullAdder<
+              Ctx['registers']['pc'],
+              '00000001'
+            >['result'];
+            sp: Subtract<
+              Ctx['registers']['sp'],
+              '00000001'
+            >['result'];
+          }
+        >;
+      }
+    : never;
+```
+
+```ts
+type EvalPopInstr<Instr, Ctx extends Context> =
+  Instr extends PopInstr<infer Rm>
+    ? {
+        // no changes to memory.
+        // we could clear the freed memory, but
+        // realistically there's no need
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            // increment both pc and sp
+            {
+              pc: FullAdder<
+                Ctx['registers']['pc'],
+                '00000001'
+              >['result'];
+              sp: FullAdder<
+                Ctx['registers']['sp'],
+                '00000001'
+              >['result'];
+            }
+          >,
+          // put the value in the register
+          Record<
+            Rm,
+            Ctx['memory'][
+              // notice that this addition happends
+              // due to the pre-incrementation
+              FullAdder<
+                Ctx['registers']['sp'],
+                '00000001'
+              >['result']
+            ]
+          >
+        >;
+      }
+    : never;
+```
+
+Now we can swap two numbers using the memory much more easily.
+
+```ts
+InterpretProgram<`
+  MOV r0, #11110000
+  MOV r1, #00001111
+  PUSH {r0}
+  PUSH {r1}
+  POP {r0}
+  POP {r1}
+`>;
+^?  {
+      registers:{
+        r0: '00001111';
+        r1: '11110000';
+        sp: '11111111';
+        // ...
+      };
+      memory: {
+        '11111111': '11110000';
+        '11111110': '00001111';
+      };
+    } 
+```
+
+# Branching
+
+You made it this far. No reason to stop now.
+
+What is branching, really? To jump to a different place in the program sounds an awful lot like overwriting the `pc` register. And that's just what it is. The `B` instruction is just syntax sugar for a `MOV pc, ...`.
+
+<Info>
+  Instruction indices will now be indicated to the left of the instruction.
+</Info>
+
+```ts
+00000000: B exit
+00000001: ADD r0, r1, r2
+00000010: exit:
+```
+
+```ts
+00000000: MOV pc, #00000010
+00000001: ADD r0, r1, r2
+00000010: exit:
+```
+
+*Corporate needs you to find the differences between these.*
+
+Schloop. The `ADD` instruction was not executed. `exit:` is a label that we can use in `Branch` instructions as a way to point to that address in the program.
+
+<Idea>
+  You might have noticed that the label got its own instruction index. Normally, after assembling, the label gets removed and any `Branch` instructions will point to the next instruction. For this project however, it's easier to treat labels as no-ops.
+</Idea>
+
+And so, we will need a way to actually link `B exit` to the `exit:` label. This step should happen after parsing and before evaluation.
+
+## The resolver
+
+Since `B` is literally syntax sugar over `MOV pc, ...`, our interpreter doesn't need to know any new functionality has been added. We can simply desugar the former into the latter.
+
+```ts
+type BranchInstr = <label extends string> = {
+  type: 'Branch';
+  label: label;
+};
+
+type ResolveLabels<Instrs> = {
+  [K in keyof Instrs]: Instrs[K] extends Indexed<
+    BranchInstr<infer label>,
+    infer idx
+  >
+    ? Indexed<
+        MovImmediateInstr<
+          'pc',
+          FindLabel<Instrs, label>['idx']
+        >,
+        idx
+      >
+    // otherwise, do nothing
+    : Instrs[K];
+};
+```
+
+We use the trick from before to find the label instruction. Only this time, we're filtering by the label name and not the instruction index.
+
+```ts
+type FindLabel<Instrs, name> = {
+  [K in keyof Instrs as K extends number ? K : never]:
+    FindLabelPredicate<
+      Instrs[K],
+      name
+    >;
+}[any];
+
+type FindLabelPredicate<T, name> =
+  T extends {name: name} ? T : never;
+```
+
+Then, we just need to make the label a no-op in the interpreter. And by no-op I mean that it should simply increment the Program Counter.
+
+```ts
+type EvalLabelInstr<T, Ctx extends Context> =
+  T extends LabelInstr<string>
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          {
+            pc: EvalAdd<
+              Ctx['registers']['pc'],
+              '00000001'
+            >['result']
+          }
+        >;
+      }
+    : never;
+```
+
+Some final touches...
+
+```ts
+type InterpretProgram<T> =
+  EvalProgram<
+    ResolveLabels<
+      ParseProgram<T>
+    >
+  >
 ```
 
 ---

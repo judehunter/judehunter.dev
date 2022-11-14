@@ -1,3 +1,5 @@
+export {Fools} from './Fools';
+
 export {
   Note,
   Info,
