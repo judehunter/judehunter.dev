@@ -6,7 +6,8 @@ thumbnail: https://images.unsplash.com/photo-1655720845034-b8f615109b5b?ixlib=rb
 description: ''
 tags:
   - typescript
-  - compiler theory
+  - compilers
+  - assembly
 ---
 
 So, don't freak out, but TypeScript's type system is advanced enough to be able to **host entire programming languages inside of it**, using template literal types and conditional types, among other techniques.
@@ -17,7 +18,9 @@ As this is some mind-bogglingly crazy stuff, I had to start by testing if it's e
 
 I decided to revisit that later and pursue something with a simpler grammar first. I settled on a dialect of Assembly inspired by RISC and ARMv7.
 
-And thus, [ts-asm](https://github.com/judehunter/ts-asm) was born.
+And thus, [ts-asm](https://github.com/judehunter/ts-asm) was born. The only thing I ever wanted was to calculate the fibonacci sequence in TypeScript's type system using Assembly. I can sleep peacefully now.
+
+<ShowcaseImage />
 
 Don't worry if you're not familiar with Assembly though. At it's core, it's a relatively simple language of statements that instruct the processor which atomic operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
 

@@ -157,7 +157,7 @@ const MDStyle = tw`
   )
   [& pre>code]:(
     font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
-    font-size[16px]
+    font-size[15px] md:font-size[16px]
   )
   [& blockquote]:(
     bg-[rgba(127, 236, 157, 0.2)]
@@ -173,6 +173,9 @@ const MDStyle = tw`
     [& > p]:(
       my-0
     )
+  )
+  [img]:(
+    rounded-[8px]
   )
 `;
 
@@ -209,7 +212,10 @@ const ContentSection = ({content, components}) => {
       <DotPattern />
       <ArticleSideBar />
       <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
-        <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
+        <div
+          tw="font-size[17px] md:text-lg max-w-[50ch] mx-auto leading-[30px] md:leading-8"
+          css={MDStyle}
+        >
           <MDXRemote
             {...content}
             components={{
