@@ -2,12 +2,13 @@
 title: 'Assembly interpreter inside of TypeScript''s type system'
 createDate: '2022-11-14T18:50:56.511Z'
 updateDate: '2022-11-14T18:50:56.511Z'
-thumbnail: /media/deepmind-Snqm29dhfOk-unsplash.jpg
-description: 'TypeScript''s type system is crazy advanced. We can even build entire programming languages on the type level.'
+thumbnail: /media/willow-xk-nl-1AVWC1RE-unsplash.jpg
+description: 'TypeScript''s type system is crazy advanced. We can even build entire programming languages on the type level. I built a whole Assembly interpreter in type annotations and it''s cursed.'
 tags:
   - typescript
   - compilers
   - assembly
+  - advanced
 ---
 
 So, don't freak out, but TypeScript's type system is advanced enough to be able to **host entire programming languages inside of it**, using template literal types and conditional types, among other techniques.
@@ -18,11 +19,13 @@ As this is some mind-bogglingly crazy stuff, I had to start by testing if it's e
 
 I decided to revisit that later and pursue something with a simpler grammar first. I settled on a dialect of Assembly inspired by RISC and ARMv7.
 
-And thus, [ts-asm](https://github.com/judehunter/ts-asm) was born. The only thing I ever wanted was to calculate the fibonacci sequence in TypeScript's type system using Assembly. I can sleep peacefully now.
+And thus, [ts-asm](https://github.com/judehunter/ts-asm) was born. The only thing I ever wanted was to calculate the Fibonacci sequence in TypeScript type annotations using Assembly. I can sleep peacefully now.
 
 <ShowcaseImage />
 
-Don't worry if you're not familiar with Assembly though. At it's core, it's a relatively simple language of statements that instruct the processor which atomic operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
+It's pretty cursed. 
+
+Don't worry if you're not familiar with Assembly though. At its core, it's a relatively simple language of statements that instruct the processor which atomic operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
 
 ```js
 // put the number 2 (10 in binary) in register 0
@@ -38,9 +41,8 @@ SUB r2, r2, #00000001
 ```
 
 # Intro
-{/* As mentioned, the dialact of Assembly I created is a simple one based on ARM. */}
 
-My artificial TypeScript processor will operate on 8-bit binary numbers. [Attempts have been made](https://itnext.io/implementing-arithmetic-within-typescripts-type-system-a1ef140a6f6f) to simulate arithmetic operations on decimal numbers by generating tuples. This is not a viable option for larger numbers though, since for any number `N`, it recursively creates `N` type instances.
+My artificial TypeScript processor will operate on 8-bit binary numbers. As a side note, [attempts have been made](https://itnext.io/implementing-arithmetic-within-typescripts-type-system-a1ef140a6f6f) to simulate arithmetic operations on decimal numbers by generating tuples. This is not a viable option for larger numbers though, since for any number `N`, it recursively creates `N` type instances.
 
 Regardless, that's the way actual processors work. It should be able to perform bitwise logic on the numbers stored in the registers.
 
@@ -52,10 +54,10 @@ type VerticalDirection = 'north' | 'south';
 type HorizontalDirection = 'west' | 'east';
 type Direction = VerticalDirection | HorizontalDirection;
 
-const foo = (direction: Direction) => {};
+const go = (direction: Direction) => {};
 
-foo('north'); // OK!
-foo('up'); // ERR!
+go('north'); // OK!
+go('up'); // ERR!
 ```
 
 We can also generate new literal types by combining them like so:
@@ -102,20 +104,11 @@ While a real processor performs this operation using multiple logic gates, we ca
 
 - `A` and `B` represent our input bits.
 - `C` represents our input carry bit. This is used so that we can chain adders to create the Full Adder. So the adder actually adds three bits.
-- `Result` represents our result output bit.
-- `Carry` represents the carry output bit, which we can pipe into another adder.
+- `result` represents our result output bit.
+- `carry` represents the carry output bit, which we can pipe into another adder.
 
 <center>
-| A | B | C | Result | Carry |
-|---|---|---|---|---|
-| 0 | 0 | 0 | 0 | 0 |
-| 0 | 0 | 1 | 1 | 0 |
-| 0 | 1 | 0 | 1 | 0 |
-| 0 | 1 | 1 | 0 | 1 |
-| 1 | 0 | 0 | 1 | 0 |
-| 1 | 0 | 1 | 0 | 1 |
-| 1 | 1 | 0 | 0 | 1 |
-| 1 | 1 | 1 | 1 | 1 |
+<AdderTable />
 </center>
 
 The implementation is actually quite simple, as it directly follows this table.
@@ -139,20 +132,20 @@ type Adder<A, B, C> =
 ```ts
 // some tests:
 Adder<'0', '0', '0'> // {result: '0', carry: '0'}
-Adder<'0', '0', '1'> // {result: '1', carry: '0'}
-Adder<'0', '1', '0'> // {result: '1', carry: '0'}
-Adder<'0', '1', '1'> // {result: '0', carry: '1'}
 Adder<'1', '0', '0'> // {result: '1', carry: '0'}
-Adder<'1', '0', '1'> // {result: '0', carry: '1'}
+Adder<'0', '1', '0'> // {result: '1', carry: '0'}
+Adder<'0', '0', '1'> // {result: '1', carry: '0'}
 Adder<'1', '1', '0'> // {result: '0', carry: '1'}
+Adder<'1', '0', '1'> // {result: '0', carry: '1'}
+Adder<'0', '1', '1'> // {result: '0', carry: '1'}
 Adder<'1', '1', '1'> // {result: '1', carry: '1'}
 ```
 
-Incredible complexity can arise from a set of simple rules. We can build surprisingly sophisticate systems on top of this adder.
+Incredible complexity can arise from a set of simple rules. We can build surprisingly sophisticated systems on top of this adder.
 
 ## Full Adder
 
-Quite easily, we can create a Full Adder circuit that adds two 8-bit numbers together. First however, we need to create a couple of utility types.
+Quite easily, we can create a Full Adder circuit that adds two 8-bit numbers together. First, however, we need to create a couple of utility types.
 
 Recall how we extracted the last character from a string literal type. This way, we can add the two last bits of our two input numbers, and then use the carry to add the two second-to-last bits of our numbers. And so on. 
 Our type needs to be thus recursive.
@@ -185,7 +178,7 @@ The algorithm for our recursive `Add<A, B>` type is roughly as follows:
 Quite convoluted, I know. Or I might just be bad at explaining. Let's just jump into the implementation.
 
 ```ts
-export type Add<A, B> =
+type Add<A, B> =
   [Tail<A>, Tail<B>] extends [infer ATail, infer BTail]
     ? [ATail, BTail] extends [never, never]
       // if the tail doesn't exist,
@@ -250,7 +243,7 @@ In short, we want to transform each Assembly instruction into an object describi
 First things first, let's then define those two operand types.
 
 ```ts
-export type Register =
+type Register =
   | 'r0'
   | 'r1'
   | 'r2'
@@ -270,7 +263,7 @@ export type Register =
 // we could theoretically also enforce
 // this string to be made up of 8 bits.
 // (left as an exercise to the reader)
-export type Immediate = string;
+type Immediate = string;
 ```
 
 <Note>
@@ -294,7 +287,7 @@ To make things easier and less bug-prone down the line, let's define the object 
 
 ```ts
 // MOV Rd, #imm
-export type MovImmediateInstr<
+type MovImmediateInstr<
   Rd extends Register, imm extends Immediate
 > = {
   type: 'MovImmediate';
@@ -305,7 +298,7 @@ export type MovImmediateInstr<
 };
 
 // MOV Rd, Rm
-export type MovRegisterInstr<
+type MovRegisterInstr<
   Rd extends Register, Rm extends Register
 > = {
   type: 'MovRegister';
@@ -359,7 +352,7 @@ type ParseMovRegisterInstr<T> =
     : never;
 ```
 
-In short, we differentiate between the two instruction with the presence or absence of the `#` character to indicate an immediate value for the second operand.
+In short, we differentiate between the two instructions with the presence or absence of the `#` character that indicates an immediate value for the second operand.
 
 Let's test these bad boys out.
 
@@ -408,7 +401,7 @@ ParseProgram<`
 `>
 ```
 
-We just need a couple of utility types to achieve that. First let's get rid of the surrounding whitespace.
+We just need a couple of utility types to achieve that. First, let's get rid of the surrounding whitespace.
 
 ```ts
 // trims spaces/newlines from the left side of a string
@@ -480,14 +473,14 @@ Our parser could very well just work for a basic assembly format where instructi
   a Branch or a Jump instruction tells the processor to continue execution from a different place in the program, instead of the next instruction.
 </Note>
 
-Since we're using binary numbers stored in strings, we cannot simply index into the above array. Rather, we have to add the index of each element in binary format into the element itself.
+Since the registers are using binary numbers stored in strings, we cannot simply index into the above array. Rather, we have to add the index of each element in binary format into the element itself.
 
 Perhaps surprisingly, we will be using the Full Adder in the parser and not just in the interpreter itself.
 
 Since our `MovImmediateInstr` and `MovRegisterInstr` types don't have an `idx` (index) field, let's create a utility wrapper type to handle that.
 
 ```ts
-export type Indexed<T, idx extends string> =
+type Indexed<T, idx extends string> =
   T & {idx: idx};
 ```
 
@@ -519,7 +512,7 @@ type ParseLoop<
     // return an empty array if there's nothing left
     : [];
 
-export type ParseProgram<T> =
+type ParseProgram<T> =
   SplitLines<Trim<T>> extends infer R extends any[]
     ? ParseLoop<R>
     : never;
@@ -585,7 +578,7 @@ EvalInstr<
 >;
 ```
 
-No need to evaluate the whole program at once. Let's see if we can create an interpreter that, given a starting `Context`, can manipulate it. In our case, we will start with `r0 = 00000000`, and we want to end up with `r0 = 00001111`.
+No need to evaluate the whole program at once for now. Let's see if we can create an interpreter that, given a starting `Context`, can manipulate it. In our case, we will start with `r0 = 00000000`, and we want to end up with `r0 = 00001111`.
 
 We will use that same union pattern we used for the parser.
 
@@ -595,7 +588,7 @@ type EvalInstr<Instr, Ctx extends Context> =
   | EvalMovRegisterInstr<Instr, Ctx>;
 ```
 
-Now, for the hard part. Remember that we want to transform the `Ctx` so that the return value contains our immediate value in `r0`. This means that we will need to overwrite some register and memory values.
+Now, for the hard part. Remember that we want to transform the `Ctx` so that the return value contains our immediate value in `r0`. This means that we will need to overwrite the register value.
 
 There isn't a very easy way to do that in TypeScript, since the intersection operator `&` takes the first value it sees, and we want the opposite behavior. It's time for another utility type.
 
@@ -688,6 +681,7 @@ EvalInstr<
 ^?  {
       registers: {
         r0: '00001111';
+        // ...
       };
       memory: {};
     }
@@ -705,9 +699,9 @@ Our instructions should then modify that `pc` register so that the interpreter c
   There's one gotcha. We want to allow our `MOV` instruction to modify the `pc` register as well. To solve that, in our `Ctx`, we first overwrite `pc` and only then do we overwrite `Rd`. This way, it will be incremented by default, or as defined in the instruction.
 </Idea>
 
-```ts
+```ts {8-20}
 type EvalMovImmediateInstr<Instr, Ctx extends Context> =
-  T extends MovImmediateInstr<
+  Instr extends MovImmediateInstr<
     infer Rd,
     infer imm
   >
@@ -732,7 +726,7 @@ type EvalMovImmediateInstr<Instr, Ctx extends Context> =
 
 I'll spare you the implementation of the `EvalMovRegisterInstr`, as it is again nearly identical.
 
-This pattern of incrementing `pc` will be so universal that we should use abstract it with a utility type.
+This pattern of incrementing `pc` will be so universal that we should abstract it away with a utility type.
 
 ```ts
 type IncrementPC<Ctx extends Context> =
@@ -824,7 +818,7 @@ We can't do much with just the `MOV` instruction. We should support a plethora o
 
 ### Addition
 
-Let's start small --- the `ADD` instruction. Just like `MOV`, it has an `immediate` and `register` variant, which determines the type of the third and last operand.
+Let's start small --- the `ADD` instruction. Just like `MOV`, it has an `immediate` and `register` variants, which determine the type of the third and last operand.
 
 ```ts
 // r0 = r1 + 00001111
@@ -836,7 +830,7 @@ ADD r0, r1, r2
 The majority of the boilerplate will feel quite familiar. Let's go through the most important stuff one last time.
 
 ```ts
-export type AddImmediateInstr<
+type AddImmediateInstr<
   Rd extends Register,
   Rn extends Register,
   imm extends Immediate,
@@ -847,7 +841,7 @@ export type AddImmediateInstr<
   imm: imm;
 };
 
-export type AddRegisterInstr<
+type AddRegisterInstr<
   Rd extends Register,
   Rn extends Register,
   Rm extends Register,
@@ -884,7 +878,7 @@ type ParseAddRegisterInstr<T> =
 
 Here's where it's a bit different. For the evaluation, instead of simply putting the value into the desired register, we use the Full Adder to apply addition.
 
-```ts
+```ts {16-19}
 type EvalAddImmediateInstr<Instr, Ctx extends Context> =
   Instr extends AddImmediateInstr<
     infer Rd,
@@ -900,10 +894,10 @@ type EvalAddImmediateInstr<Instr, Ctx extends Context> =
           >,
           Record<
             Rd,
-*           Add<
-*             Ctx['registers'][Rn],
-*             imm
-*           >['result']
+            Add<
+              Ctx['registers'][Rn],
+              imm
+            >['result']
           >
         >;
       }
@@ -955,7 +949,7 @@ type TwosComplement<T> = Add<
 // add the minuend and the opposite of the subtrahend
 type Subtract<A, B> = Add<A, TwosComplement<B>>;
 ```
-```ts
+```ts {4,9}
 InterpretProgram<`
   MOV r0, #00000110
   MOV r1, #00001010
@@ -964,7 +958,7 @@ InterpretProgram<`
 ^?  {
       r0: '00000110';
       r1: '00001010';
-*     r2: '00000100';
+      r2: '00000100';
       // ...
     }
 ```
@@ -997,7 +991,7 @@ STR r0, [r1, #00000001]
 
 For the `LDR` instruction, we simply get the desired value from memory and place it in the register. 
 
-```ts
+```ts {17-25}
 type EvalLdrImmediateInstr<Instr, Ctx extends Context> =
   Instr extends LdrImmediateInstr<
     // Rt is our target register
@@ -1030,7 +1024,7 @@ type EvalLdrImmediateInstr<Instr, Ctx extends Context> =
 
 For `STR`, it's the opposite --- get the value from the register and put it in the desired place in memory.
 
-```ts
+```ts {8-17}
 type EvalStrImmediateInstr<Instr, Ctx extends Context> =
   Instr extends StrImmediateInstr<
     infer Rt,
@@ -1084,11 +1078,11 @@ InterpretProgram<`
     } 
 ```
 
-There's still more instructions to be added. There is something we need to deal with first though.
+There are still more instructions to be added. There is something we need to deal with first though.
 
 # The Little Big Problem
 
-As the interpreter complexity kept growing, I encountered a problem I hoped wouldn't pop up in this project. It's that same problem that plagued me in my original project of implementing a full programming language inside of TypeScript's type system.
+As the interpreter's complexity kept growing, I encountered a problem I hoped wouldn't pop up in this project. It's that same problem that plagued me in my original project of implementing a full programming language inside of TypeScript's type system.
 
 ```text
 Type instantiation is excessively deep
@@ -1120,7 +1114,7 @@ if (
 Whaddaya know! We can now run about 300 instructions. We can also increase this number even more, if need be.
 
 <Idea>
-  I attempted this patch-fix when I was working on the original full programming language project. For some reason I couldn't get it to work. Then, suddenly, it started working on its own. I suspect VS Code was doing some caching behind the scenes.
+  I attempted this patch-fix when I was working on the original full programming language project. For some reason, it wouldn't work, until suddenly it did. I suspect VS Code was doing some caching behind the scenes.
 </Idea>
 
 Right, where were we?
@@ -1155,13 +1149,13 @@ The syntax of the two instructions is simple.
 // pushes the value in r0 onto the stack
 PUSH {r0}
 
-// pops the value and places is in r0
+// pops the value and places it in r0
 POP {r0}
 ```
 
 The implementation is somewhat similar to the `LDR` and `STR` instructions, with the caveat of having to manage the `sp` register.
 
-```ts
+```ts {6-12,16-23}
 type EvalPushInstr<Instr, Ctx extends Context> =
   Instr extends PushInstr<infer Rm>
     ? {
@@ -1171,7 +1165,7 @@ type EvalPushInstr<Instr, Ctx extends Context> =
             // the address contained in sp is the key
             Ctx['registers']['sp'],
             // the value in the register will be
-            // set as the value of that key
+            // set as the value for that key
             Ctx['registers'][Rm]
           >
         >;
@@ -1180,7 +1174,7 @@ type EvalPushInstr<Instr, Ctx extends Context> =
           // increment pc and decrement sp
           {
             pc: IncrementPC<Ctx>;
-            sp: Add<
+            sp: Sub<
               Ctx['registers']['sp'],
               '00000001'
             >['result'];
@@ -1190,7 +1184,7 @@ type EvalPushInstr<Instr, Ctx extends Context> =
     : never;
 ```
 
-```ts
+```ts {11-18,23-30}
 type EvalPopInstr<Instr, Ctx extends Context> =
   Instr extends PopInstr<infer Rm>
     ? {
@@ -1279,14 +1273,14 @@ What is branching, really? To jump to a different place in the program sounds an
 Schloop. The `ADD` instruction was not executed. `exit:` is a label that we can use in `Branch` instructions as a way to point to that address in the program.
 
 <Idea>
-  You might have noticed that the label got its own instruction index. Normally, after assembling, the label gets removed and any `Branch` instructions will point to the next instruction. For this project however, it's easier to treat labels as no-ops.
+  You might have noticed that the label got its own instruction index. Normally, after assembling, the label gets removed and any `Branch` instruction will point to the next instruction. For this project, however, it's easier to treat labels as no-ops.
 </Idea>
 
 And so, we will need a way to actually link `B exit` to the `exit:` label. This step should happen after parsing and before evaluation.
 
 ## The resolver
 
-Since `B` is literally syntax sugar over `MOV pc, ...`, our interpreter doesn't need to know any new functionality has been added. We can simply desugar the former into the latter.
+Since `B` is literally syntax sugar for `MOV pc, ...`, our interpreter doesn't need to know any new functionality has been added. We can simply desugar the former into the latter.
 
 ```ts
 type BranchInstr = <label extends string> = {
@@ -1326,9 +1320,9 @@ type FindLabelPredicate<T, name> =
   T extends {name: name} ? T : never;
 ```
 
-Then, we just need to make the label a no-op in the interpreter. And by no-op I mean that it should simply increment the Program Counter.
+Then, we just need to make the label a no-op in the interpreter. And by no-op, I mean that it should simply increment the Program Counter.
 
-```ts
+```ts {7}
 type EvalLabelInstr<Instr, Ctx extends Context> =
   Instr extends LabelInstr<string>
     ? {
@@ -1363,6 +1357,8 @@ InterpretProgram<`
   exit:
 `>['registers']
 ^?  {
+      // r0 remains 0, as the ADD instruction
+      // was not executed
       r0: '00000000',
       r1: '00001111',
       r2: '11110000',
@@ -1372,7 +1368,7 @@ InterpretProgram<`
 
 ### Conditional branching
 
-Branching by itself isn't all that useful. To write if statements, we need a way to branch only when a condition is met. Let's add two more instructions, `Compare and Branch If Zero` and<br/>`Compare and Branch If Not Zero`. They will read the value from the specified register to determine whether or not to branch.
+Branching by itself isn't all that useful. To write if statements, we need a way to branch only when a condition is met. Let's add two more instructions, `Compare and Branch If Zero` and `Compare and Branch If Not Zero`. They will read the value from the specified register to determine whether or not to branch.
 
 ```ts
 MOV r0, #00000000
@@ -1380,9 +1376,9 @@ CBZ r0, mylabel  // branches
 CBNZ r0, mylabel // does not branch
 ```
 
-This time, we do need to make changes to the interpreter, as there's no way to desugar this into any set of other instructions. Since the two instructions are similar, I used just one object type `BranchIf` to denote them.
+This time, we do need to make changes to the interpreter, as there's no easy way to desugar this into any set of other instructions. Since the two instructions are similar, I used just one object type `BranchIf` to denote them.
 
-```ts
+```ts {12-28}
 type EvalBranchIfInstr<Instr, Ctx extends Context> =
   Instr extends BranchIf<
     infer type,
@@ -1442,7 +1438,7 @@ InterpretProgram<`
 You've waited long enough. Say hi to the `lr` Link Register. Labels? More like subroutines, am I right coders?
 
 <Note>
-The Link Register is used as a way to store the Program Counter temporarily before branching so that you can branch back (return) to it later.
+The Link Register is used as a way to store the Program Counter temporarily before branching so that you can branch back (return) to it later, to simulate subroutines.
 </Note>
 
 You can imagine a makeshift way to return from a subroutine like so. The program calls a subroutine to negate a number in `r0`.
@@ -1489,10 +1485,10 @@ negate:
 exit:
 ```
 
-The desugaring and evaluation of `BL` and `BR` is trivial.
+The desugaring and evaluation of `BL` and `BR` is trivial. I won't be boring you with it 😉.
 
 # Fin
 
-Once a daunting task, now a distant memory. You can check the whole codebase for the project in the official repository, [ts-asm](https://github.com/judehunter/ts-asm).
+Once a daunting task, now a distant memory. This article doesn't cover everything, but you can check the whole codebase for the project in the official repository, [ts-asm](https://github.com/judehunter/ts-asm).
 
-On the topic of programming languages and compiler theory, you might also want to check out [The journey of Queso, my programming language](/blog/the-journey-of-queso-my-programming-language).
+On the topic of programming languages and compiler theory, you might also want to read [The journey of Queso, my programming language](/blog/the-journey-of-queso-my-programming-language).

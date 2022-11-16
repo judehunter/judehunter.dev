@@ -3,9 +3,9 @@ import {serialize} from 'next-mdx-remote/serialize';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
 import {visit} from 'unist-util-visit';
-import * as rehypePrism from '@mapbox/rehype-prism';
 import {devCache} from './devCache';
 import remarkGfm from 'remark-gfm';
+import rehypePrism from 'rehype-prism-plus';
 
 export const devMdxCache =
   devCache<Awaited<ReturnType<typeof serverSerializeMDX>>>();

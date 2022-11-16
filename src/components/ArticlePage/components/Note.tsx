@@ -5,7 +5,7 @@ export const AttentionBox = ({icon, children}) => {
   return (
     <div tw="rounded-[8px] bg-[#2E344033] px-[25px] py-4 mx-[-25px] flex items-center my-8 font-size[0.9em]">
       <Icon icon={icon} tw="font-size[2rem] mr-7 flex-shrink-0" />
-      <div tw="[&>p:first-child]:(mt-0) [&>p:last-child]:(mb-0)">
+      <div tw="[&>p:nth-of-type(1)]:(mt-0) [&>p:nth-last-of-type(1)]:(mb-0)">
         {children}
       </div>
     </div>
