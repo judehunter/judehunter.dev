@@ -1,0 +1,1500 @@
+---
+title: 'Assembly interpreter inside of TypeScript''s type system'
+createDate: '2022-11-16T14:43:05.597Z'
+updateDate: '2022-11-16T14:43:05.597Z'
+thumbnail: /media/willow-xk-nl-1AVWC1RE-unsplash.jpg
+description: 'TypeScript''s type system is crazy advanced. We can even build entire programming languages on the type level. I built a whole Assembly interpreter in type annotations and it''s cursed.'
+tags:
+  - typescript
+  - compilers
+  - assembly
+  - advanced
+  - javascript
+  - types
+  - generics
+  - interpreter
+  - compilation
+  - conditional types
+---
+
+So, don't freak out, but TypeScript's type system is advanced enough to be able to **host entire programming languages inside of it**, using template literal types and conditional types, among other techniques.
+
+This has been done before, to varying degrees of insanity. Check out [ts-sql](https://github.com/codemix/ts-sql) and [typefuck](https://github.com/susisu/typefuck).
+
+As this is some mind-bogglingly crazy stuff, I had to start by testing if it's even possible for more complex languages. At first, I tried creating a full programming language similar to Lua and Python. This was mostly successful but due to the fact that it required an operator precedence parser, it got complicated and slow pretty fast.
+
+I decided to revisit that later and pursue something with a simpler grammar first. I settled on a dialect of Assembly inspired by RISC and ARMv7.
+
+And thus, [ts-asm](https://github.com/judehunter/ts-asm) was born. The only thing I ever wanted was to calculate the Fibonacci sequence in TypeScript type annotations using Assembly. I can sleep peacefully now.
+
+<ShowcaseImage />
+
+It's pretty cursed. 
+
+Don't worry if you're not familiar with Assembly though. At its core, it's a relatively simple language of statements that instruct the processor which atomic operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
+
+```js
+// put the number 2 (10 in binary) in register 0
+MOV r0, #00000010
+// put the number 3 in register 1
+MOV r1, #00000011
+// add the numbers in registers 0 and 1
+// and put the result in register 2
+ADD r2, r0, r1
+// subtract the number 1 from the number in register 2
+// and put the result in register 2 again
+SUB r2, r2, #00000001
+```
+
+# Intro
+
+My artificial TypeScript processor will operate on 8-bit binary numbers. As a side note, [attempts have been made](https://itnext.io/implementing-arithmetic-within-typescripts-type-system-a1ef140a6f6f) to simulate arithmetic operations on decimal numbers by generating tuples. This is not a viable option for larger numbers though, since for any number `N`, it recursively creates `N` type instances.
+
+Regardless, that's the way actual processors work. It should be able to perform bitwise logic on the numbers stored in the registers.
+
+If you're familiar with [String Literal Types](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#literal-types) and [Template Literal Types](https://www.typescriptlang.org/docs/handbook/2/template-literal-types.html), you know that TypeScript treats string constants as their own types and allows us to transform them to a surprising degree.
+
+For instance, we can make a function that only accepts these particular strings:
+```ts
+type VerticalDirection = 'north' | 'south';
+type HorizontalDirection = 'west' | 'east';
+type Direction = VerticalDirection | HorizontalDirection;
+
+const go = (direction: Direction) => {};
+
+go('north'); // OK!
+go('up'); // ERR!
+```
+
+We can also generate new literal types by combining them like so:
+```ts
+type MixedDirection =
+  | Direction
+  | `${VerticalDirection}-${HorizontalDirection}`;
+
+// the generated type is equivalent to:
+type MixedDirection =
+  | 'north' | 'south' | 'west' | 'east'
+  | 'north-west' | 'north-east'
+  | 'south-west' | 'south-east';
+```
+
+We can then use [Conditional Types](https://www.typescriptlang.org/docs/handbook/2/conditional-types.html) to transform types based on their value.
+```ts
+// creates a string literal type that's the first
+// character of the T string
+type FirstCharacter<T> =
+  T extends `${infer First}${string}` ? First : never;
+
+FirstCharacter<'abcdef'> // 'a'
+
+// same thing, just with the last character.
+// due to how these template types work,
+// we need to use recursive types to achieve this.
+type LastCharacter<T> =
+  T extends `${string}${infer Rest}`
+    ? Rest extends ''
+      ? T
+      : LastCharacter<Rest>
+    : never;
+
+LastCharacter<'abcdef'> // 'f'
+```
+
+All that to say, we can replicate exactly what a real processor does by manipulating strings of ones and zeros.
+
+As a proof of concept, I began prototyping a Binary Adder, i.e. a circuit that, given two input bits, adds them together and spits out the result, as well as the carry.
+
+## Adder
+While a real processor performs this operation using multiple logic gates, we can instead define a table of input and output values for our adder circuit and implement it using all the aforementioned techniques.
+
+- `A` and `B` represent our input bits.
+- `C` represents our input carry bit. This is used so that we can chain adders to create the Full Adder. So the adder actually adds three bits.
+- `result` represents our result output bit.
+- `carry` represents the carry output bit, which we can pipe into another adder.
+
+<center>
+<AdderTable />
+</center>
+
+The implementation is actually quite simple, as it directly follows this table.
+
+```ts
+type Adder<A, B, C> =
+    [A, B, C] extends
+    ['0', '0', '0']
+  ? {result: '0'; carry: '0'}
+  // else if
+  : [A, B, C] extends
+    ['1', '0', '0'] | ['0', '1', '0'] | ['0', '0', '1']
+  ? {result: '1'; carry: '0'}
+  // else if
+  : [A, B, C] extends
+    ['1', '1', '0'] | ['1', '0', '1'] | ['0', '1', '1']
+  ? {result: '0'; carry: '1'}
+  // else
+  : {result: '1'; carry: '1'};
+```
+```ts
+// some tests:
+Adder<'0', '0', '0'> // {result: '0', carry: '0'}
+Adder<'1', '0', '0'> // {result: '1', carry: '0'}
+Adder<'0', '1', '0'> // {result: '1', carry: '0'}
+Adder<'0', '0', '1'> // {result: '1', carry: '0'}
+Adder<'1', '1', '0'> // {result: '0', carry: '1'}
+Adder<'1', '0', '1'> // {result: '0', carry: '1'}
+Adder<'0', '1', '1'> // {result: '0', carry: '1'}
+Adder<'1', '1', '1'> // {result: '1', carry: '1'}
+```
+
+Incredible complexity can arise from a set of simple rules. We can build surprisingly sophisticated systems on top of this adder.
+
+## Full Adder
+
+Quite easily, we can create a Full Adder circuit that adds two 8-bit numbers together. First, however, we need to create a couple of utility types.
+
+Recall how we extracted the last character from a string literal type. This way, we can add the two last bits of our two input numbers, and then use the carry to add the two second-to-last bits of our numbers. And so on. 
+Our type needs to be thus recursive.
+
+```ts
+// this is our FirstCharacter type
+type Head<T> = type Head<T> =
+  T extends `${infer R}${string}` ? R : never;
+
+// this is different.
+// the type returns a string made up of
+// all but the first character of the string.
+type Tail<T> = 
+  T extends `${string}${infer R extends string}`
+    ? R extends ''
+      ? never
+      : R
+    : never;
+
+Tail<'abcdef'> // 'bcdef'
+```
+
+The algorithm for our recursive `Add<A, B>` type is roughly as follows:
+- Given binary string inputs `A` and `B`, if `A` and `B` are single-bit numbers, simply return their sum with no input carry bit, `Adder<A, B, '0'>`
+- Otherwise, calculate `FullAdder` for the `Tail`s of `A` and `B` (`ATail` and `BTail`). Using the result and the output carry bit of that, calculate the return value:
+- Add the left-most bits of `A` and `B`, as well as the output carry bit of the tail (so, `Adder<Head<A>, Head<B>, TailAdded['carry']>`).
+- For the result, concatenate the `result` of the above operation with the `result` of the tail.
+- For the carry, simply use the `carry` of the above operation.
+
+Quite convoluted, I know. Or I might just be bad at explaining. Let's just jump into the implementation.
+
+```ts
+type Add<A, B> =
+  [Tail<A>, Tail<B>] extends [infer ATail, infer BTail]
+    ? [ATail, BTail] extends [never, never]
+      // if the tail doesn't exist,
+      // we're dealing with a 1-bit number
+      ? Adder<A, B, '0'>
+      // otherwise, we recursively call Add
+      // with the tails of both numberes
+      : Add<ATail, BTail>
+        // and give it an alias:
+        extends infer TailAdded
+        // don't worry about this.
+        // it is a sort of type assertion
+        // so that we can access these fields later
+        extends {carry: any; result: any}
+      // then, add the left-most bits of A and B
+      // along with the carry of the tail
+      ? Adder<
+          Head<A>,
+          Head<B>,
+          TailAdded['carry']
+        >
+        // alias:
+        extends infer Current
+        // same as above
+        extends {carry: any; result: any}
+        // finally, the return value:
+        ? {
+            result:
+            `${Current['result']}${TailAdded['result']}`;
+            carry: Current['carry'];
+          }
+        : never
+      : never
+    : never;
+```
+
+Voilà! We have a Full Adder that can handle binary numbers of any length. Let's see it in practice.
+
+```ts
+Add<'01', '01'>
+  // {result: '10', carry: '0'}
+
+Add<'00100110', '00000010'>
+  // {result: '00101000', carry: '0'}
+
+Add<'11111111', '00000001'>
+  // {result: '00000000', carry: '1'}
+```
+
+The last test in particular shows that we can actually cause overflow! This could be a useful thing to track with flag registers, but in the scope of this project, we won't be adding that complexity.
+
+---
+
+The ability to add two numbers is of course an important operation that the user should be able to perform. It is also however instrumental to how our artificial processor works. For instance, we will need it to increment the Program Counter.
+
+With that behind us, we can move on to the more practical parts of the project.
+
+# The parser
+
+In short, we want to transform each Assembly instruction into an object describing that instruction. Conveniently, an instruction is always one line long. The object will contain the instruction type, as well as its operands, be it the register numbers, or immediate (i.e. constant) values.
+
+First things first, let's then define those two operand types.
+
+```ts
+type Register =
+  | 'r0'
+  | 'r1'
+  | 'r2'
+  | 'r3'
+  | 'r4'
+  | 'r5'
+  | 'r6'
+  | 'r7'
+  // the stack pointer
+  | 'sp'
+  // the link register
+  | 'lr'
+  // the program counter
+  | 'pc';
+
+// simply an alias for string.
+// we could theoretically also enforce
+// this string to be made up of 8 bits.
+// (left as an exercise to the reader)
+type Immediate = string;
+```
+
+<Note>
+  Apart from eight numbered registers, we also have access to three special registers `sp`, `lr`, and `pc`. You might already be familiar with them. We will revisit those soon&#8482;
+</Note>
+Probably the simplest instruction to implement is the Move instruction. It has two variants, `MOV (immediate)` and `MOV (register)`, which dictate the type of the second operand.
+
+```ts
+// MOV (immediate)
+// puts the immediate (constant) value 00010110 in r2
+MOV r2, #00010110
+
+// MOV (register)
+// copies the value from r1 to r0
+MOV r0, r1
+```
+
+As you can see, the instruction type is clearly stated at the beginning of the line. This makes parsing extremely easy. However, typically for Assembly dialects, including my dialect, we need to do some more work to figure out the actual variant, be it `MOV (immediate)` or `MOV (register)`.
+
+To make things easier and less bug-prone down the line, let's define the object types for those two instruction variants.
+
+```ts
+// MOV Rd, #imm
+type MovImmediateInstr<
+  Rd extends Register, imm extends Immediate
+> = {
+  type: 'MovImmediate';
+  // the destination register
+  Rd: Rd;
+  // the immediate value
+  imm: imm;
+};
+
+// MOV Rd, Rm
+type MovRegisterInstr<
+  Rd extends Register, Rm extends Register
+> = {
+  type: 'MovRegister';
+  Rd: Rd;
+  // the 'from' register.
+  // value will be copied from Rm to Rd
+  Rm: Rm;
+};
+```
+
+The terms `Rd`, `Rm` (also `Rn`, `Rt`, `Rs`) come from the ARM Assembly grammar. Typically,
+- `Rd` stands for `destination register`,
+- `Rn` and `Rm` refer to the first and second operation operands (so second and third instruction operands),
+- `Rt` is used for instructions dealing with memory, and
+- `Rs` stands for `shift amount register`.
+
+---
+
+Onto the parsing. We will define generic types (you can think of them as functions that take types as arguments and return a type) for every instruction and instruction variant.
+
+If we find a match, the function should return the object type, such as a `MovRegisterInstr` type. Otherwise, it should return `never`. This is a clever trick that will let us narrow down on the matching parsing rule without resorting to nested conditional types.
+
+```ts
+// T is our instruction string (one line)
+// We implement the parsing of our instruction
+// with a union of our parser types
+type ParseInstr<T> =
+  | ParseMovImmediateInstr<T>
+  | ParseMovRegisterInstr<T>;
+
+type ParseMovImmediateInstr<T> =
+  // parses "MOV " + register + ", #" + immediate
+  T extends `MOV ${
+    infer Rd extends Register
+  }, #${
+    infer imm extends Immediate
+  }`
+    // create the object
+    ? MovImmediateInstr<Rd, imm>
+    // return never if it's not a match
+    : never;
+
+type ParseMovRegisterInstr<T> =
+  // parses "MOV " + register + ", " + register
+  T extends `MOV ${
+    infer Rd extends Register
+  }, ${
+    infer Rm extends Register
+  }`
+    ? MovRegisterInstr<Rd, Rm>
+    : never;
+```
+
+In short, we differentiate between the two instructions with the presence or absence of the `#` character that indicates an immediate value for the second operand.
+
+Let's test these bad boys out.
+
+<Info>
+  I will use the `^?` notation to show the final generated type.
+</Info>
+
+```ts
+ParseInstr<'MOV r3, r4'>
+^?  {
+      type: 'MovRegister',
+      Rd: 'r3',
+      Rm: 'r4'
+    }
+
+ParseInstr<'MOV r5, #00001000'>
+^?  {
+      type: 'MovImmediate',
+      Rd: 'r5',
+      imm: '00001000'
+    }
+
+// a non-matching instruction
+ParseInstr<'ADD something, bla bla'>
+^?  never
+```
+
+Perfect! Oh, by the way, if you're wondering about that union pattern in `type ParseInstr<T>`, it works because for this grammar, we should only have one instruction match at all times. Thus, only one parsing type (like `ParseMovRegisterInstr` or maybe `ParseAddImmediateInstr`) will return an object and all the others will return `never`.
+
+This leverages the fact that TypeScript will remove the `never` variants from the union, leaving us with just the generated object.
+```ts
+type Foo = bar | buzz | never | yeet | never;
+     ^?  bar | buzz | yeet;
+
+type Bar = never | 123 | never | never;
+     ^?  123
+```
+
+### Parsing multiple instructions
+Obviously, our program needs to be able to parse more than one instruction at a time.
+
+```ts
+ParseProgram<`
+  MOV r1, #00001111
+  MOV r0, r1
+`>
+```
+
+We just need a couple of utility types to achieve that. First, let's get rid of the surrounding whitespace.
+
+```ts
+// trims spaces/newlines from the left side of a string
+type TrimLeft<T> = T extends
+  `${' ' | '\n'}${infer R}`
+    ? TrimLeft<R>
+    : T;
+
+// same thing with the right side
+type TrimRight<T> = T extends
+  `${infer R}${' ' | '\n'}`
+    ? TrimRight<R>
+    : T;
+
+// trims both sides
+type Trim<T> = TrimRight<TrimLeft<T>>;
+```
+
+Then let's split our multi-line string into an array of single lines.
+
+```ts
+// splits a string based on a separator string
+type Split<T, Sep extends string> = T extends
+  `${infer Line}${Sep}${infer Rest}`
+    ? [Line, ...Split<Rest, Sep>]
+    : [T];
+
+// splits a string based on the newline character
+type SplitLines<T> = Split<T, '\n'>;
+```
+
+Finally, gluing everything together, using [Mapped Types](https://www.typescriptlang.org/docs/handbook/2/mapped-types.html).
+
+```ts
+type ParseLine<LineString> =
+  ParseInstr<Trim<LineString>>;
+
+type ParseProgram<ProgramString> =
+  SplitLines<Trim<ProgramString>> extends infer R
+    ? {
+        [K in keyof R]: ParseLine<R[K]>
+      }
+    : never;
+```
+Big wow, it works 🎉.
+```ts
+ParseProgram<`
+  MOV r1, #00001111
+  MOV r0, r1
+`>
+ ^? [
+      {
+        type: 'MovImmediate',
+        Rd: 'r1',
+        imm: '00001111',
+      },
+      {
+        type: 'MovRegister',
+        Rd: 'r0',
+        Rm: 'r1',
+      },
+    ]
+```
+
+### Instruction indices
+Our parser could very well just work for a basic assembly format where instructions are executed from top to bottom, always. However, if we want our interpreter to support the Branch instruction, we need to design it around the concept of a Program Counter, which is a special register that stores the index of the current instruction.
+
+<Note>
+  a Branch or a Jump instruction tells the processor to continue execution from a different place in the program, instead of the next instruction.
+</Note>
+
+Since the registers are using binary numbers stored in strings, we cannot simply index into the above array. Rather, we have to add the index of each element in binary format into the element itself.
+
+Perhaps surprisingly, we will be using the Full Adder in the parser and not just in the interpreter itself.
+
+Since our `MovImmediateInstr` and `MovRegisterInstr` types don't have an `idx` (index) field, let's create a utility wrapper type to handle that.
+
+```ts
+type Indexed<T, idx extends string> =
+  T & {idx: idx};
+```
+
+Then to actually index all of our instructions, we create a recursive type that increments the index in binary format on every recursive call.
+
+```ts
+type ParseLoop<
+  T extends any[],
+  // start with index 0
+  idx extends string = '00000000'
+> =
+  // extract the first element, and the rest
+  T extends [
+    infer Current,
+    ...infer Rest,
+  ]
+    ? [
+        // index the first instruction
+        Indexed<ParseLine<Current>, idx>,
+        // merge the result of the recursively call for
+        // the rest of the instructions
+        ...ParseLoop<
+          Rest,
+          // pass the incremented counter
+          Add<idx, '00000001'>['result']
+        >,
+      ]
+    // this is our base case.
+    // return an empty array if there's nothing left
+    : [];
+
+type ParseProgram<T> =
+  SplitLines<Trim<T>> extends infer R extends any[]
+    ? ParseLoop<R>
+    : never;
+```
+
+Now our parsed program will contain this information.
+
+```ts
+ParseProgram<`
+  MOV r1, #00001111
+  MOV r0, r1
+`>
+ ^? [
+      {
+        type: 'MovImmediate',
+        Rd: 'r1',
+        imm: '00001111',
+        idx: '00000000',
+      },
+      {
+        type: 'MovRegister',
+        Rd: 'r0',
+        Rm: 'r1',
+        idx: '00000001',
+      },
+    ]
+```
+
+# The interpreter
+Our parser is far from being done. But we should already be able to evaluate the `MOV` instruction with an interpreter.
+
+### Registers and memory
+As you know, our processor can operate on registers and memory. To evaluate an instruction, we pass our current registers and memory to the evaluating type (similar to our parsing types). After performing the necessary calculations, the type will return the new state of the registers and memory.
+
+Let's define those in a type.
+
+```ts
+type Context = {
+  registers: {
+    r0: string;
+    r1: string;
+    r2: string;
+    r3: string;
+    r4: string;
+    r5: string;
+    r6: string;
+    r7: string;
+    sp: string;
+    lr: string;
+    pc: string;
+  };
+  memory: Record<string, string>;
+};
+```
+
+Notice that our memory is an object instead of an array. This is because our indices are strings representing binary numbers. It also saves a lot of space, as only the used memory slots will be represented.
+
+### Evaluating one instruction
+```ts
+EvalInstr<
+  ParseInstr<'MOV r0, #00001111'>,
+  StartingContext
+>;
+```
+
+No need to evaluate the whole program at once for now. Let's see if we can create an interpreter that, given a starting `Context`, can manipulate it. In our case, we will start with `r0 = 00000000`, and we want to end up with `r0 = 00001111`.
+
+We will use that same union pattern we used for the parser.
+
+```ts
+type EvalInstr<Instr, Ctx extends Context> =
+  | EvalMovImmediateInstr<Instr, Ctx>
+  | EvalMovRegisterInstr<Instr, Ctx>;
+```
+
+Now, for the hard part. Remember that we want to transform the `Ctx` so that the return value contains our immediate value in `r0`. This means that we will need to overwrite the register value.
+
+There isn't a very easy way to do that in TypeScript, since the intersection operator `&` takes the first value it sees, and we want the opposite behavior. It's time for another utility type.
+
+```ts
+type Overwrite<
+  A extends Record<string, any>,
+  B extends Record<string, any>,
+> =
+  // simply omit any keys in the first object,
+  // which are also present in the second object.
+  // then the intersection operator will
+  // work as we want it to.
+  Omit<A, keyof B> & B;
+
+Overwrite<{r0: '00000000'}, {r0: '00001111'}>;
+^?  {
+      r0: '00001111' 
+    }
+```
+
+Finally, the evaluating type.
+
+```ts
+type EvalMovImmediateInstr<Instr, Ctx extends Context> = 
+  Instr extends MovImmediateInstr<
+    infer Rd,
+    infer imm
+  >
+    ? {
+        // no changes to memory
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          // we use the Record type here
+          // since our Rd is dynamic.
+          //
+          // this is similar to creating an object with
+          // a dynamic key using the {[Rd]: imm}
+          // notation in JavaScript.
+          Record<Rd, imm>
+        >;
+      }
+    // if the `type` field is not a match,
+    // return never
+    : never;
+```
+
+<Idea>
+  Notice how those instruction object types we created earlier come in handy now. We can simply infer all the defined fields. TypeScript will determine if the instruction is a match using the `type` field.
+</Idea>
+
+Are you still here? Hope this isn't too crazy. The evaluating type for our other variant, `MOV (register)` will be nearly identical.
+
+```ts
+type EvalMovRegisterInstr<Instr, Ctx extends Context> =
+  Instr extends MovRegisterInstr<
+    infer Rd,
+    infer Rm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          Record<
+            Rd,
+            // instead of passing it directly,
+            // simply take the value from Rm
+            Ctx['registers'][Rm]
+          >
+        >;
+      }
+    : never;
+```
+
+Please work, please work, please work.
+
+```ts
+type StartingContext = {
+  registers: {
+    r0: '00000000';
+    // ...
+  };
+  memory: {};
+};
+
+EvalInstr<
+  ParseInstr<'MOV r0, #00001111'>,
+  StartingContext
+>;
+^?  {
+      registers: {
+        r0: '00001111';
+        // ...
+      };
+      memory: {};
+    }
+```
+
+We did it ~~gamers~~ coders. Now, onto --
+
+### Evaluating the whole program
+
+Our program is simply an array of indexed instruction objects. As I mentioned multiple times now (hope you're paying attention), the `pc` Program Counter register will contain the current instruction to be processed.
+
+Our instructions should then modify that `pc` register so that the interpreter can process the next instruction and we don't end up with an infinite loop. For normal instructions, it should simply increment the `pc` register. Special instructions, such as `Branch`, will instead modify the Program Counter so the processor can continue execution from a different place.
+
+<Idea>
+  There's one gotcha. We want to allow our `MOV` instruction to modify the `pc` register as well. To solve that, in our `Ctx`, we first overwrite `pc` and only then do we overwrite `Rd`. This way, it will be incremented by default, or as defined in the instruction.
+</Idea>
+
+```ts {8-20}
+type EvalMovImmediateInstr<Instr, Ctx extends Context> =
+  Instr extends MovImmediateInstr<
+    infer Rd,
+    infer imm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            {
+              // increment pc
+              pc: Add<
+                Ctx['registers']['pc'], '00000001'
+              >['result']
+            }
+          >,
+          // then do the actual MOV
+          Record<Rd, imm>
+        >;
+      }
+    : never;
+```
+
+I'll spare you the implementation of the `EvalMovRegisterInstr`, as it is again nearly identical.
+
+This pattern of incrementing `pc` will be so universal that we should abstract it away with a utility type.
+
+```ts
+type IncrementPC<Ctx extends Context> =
+  Add<Ctx['registers']['pc'], '00000001'>['result'];
+```
+
+Now we need our interpreter to actually have a program loop and pick the right instruction in each iteration. It should halt as soon as the instruction with a given index does not exist.
+
+TypeScript was giving me a hard time with this one, so the code is a bit hacky. But it works.
+
+```ts
+// when translated to JS, this would like:
+// instrs.filter(x => x.idx === PC)[0]
+type FindInstrByIdx<Instrs, PC> = {
+  [K in keyof Instrs as K extends number ? K : never]:
+    FindInstrByIdxPredicate<
+      Instrs[K],
+      PC
+    >;
+}[any];
+
+type FindInstrByIdxPredicate<T, PC> =
+  T extends {idx: PC} ? T : never;
+```
+
+Bask in the glory of the pièce de résistance.
+
+```ts
+type EvalProgram<
+  Instrs,
+  Ctx extends Context = StartingContext
+> =
+  FindInstrByIdx<
+    Instrs,
+    Ctx['registers']['pc']
+    // due to some weird TypeScript quirk,
+    // I had to use never here and essentially
+    // reverse the conditional,
+    // so I couldn't alias this expression.
+  > extends never
+    // if the instruction at the current pc
+    // doesn't exist, return the final context
+    ? Ctx
+    // evaluate the current instruction and recursively
+    // call EvalProgram with the new context
+    : EvalProgram<
+        Instrs,
+        EvalInstr<
+          FindInstrByIdx<
+            Instrs,
+            Ctx['registers']['pc']
+          >,
+          Ctx
+        >
+      >;
+```
+
+```ts
+EvalProgram<
+  ParseProgram<`
+    MOV r0, #00001111
+    MOV r1, #11110000
+    MOV r2, r0
+  `>
+>['registers']
+^?  {
+      r0: '00001111';
+      r1: '11110000';
+      r2: '00001111';
+      pc: '00000011';
+      // ...
+    }
+```
+
+### API glue
+
+Since `EvalProgram<ParseProgram<...` is awkward to use, let's define a type that glues everything together. This will also prove useful after we add more compiler steps into the mix.
+
+```ts
+type InterpretProgram<T> =
+  EvalProgram<
+    ParseProgram<T>
+  >
+```
+
+# More instructions
+
+We can't do much with just the `MOV` instruction. We should support a plethora of arithmetic and logical operations, as well as implement branching so that we can write programs with loops and conditional statements.
+
+### Addition
+
+Let's start small --- the `ADD` instruction. Just like `MOV`, it has an `immediate` and `register` variants, which determine the type of the third and last operand.
+
+```ts
+// r0 = r1 + 00001111
+ADD r0, r1, #00001111
+// r0 = r1 + r2
+ADD r0, r1, r2
+```
+
+The majority of the boilerplate will feel quite familiar. Let's go through the most important stuff one last time.
+
+```ts
+type AddImmediateInstr<
+  Rd extends Register,
+  Rn extends Register,
+  imm extends Immediate,
+> = {
+  type: 'AddImmediate';
+  Rd: Rd;
+  Rn: Rn;
+  imm: imm;
+};
+
+type AddRegisterInstr<
+  Rd extends Register,
+  Rn extends Register,
+  Rm extends Register,
+> = {
+  type: 'AddRegister';
+  Rd: Rd;
+  Rn: Rn;
+  Rm: Rm;
+};
+```
+```ts
+type ParseAddImmediateInstr<T> =
+  T extends `ADD ${
+    infer Rd extends Register
+  }, ${
+    infer Rn extends Register
+  }, #${
+    infer imm extends Immediate
+  }`
+    ? AddImmediateInstr<Rd, Rn, imm>
+    : never;
+
+type ParseAddRegisterInstr<T> =
+  T extends `ADD ${
+    infer Rd extends Register
+  }, ${
+    infer Rn extends Register
+  }, ${
+    infer Rm extends Register
+  }`
+    ? AddRegisterInstr<Rd, Rn, Rm>
+    : never;
+```
+
+Here's where it's a bit different. For the evaluation, instead of simply putting the value into the desired register, we use the Full Adder to apply addition.
+
+```ts {16-19}
+type EvalAddImmediateInstr<Instr, Ctx extends Context> =
+  Instr extends AddImmediateInstr<
+    infer Rd,
+    infer Rn,
+    infer imm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            {pc: IncrementPC<Ctx>}
+          >,
+          Record<
+            Rd,
+            Add<
+              Ctx['registers'][Rn],
+              imm
+            >['result']
+          >
+        >;
+      }
+    : never;
+```
+
+As you can see, it's not too difficult to add more functionality to our parser and interpreter. Going forward, I will only show the nitty gritty stuff and skip this boilerplate.
+
+```ts
+InterpretProgram<`
+  MOV r0, #00000110
+  MOV r1, #00001010
+  ADD r2, r0, r1
+`>['registers'];
+^?  {
+      r0: '00000110';
+      r1: '00001010';
+      r2: '00010000';
+      // ...
+    }
+```
+
+### Subtraction
+
+To subtract one binary number from another, we need to add the minuend and the number opposite to the subtrahend, using [Two's Complement](https://en.wikipedia.org/wiki/Two%27s_complement).
+
+<Note>
+  Two's Complement is a way to represent negative numbers in binary. Simply flip all the bits of your number and add 1 to get the number opposite to it.
+</Note>
+
+```ts
+// One's Complement is just flipping the bits.
+// To achieve this, we flip the first bit in the number,
+// then recurse and concatenate the rest
+type OnesComplement<T> = T extends ''
+  ? ''
+  : T extends `0${infer Rest}`
+  ? `1${OnesComplement<Rest>}`
+  : T extends `1${infer Rest}`
+  ? `0${OnesComplement<Rest>}`
+  : never;
+
+// Two's Complement is One's Complement plus one
+type TwosComplement<T> = Add<
+  OnesComplement<T>,
+  '00000001'
+>['result'];
+
+// add the minuend and the opposite of the subtrahend
+type Subtract<A, B> = Add<A, TwosComplement<B>>;
+```
+```ts {4,9}
+InterpretProgram<`
+  MOV r0, #00000110
+  MOV r1, #00001010
+  SUB r2, r1, r0
+`>['registers'];
+^?  {
+      r0: '00000110';
+      r1: '00001010';
+      r2: '00000100';
+      // ...
+    }
+```
+
+### Memory instructions
+
+We want to be able to store and load values from memory addresses into registers and the other way around. Easy enough. Since our processor architecture works with 8-bit registers, we don't have to worry about memory alignment and different instructions for saving bytes, words, etc.
+
+Let's have a look at the syntax.
+
+```ts
+// memory[r1 + 00000000] = r0
+LDR r0, [r1]
+// memory[r1 + r2] = r0
+LDR r0, [r1, r2]
+// memory[r1 + 00000001] = r0
+LDR r0, [r1, #00000001]
+
+// r0 = memory[r1 + 00000000]
+STR r0, [r1]
+// r0 = memory[r1 + r2]
+STR r0, [r1, r2]
+// r0 = memory[r1 + 00000001]
+STR r0, [r1, #00000001]
+```
+
+<Idea>
+  The reason we can have two values between the brackets is so that the first one could point to the base of an array in memory, while the second could be incremented for indexing.
+</Idea>
+
+For the `LDR` instruction, we simply get the desired value from memory and place it in the register. 
+
+```ts {17-25}
+type EvalLdrImmediateInstr<Instr, Ctx extends Context> =
+  Instr extends LdrImmediateInstr<
+    // Rt is our target register
+    infer Rt,
+    // Rn is our base address register
+    infer Rn,
+    // imm is used for the offset
+    infer imm
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            {pc: IncrementPC<Ctx>}
+          >,
+          Record<
+            Rt,
+            Ctx['memory'][
+              Add<
+                Ctx['registers'][Rn],
+                imm
+              >['result']
+            ]
+          >
+        >;
+      }
+    : never;
+```
+
+For `STR`, it's the opposite --- get the value from the register and put it in the desired place in memory.
+
+```ts {8-17}
+type EvalStrImmediateInstr<Instr, Ctx extends Context> =
+  Instr extends StrImmediateInstr<
+    infer Rt,
+    infer Rn,
+    infer imm
+  >
+    ? {
+        memory: Overwrite<
+          Ctx['memory'],
+          Record<
+            Add<
+              Ctx['registers'][Rn],
+              imm
+            >['result'],
+            Ctx['registers'][Rt]
+          >
+        >;
+        registers: Overwrite<
+          Ctx['registers'],
+          {pc: IncrementPC<Ctx>}
+        >;
+      }
+    : never;
+```
+
+We can now save values for later in memory, and even start the program with an allocated data section by modifying the `StartingContext`.
+
+Here's a program that swaps the values in two registers using the memory.
+
+```ts
+InterpretProgram<`
+  MOV r0, #11110000
+  MOV r1, #00001111
+  MOV r2, #10000000
+  STR r0, [r2, #00000000]
+  STR r1, [r2, #00000001]
+  LDR r0, [r2, #00000001]
+  LDR r1, [r2, #00000000]
+`>;
+^?  {
+      registers:{
+        r0: '00001111';
+        r1: '11110000';
+        r2: '10000000';
+        // ...
+      };
+      memory: {
+        '10000000': '11110000';
+        '10000001': '00001111'
+      };
+    } 
+```
+
+There are still more instructions to be added. There is something we need to deal with first though.
+
+# The Little Big Problem
+
+As the interpreter's complexity kept growing, I encountered a problem I hoped wouldn't pop up in this project. It's that same problem that plagued me in my original project of implementing a full programming language inside of TypeScript's type system.
+
+```text
+Type instantiation is excessively deep
+and possibly infinite. ts(2589)
+```
+
+The error would present itself for programs that had about 30 instructions, or more. This is because our program loop is a recursive type that needs to evaluate one line at a time and pass the result to the next line.
+
+Clearly, we've gone too far. <Fools />. No human should be able to wield such power.
+
+I found a solution. Just don't tell anyone. Some say the best way to fix an error is to disable it. And so, I found the code responsible for generating that error in TypeScript's codebase.
+
+```ts
+if (
+  instantiationDepth === 100 ||
+  instantiationCount >= 5000000
+) {
+```
+
+Yeaaah, let's just bring that up to a more *sane* number.
+
+```ts
+if (
+  instantiationDepth === 100 * 10 ||
+  instantiationCount >= 5000000 * 10
+) {
+```
+
+Whaddaya know! We can now run about 300 instructions. We can also increase this number even more, if need be.
+
+<Idea>
+  I attempted this patch-fix when I was working on the original full programming language project. For some reason, it wouldn't work, until suddenly it did. I suspect VS Code was doing some caching behind the scenes.
+</Idea>
+
+Right, where were we?
+
+# The stack
+
+The time has come to revisit one of the other special registers I mentioned earlier, `sp` --- the Stack Pointer register.
+
+<Note>
+Processors equipped with a Stack Pointer automatically maintain a stack data structure in their memory that we can use to push and pop elements.
+</Note>
+
+The user could of course manually manage such a structure. The way to do it would basically be to keep track of where in memory the stack starts, which is a constant, and where it ends, which changes based on how many elements in the stack there are.
+
+The need for a stack structure though is so common, that processors tend to implement it anyway (not to mention it can be used by the processor itself).
+
+One use for them is pushing values from registers before subroutine calls, and popping them back into registers to restore their state after the subroutine returns. We will see this in practice after we implement the `Branch` instruction.
+
+<Note>
+This managed stack typically grows downwards, i.e. the top of the stack is earlier in memory than the bottom.
+</Note>
+
+In our case, the stack base is at the end of our memory -- at address `11111111`. The Stack Pointer is initialized to this value as well.
+
+Pushing additional elements onto the stack places them at the memory position dictated by the Stack Pointer and post-decrements the Stack Pointer.
+
+Popping does the opposite --- it pre-increments the Stack Pointer and retrieves the value from the memory position dictated by the Stack Pointer.
+
+The syntax of the two instructions is simple.
+
+```ts
+// pushes the value in r0 onto the stack
+PUSH {r0}
+
+// pops the value and places it in r0
+POP {r0}
+```
+
+The implementation is somewhat similar to the `LDR` and `STR` instructions, with the caveat of having to manage the `sp` register.
+
+```ts {6-12,16-23}
+type EvalPushInstr<Instr, Ctx extends Context> =
+  Instr extends PushInstr<infer Rm>
+    ? {
+        memory: Overwrite<
+          Ctx['memory'],
+          Record<
+            // the address contained in sp is the key
+            Ctx['registers']['sp'],
+            // the value in the register will be
+            // set as the value for that key
+            Ctx['registers'][Rm]
+          >
+        >;
+        registers: Overwrite<
+          Ctx['registers'],
+          // increment pc and decrement sp
+          {
+            pc: IncrementPC<Ctx>;
+            sp: Sub<
+              Ctx['registers']['sp'],
+              '00000001'
+            >['result'];
+          }
+        >;
+      }
+    : never;
+```
+
+```ts {11-18,23-30}
+type EvalPopInstr<Instr, Ctx extends Context> =
+  Instr extends PopInstr<infer Rm>
+    ? {
+        // no changes to memory.
+        // we could clear the freed memory, but
+        // realistically there's no need
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Overwrite<
+            Ctx['registers'],
+            // increment both pc and sp
+            {
+              pc: IncrementPC<Ctx>
+              sp: Add<
+                Ctx['registers']['sp'],
+                '00000001'
+              >['result'];
+            }
+          >,
+          // put the value in the register
+          Record<
+            Rm,
+            Ctx['memory'][
+              // notice that this addition happens
+              // due to the pre-incrementation
+              Add<
+                Ctx['registers']['sp'],
+                '00000001'
+              >['result']
+            ]
+          >
+        >;
+      }
+    : never;
+```
+
+Now we can swap two numbers using the memory much more easily.
+
+```ts
+InterpretProgram<`
+  MOV r0, #11110000
+  MOV r1, #00001111
+  PUSH {r0}
+  PUSH {r1}
+  POP {r0}
+  POP {r1}
+`>;
+^?  {
+      registers:{
+        r0: '00001111';
+        r1: '11110000';
+        sp: '11111111';
+        // ...
+      };
+      memory: {
+        '11111111': '11110000';
+        '11111110': '00001111';
+      };
+    } 
+```
+
+# Branching
+
+You made it this far. No reason to stop now.
+
+What is branching, really? To jump to a different place in the program sounds an awful lot like overwriting the `pc` register. And that's just what it is. The `B` instruction is just syntax sugar for a `MOV pc, ...`.
+
+<Info>
+  Instruction indices will now be indicated to the left of the instruction.
+</Info>
+
+```ts
+00000000: B exit
+00000001: ADD r0, r1, r2
+00000010: exit:
+```
+
+```ts
+00000000: MOV pc, #00000010
+00000001: ADD r0, r1, r2
+00000010: exit:
+```
+
+*Corporate needs you to find the differences between these.*
+
+Schloop. The `ADD` instruction was not executed. `exit:` is a label that we can use in `Branch` instructions as a way to point to that address in the program.
+
+<Idea>
+  You might have noticed that the label got its own instruction index. Normally, after assembling, the label gets removed and any `Branch` instruction will point to the next instruction. For this project, however, it's easier to treat labels as no-ops.
+</Idea>
+
+And so, we will need a way to actually link `B exit` to the `exit:` label. This step should happen after parsing and before evaluation.
+
+## The resolver
+
+Since `B` is literally syntax sugar for `MOV pc, ...`, our interpreter doesn't need to know any new functionality has been added. We can simply desugar the former into the latter.
+
+```ts
+type BranchInstr = <label extends string> = {
+  type: 'Branch';
+  label: label;
+};
+
+type ResolveLabels<Instrs> = {
+  [K in keyof Instrs]: Instrs[K] extends Indexed<
+    BranchInstr<infer label>,
+    infer idx
+  >
+    ? Indexed<
+        MovImmediateInstr<
+          'pc',
+          FindLabel<Instrs, label>['idx']
+        >,
+        idx
+      >
+    // otherwise, do nothing
+    : Instrs[K];
+};
+```
+
+We use the trick from before to find the label instruction. Only this time, we're filtering by the label name and not the instruction index.
+
+```ts
+type FindLabel<Instrs, name> = {
+  [K in keyof Instrs as K extends number ? K : never]:
+    FindLabelPredicate<
+      Instrs[K],
+      name
+    >;
+}[any];
+
+type FindLabelPredicate<T, name> =
+  T extends {name: name} ? T : never;
+```
+
+Then, we just need to make the label a no-op in the interpreter. And by no-op, I mean that it should simply increment the Program Counter.
+
+```ts {7}
+type EvalLabelInstr<Instr, Ctx extends Context> =
+  Instr extends LabelInstr<string>
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          {pc: IncrementPC<Ctx>}
+        >;
+      }
+    : never;
+```
+
+Some final touches...
+
+```ts
+type InterpretProgram<T> =
+  EvalProgram<
+    ResolveLabels<
+      ParseProgram<T>
+    >
+  >
+```
+
+Cool.
+
+```ts
+InterpretProgram<`
+  MOV r1, #00001111
+  MOV r2, #11110000
+  B exit
+  ADD r0, r1, r2
+  exit:
+`>['registers']
+^?  {
+      // r0 remains 0, as the ADD instruction
+      // was not executed
+      r0: '00000000',
+      r1: '00001111',
+      r2: '11110000',
+      // ...
+    }
+```
+
+### Conditional branching
+
+Branching by itself isn't all that useful. To write if statements, we need a way to branch only when a condition is met. Let's add two more instructions, `Compare and Branch If Zero` and `Compare and Branch If Not Zero`. They will read the value from the specified register to determine whether or not to branch.
+
+```ts
+MOV r0, #00000000
+CBZ r0, mylabel  // branches
+CBNZ r0, mylabel // does not branch
+```
+
+This time, we do need to make changes to the interpreter, as there's no easy way to desugar this into any set of other instructions. Since the two instructions are similar, I used just one object type `BranchIf` to denote them.
+
+```ts {12-28}
+type EvalBranchIfInstr<Instr, Ctx extends Context> =
+  Instr extends BranchIf<
+    infer type,
+    infer Rn,
+    infer address
+  >
+    ? {
+        memory: Ctx['memory'];
+        registers: Overwrite<
+          Ctx['registers'],
+          {
+            // if the value is 0, ...
+            pc: Ctx['registers'][Rn] extends '00000000'
+              // and the instruction is CBZ, ...
+              ? type extends 'BranchIfZero'
+                // jump to the label
+                ? address
+                // otherwise if the instruction is CBNZ,
+                // do nothing (increment the pc as usual)
+                : IncrementPC<Ctx>
+              // else if the value is truthy, ...
+              // and the instruction is CBZ, ...
+              : type extends 'BranchIfZero'
+                // do nothing
+                ? IncrementPC<Ctx>
+                // otherwise if the instruction is CBNZ,
+                // jump to the label
+                : address;
+          }
+        >;
+      }
+    : never;
+```
+
+The possibilities are now endless. Have a look at this program that multiplies a number by `2` raised to any power --- `r0 * 2^r1`.
+
+```ts
+InterpretProgram<`
+  MOV r0, #00000011
+  MOV r1, #00000100
+  loop:
+    CBZ r1, exit
+    ADD r0, r0, r0
+    SUB r1, r1, #00000001
+    B loop
+  exit:
+`>['registers']
+^?  {
+      r0: '00110000', // 3 * 2^4 = 48
+      r1: '00000000',
+      // ...
+    }
+```
+
+### Branching with links
+
+You've waited long enough. Say hi to the `lr` Link Register. Labels? More like subroutines, am I right coders?
+
+<Note>
+The Link Register is used as a way to store the Program Counter temporarily before branching so that you can branch back (return) to it later, to simulate subroutines.
+</Note>
+
+You can imagine a makeshift way to return from a subroutine like so. The program calls a subroutine to negate a number in `r0`.
+
+```ts
+MOV r0, #00001101
+MOV lr, pc
+// when we return, we should continue from the next
+// instruction after the branch
+ADD lr, lr, #00000011
+B negate
+// ... we return here
+// r0 now contains -r0
+// branch to exit so that we don't negate twice
+B exit
+negate:
+  MOV r1, r0
+  SUB r0, r0, r1
+  SUB r0, r0, r1
+  // return from the subroutine 
+  MOV pc, lr
+exit:
+```
+
+With a little bit of syntax sugar, we can make this a lot nicer.
+
+```ts
+MOV r0, #00001101
+// branch with link,
+// which saves the next pc in lr and branches
+BL negate
+// ... we return here
+// r0 now contains -r0
+// branch to exit so that we don't negate twice
+B exit
+negate:
+  MOV r1, r0
+  SUB r0, r0, r1
+  SUB r0, r0, r1
+  // return from the subroutine.
+  // BR stands for Branch to Register
+  // `BR Rm` is sugar for `MOV pc, Rm `
+  BR lr
+exit:
+```
+
+The desugaring and evaluation of `BL` and `BR` is trivial. I won't be boring you with it 😉.
+
+# Fin
+
+Once a daunting task, now a distant memory. This article doesn't cover everything, but you can check the whole codebase for the project in the official repository, [ts-asm](https://github.com/judehunter/ts-asm).
+
+On the topic of programming languages and compiler theory, you might also want to read [The journey of Queso, my programming language](/blog/the-journey-of-queso-my-programming-language).

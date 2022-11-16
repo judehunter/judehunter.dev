@@ -15,7 +15,7 @@
    word-spacing: normal;
    word-break: normal;
    word-wrap: normal;
-   line-height: 1.3;
+   line-height: 1.45;
    -moz-tab-size: 2;
    -o-tab-size: 2;
    tab-size: 2;
@@ -122,3 +122,24 @@
  .token.entity {
    cursor: help;
  }
+
+.code-highlight {
+  float: left; /* 1 */
+  min-width: 100%; /* 2 */
+}
+
+.code-line {
+  display: block;
+  padding-left: 23px;
+  padding-right: 23px;
+  margin-left: -25px;
+  margin-right: -25px;
+  border-left: 2px solid rgba(0, 0, 0, 0); /* Set placeholder for highlight accent border color to transparent */
+}
+
+.highlight-line {
+  margin-left: -25px;
+  margin-right: -25px;
+  background-color: rgba(55, 65, 81, 0.30); /* Set highlight bg color */
+  border-left: 2px solid rgba(127, 236, 157, 0.8); /* Set highlight accent border color */
+}

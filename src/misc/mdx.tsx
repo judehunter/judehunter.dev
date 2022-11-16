@@ -3,8 +3,9 @@ import {serialize} from 'next-mdx-remote/serialize';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
 import {visit} from 'unist-util-visit';
-import * as rehypePrism from '@mapbox/rehype-prism';
 import {devCache} from './devCache';
+import remarkGfm from 'remark-gfm';
+import rehypePrism from 'rehype-prism-plus';
 
 export const devMdxCache =
   devCache<Awaited<ReturnType<typeof serverSerializeMDX>>>();
@@ -17,6 +18,7 @@ const serverSerializeMDX = (text: string) => {
     parseFrontmatter: true,
     mdxOptions: {
       remarkPlugins: [
+        remarkGfm,
         () => (tree) => {
           visit(tree, (node) => {
             if (node.type === 'text') {
@@ -49,7 +51,7 @@ export const serverSerializePostBySlug = async (slug: string) => {
   }
 
   const components = isSlugPathDir
-    ? (await readdir(slugPath)).filter((x) => x.endsWith('.tsx'))
+    ? Object.keys(await import(`../../content/posts/${slug}/components.tsx`))
     : null;
 
   return {source, components};

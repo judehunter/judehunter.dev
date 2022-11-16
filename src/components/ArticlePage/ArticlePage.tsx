@@ -1,10 +1,7 @@
 import tw from 'twin.macro';
 import {Footer} from '../Footer';
-import {PrismAsyncLight as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {format} from 'date-fns';
 import Img from 'next/future/image';
-import ts from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
-import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
 import {YouveReached} from './YouveReached';
 import {ArticleBottomNav} from './ArticleBottomNav';
 import {ArticleSideBar} from './ArticleSideBar';
@@ -16,9 +13,6 @@ import ArticlePageExport from '../../pages/blog/[slug]';
 import {LazyMotion} from 'framer-motion';
 import {SubscribeCTA} from './SubscribeCTA';
 import {NavBar} from '../NavBar';
-
-SyntaxHighlighter.registerLanguage('ts', ts);
-SyntaxHighlighter.registerLanguage('tsx', tsx);
 
 const DotPattern = () => {
   return (
@@ -163,7 +157,25 @@ const MDStyle = tw`
   )
   [& pre>code]:(
     font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
-    font-size[16px]
+    font-size[15px] md:font-size[16px]
+  )
+  [& blockquote]:(
+    bg-[rgba(127, 236, 157, 0.2)]
+    border-l-4
+    border-[rgba(127, 236, 157, 1)]
+    font-style[oblique 5deg]
+    font-weight[500]
+    rounded-r-[8px]
+    pl-5
+    pr-5
+    my-5
+    py-3
+    [& > p]:(
+      my-0
+    )
+  )
+  [img]:(
+    rounded-[8px]
   )
 `;
 
@@ -178,8 +190,8 @@ const ContentSection = ({content, components}) => {
           x,
           dynamic(
             () =>
-              import(`../../../content/posts/${slug}/${x}.tsx`).then(
-                (x) => x.default,
+              import(`../../../content/posts/${slug}/components.tsx`).then(
+                (y) => y[x],
               ),
             {
               ssr: true,
@@ -200,7 +212,10 @@ const ContentSection = ({content, components}) => {
       <DotPattern />
       <ArticleSideBar />
       <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
-        <div tw="text-lg max-w-[50ch] mx-auto leading-8" css={MDStyle}>
+        <div
+          tw="font-size[17px] md:text-lg max-w-[50ch] mx-auto leading-[30px] md:leading-8"
+          css={MDStyle}
+        >
           <MDXRemote
             {...content}
             components={{
@@ -240,12 +255,16 @@ export const ArticlePage = () => {
       >
         <NavBar />
         <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-          <div tw="pt-32 flex"></div>
+          <div tw="pt-16 md:pt-32 flex"></div>
           <header>
             <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
               <aside tw="text-center mb-5 opacity-50">
-                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')}{' '}
-                <span tw="mx-4">·</span>{' '}
+                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')}
+                <span tw="hidden md:inline">
+                  {' '}
+                  <span tw="mx-4">·</span>{' '}
+                </span>
+                <br tw="inline md:hidden" />
                 {(source.frontmatter!.tags.slice(0, 3) as any as string[])
                   .map((x) => `#${x}`)
                   .join(' ')}

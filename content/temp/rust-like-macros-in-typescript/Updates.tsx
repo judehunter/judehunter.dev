@@ -305,7 +305,7 @@ const StoreExampleFirst = () => {
   );
 };
 
-export const Updates = () => {
+export default () => {
   return (
     <>
       <div tw="flex flex-col md:flex-row justify-center items-center md:justify-between py-10 select-none -webkit-tap-highlight-color[transparent]">
