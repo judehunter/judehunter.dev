@@ -255,12 +255,16 @@ export const ArticlePage = () => {
       >
         <NavBar />
         <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-          <div tw="pt-32 flex"></div>
+          <div tw="pt-16 md:pt-32 flex"></div>
           <header>
             <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
               <aside tw="text-center mb-5 opacity-50">
-                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')}{' '}
-                <span tw="mx-4">·</span>{' '}
+                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')}
+                <span tw="hidden md:inline">
+                  {' '}
+                  <span tw="mx-4">·</span>{' '}
+                </span>
+                <br tw="inline md:hidden" />
                 {(source.frontmatter!.tags.slice(0, 3) as any as string[])
                   .map((x) => `#${x}`)
                   .join(' ')}
