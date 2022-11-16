@@ -4,6 +4,7 @@ import {usePageProps} from '../../misc/common';
 import BlogIndexPageExport from '../../pages/blog';
 import {Footer} from '../Footer';
 import {NavBar} from '../NavBar';
+import {SubscribeCTA} from '../ArticlePage/SubscribeCTA';
 
 export const BlogIndexPage = () => {
   const {posts} = usePageProps<typeof BlogIndexPageExport>();
@@ -39,9 +40,12 @@ export const BlogIndexPage = () => {
   return (
     <>
       <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-        <div tw="pt-24"></div>
         <NavBar />
-        <main tw="pb-[100px] mt-[100px] grid md:grid-template-columns[repeat(4, 1fr)] grid-template-columns[repeat(1, 1fr)] gap[50px 30px] max-w-[1300px] px-6 mx-auto">
+        <div tw="pt-36"></div>
+        <div tw="flex justify-center pt-[0.3px]">
+          <SubscribeCTA />
+        </div>
+        <main tw="pb-[100px] mt-[50px] grid md:grid-template-columns[repeat(4, 1fr)] grid-template-columns[repeat(1, 1fr)] gap[50px 30px] max-w-[1300px] px-6 mx-auto">
           <ArticleCard
             tw="md:grid-column[1 / 3]"
             css={bigTileStyles}
@@ -87,7 +91,6 @@ export const BlogIndexPage = () => {
             />
           ))}
         </main>
-
         <Footer />
       </div>
     </>
