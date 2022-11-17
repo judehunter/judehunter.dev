@@ -31,7 +31,7 @@ And thus, [ts-asm](https://github.com/judehunter/ts-asm) was born. The only thin
 
 It's pretty cursed. 
 
-Don't worry if you're not familiar with Assembly though. At its core, it's a relatively simple language of statements that instruct the processor which atomic operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
+Don't worry if you're not familiar with Assembly though. At its core, it's a relatively simple language of statements that instruct the processor which primitive operation to perform next, in a linear fashion. The processor has an array of registers, which store binary numbers that the processor can do calculations on. It can also read from and write to memory. Here's an example of a simple Assembly program:
 
 ```js
 // put the number 2 (10 in binary) in register 0
@@ -191,7 +191,7 @@ type Add<A, B> =
       // we're dealing with a 1-bit number
       ? Adder<A, B, '0'>
       // otherwise, we recursively call Add
-      // with the tails of both numberes
+      // with the tails of both numbers
       : Add<ATail, BTail>
         // and give it an alias:
         extends infer TailAdded
@@ -506,7 +506,7 @@ type ParseLoop<
     ? [
         // index the first instruction
         Indexed<ParseLine<Current>, idx>,
-        // merge the result of the recursively call for
+        // merge the result of the recursive call for
         // the rest of the instructions
         ...ParseLoop<
           Rest,
@@ -648,7 +648,7 @@ type EvalMovImmediateInstr<Instr, Ctx extends Context> =
 
 Are you still here? Hope this isn't too crazy. The evaluating type for our other variant, `MOV (register)` will be nearly identical.
 
-```ts
+```ts {12-14}
 type EvalMovRegisterInstr<Instr, Ctx extends Context> =
   Instr extends MovRegisterInstr<
     infer Rd,
@@ -697,7 +697,7 @@ We did it ~~gamers~~ coders. Now, onto --
 
 ### Evaluating the whole program
 
-Our program is simply an array of indexed instruction objects. As I mentioned multiple times now (hope you're paying attention), the `pc` Program Counter register will contain the current instruction to be processed.
+Our program is simply an array of indexed instruction objects. As I mentioned multiple times now (hope you're paying attention), the `pc` Program Counter register will contain the index of the current instruction to be processed.
 
 Our instructions should then modify that `pc` register so that the interpreter can process the next instruction and we don't end up with an infinite loop. For normal instructions, it should simply increment the `pc` register. Special instructions, such as `Branch`, will instead modify the Program Counter so the processor can continue execution from a different place.
 
@@ -744,7 +744,7 @@ Now we need our interpreter to actually have a program loop and pick the right i
 TypeScript was giving me a hard time with this one, so the code is a bit hacky. But it works.
 
 ```ts
-// when translated to JS, this would like:
+// when translated to JS, this would look like:
 // instrs.filter(x => x.idx === PC)[0]
 type FindInstrByIdx<Instrs, PC> = {
   [K in keyof Instrs as K extends number ? K : never]:
@@ -820,7 +820,7 @@ type InterpretProgram<T> =
 
 # More instructions
 
-We can't do much with just the `MOV` instruction. We should support a plethora of arithmetic and logical operations, as well as implement branching so that we can write programs with loops and conditional statements.
+We can't do much with just the `MOV` instruction. We should support a plethora of arithmetic, logical and memory operations, as well as implement branching so that we can write programs with loops and conditional statements.
 
 ### Addition
 
