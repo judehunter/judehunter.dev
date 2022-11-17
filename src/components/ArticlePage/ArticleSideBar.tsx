@@ -26,6 +26,10 @@ const LikeButton = () => {
   const [hits, setHits] = useState<number[]>([personalLikes.current]);
 
   const giveLike = async () => {
+    if (personalLikes.current >= 200) {
+      evt({action: 'like_post_overkill', category: 'engagement', label: slug});
+      return;
+    }
     fetch('/api/addPostLike', {
       method: 'POST',
       body: JSON.stringify({slug}),
