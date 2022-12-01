@@ -25,7 +25,7 @@ export const YouveReached = () => {
             {/* <ContactInput tw="font-size[0.9em]" /> */}
             <div tw="text-white font-size[30px] space-x-[20px] flex items-center mt-[25px] md:mt-0">
               <a
-                href="mailto:matisowagm@gmail.com"
+                href="mailto:jude@judehunter.dev"
                 target="_blank"
                 aria-label="email"
               >

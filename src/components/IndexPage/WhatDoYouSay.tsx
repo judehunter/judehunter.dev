@@ -19,7 +19,7 @@ export const WhatDoYouSay = () => {
       <div></div>
 
       <div tw="text-white font-size[40px] space-x-[40px] flex items-center mt-[30px]">
-        <a href="mailto:matisowagm@gmail.com" target="_blank">
+        <a href="mailto:jude@judehunter.dev" target="_blank">
           <Icon icon="mdi:email-open" tw="mb-[-5px]" />
         </a>
         <a

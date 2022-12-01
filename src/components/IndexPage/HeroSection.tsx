@@ -213,7 +213,7 @@ const AboutMe = () => {
               </a>
             </div> */}
             <div tw="text-white font-size[30px] space-x-[26px] flex items-center mt-[35px] mb-[15px] md:mb-0 md:mt-0">
-              <a href="mailto:matisowagm@gmail.com" target="_blank">
+              <a href="mailto:jude@judehunter.dev" target="_blank">
                 <Icon icon="mdi:email-open" tw="mb-[-5px]" />
               </a>
               <a
