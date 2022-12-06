@@ -129,9 +129,8 @@ const MDStyle = tw`
     bg-[#2a3b4c]
     rounded
     px-1.5
-    // [&:before]:(
-    //   content["d"]
-    // )
+    font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
+    font-size[15px] md:font-size[16px]
   )
   [& hr]:(
     border-top-color[#2a3b4c]
@@ -219,7 +218,27 @@ const ContentSection = ({content, components}) => {
           <MDXRemote
             {...content}
             components={{
-              // pre: ({children}) => <>{children}</>,
+              CodeBlock: ({filename, children}) => (
+                <>
+                  {filename ? (
+                    <div tw="flex mb-[-0.5em] mt-[0.5em] font-family['Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace]!">
+                      <div tw="bg-[#192732] px-2 -ml-2 rounded-t-[0.3em] font-size[15px] md:font-size[16px]">
+                        {filename}
+                      </div>
+                    </div>
+                  ) : null}
+                  {children}
+                </>
+              ),
+              // pre: ({meta, ...props}: any) => {
+              //   // console.log(meta);
+              //   return (
+              //     <>
+              //       {/* {meta.filename ? <div>{meta.filename}</div> : null} */}
+              //       <pre {...props} />
+              //     </>
+              //   );
+              // },
               // code: ({className, children}) => {
               //   const match = /language-(\w+)/.exec(className || '');
               //   return match ? (

@@ -1,0 +1,513 @@
+---
+title: 'ChatGPT helped me design a brand new programming language'
+createDate: '2022-12-06T18:01:19.587Z'
+updateDate: '2022-12-06T18:01:19.587Z'
+thumbnail: /media/solen-feyissa-IfWFKG3FXE4-unsplash.jpg
+description: 'I forced ChatGPT to be my assistant in designing a brand-new programming language. It understood complex custom constructs and was able to build and interpret programs with it. Crazy.'
+tags:
+  - chatgpt
+  - compilers
+  - ai
+  - openai
+  - gpt3
+  - github copilot
+---
+
+Since we all know by now that ChatGPT is capable of some crazy stuff, let's just cut to the chase.
+
+I forced ChatGPT to be my assistant in designing a brand-new programming language. Along the way, I made obscure language syntax and semantic choices to see if it can handle it.
+
+Note, since ChatGPT often answers very verbosely --- even if you ask it not to --- I have removed any extraneous explanations it produced. The core of the conversation remains unaltered.
+
+<ChatMe>
+I want to design a programming language. You will assist me with generating the example code snippets as we go along and iterate over ideas. Do not put anything other than code blocks showcasing the language thus far in your answers, unless I specifically ask you to.
+
+Let's start with the basics. Do not assume any influence from other programming languages, other than that the language will fall into the C-style family of languages.
+
+Let's define the basic data types. The language should support integers, floats, multiline strings (delimited by&nbsp;`` ` ``), objects, and arrays.
+</ChatMe>
+<ChatGpt>
+```py
+# Integers
+num = 5
+
+# Floats
+decimal = 5.5
+
+# Multiline strings
+string = "Hello,
+          World"
+
+# Objects
+obj = {
+  "key": "value"
+}
+
+# Arrays
+array = [1, 2, 3]
+```
+</ChatGpt>
+
+Alright, we've got something! Wasn't expecting this to work but it seems promising.
+
+It got something wrong though, the strings are delimited by double quotes -- not what I asked for.
+Also, I would like object keys not to be wrapped in quotes at all. Let's fix that.
+
+<ChatMe>
+All strings, including object values, should be delimited by a backtick, and not a double quote.
+
+Object keys should be bare.
+</ChatMe>
+<ChatGpt>
+```py
+# Multiline strings
+string = `Hello,
+          World`
+
+# Objects
+obj = {
+  key: `value`
+}
+```
+</ChatGpt>
+
+So far so good. ChatGPT implicitly created a variable construct. I'd like variables to look a bit less python-ish though.
+
+<ChatMe>
+Now let's define a variable construct to store those values. The language will have `let` and `mut` constructs, which behave as their names suggest. Additionally, show how a user might (try) to reassign those variables.
+</ChatMe>
+<ChatGpt>
+```py
+# Declare a variable
+let num = 5
+
+# Declare a mutable variable
+mut decimal = 5.5
+
+# Reassign a variable
+# This will result in a compile-time error
+let num = 10
+
+# Reassign a mutable variable
+mut decimal = 10.5
+```
+</ChatGpt>
+
+It understood what I was looking for perfectly. Let's pretend I'm stuck, where do we go from here?
+
+<ChatMe>
+What other constructs should my language have?
+</ChatMe>
+<ChatGpt>
+To start, your language might include common control flow constructs such as `if`/`else` statements and `for`/`while` loops. Additionally, your language may include support for defining and calling functions.
+</ChatGpt>
+<ChatMe>
+Do not add all of those to my language yet.
+
+Let's start with the function construct. In my language, there should be no function declaration construct. Rather, functions should only be defined through a shorthand syntax known as lambdas, creating anonymous functions.
+</ChatMe>
+<ChatGpt>
+```py
+# Define a lambda that takes
+# two arguments and returns their sum
+let add = (x, y) => x + y
+
+# Call the lambda and
+# store the result in a variable
+let sum = add(1, 2)
+```
+</ChatGpt>
+Nice! We've got a JavaScript-style lambda in our language now. I'd like it to look a bit different though.
+
+<ChatMe>
+This syntax looks visually bulky to me.
+
+Suggest an alternative syntax (e.g. alternative characters) that will look lighter, while keeping the exact semantics of your proposed solution.
+</ChatMe>
+<ChatGpt>
+One option could be to use the `|` character to delimit the arguments of the lambda, and the `->` sequence to indicate that the code on the right-hand side should be executed and returned whenever the lambda is called.
+```py
+let add = |x, y| -> x + y
+let sum = add(1, 2)
+```
+</ChatGpt>
+
+Now I like this a lot better, but maybe I can nudge ChatGPT in the direction of something more akin to `\x, y -> x + y`, to remove even more characters.
+
+<ChatMe>
+I like the new arrow but I don't like the `|` characters.
+
+Suggest an alternative character that could be used to delimit the left side of the lambda.
+
+Since we're using the arrow to delimit the arguments from the return value, the second `|` is redundant, so remove it.
+</ChatMe>
+<ChatGpt>
+```py
+let add = :x, y -> x + y
+let sum = add(1, 2)
+```
+Here, we have removed the second `:` character after the arguments list, since it is not necessary for the syntax or functionality of the lambda. This makes the syntax a little simpler and easier to read.
+</ChatGpt>
+
+This is interesting. I haven't even considered this syntax, but it surprisingly works! Let's keep going and add some more nontypical features.
+
+<ChatMe>
+I want to incorporate the "everything-is-an-expression" notion into my language.
+
+To do that, I want to add a new construct, a block.
+
+The last expression statement from that block should be implicitly "returned" from it without any additional keywords.
+</ChatMe>
+<ChatGpt>
+In your language, blocks can be defined using curly braces `{}`.
+```py
+# Define a lambda that takes a single argument
+# and returns the square of that argument
+let square = :x -> {
+  let squared = x * x
+  squared
+}
+
+let result = square(5)
+```
+</ChatGpt>
+
+The provided code sample isn't a very useful one, but it does demonstrate that the AI understands the concept it just designed. `squared` is returned from the block and thus from the lambda.
+
+It looks a bit too easy though since so, so many languages use this syntax already.
+
+<ChatMe>
+I would like to use a different character for the block delimiter. Pick something slightly unorthodox. Present multiple ideas.
+</ChatMe>
+<ChatGpt>
+Here are a few examples of alternative characters that you could use:
+- `[` and `]`: These characters are often used as delimiters for arrays and other types of data structures.
+- `(` and `)`: These characters are often used as delimiters for function arguments.
+- `<` and `>`: These characters are often used to delimit HTML tags and other types of markup.
+- `⸨` and `⸩`: These characters are called "top and bottom square brackets" and are not commonly used in programming languages, so using them could provide a unique and distinctive aesthetic for your language.
+</ChatGpt>
+<ChatMe>
+I choose option 2.
+
+Can you show me how nested blocks as well as blocks whose return value is assigned to a variable would look like with that option?
+</ChatMe>
+<ChatGpt>
+```py
+let square = :x -> (
+  # Define a nested block that
+  # calculates the square of the argument
+  let squared = (
+    let xSquared = x * x
+    xSquared
+  )
+  
+  # Assign the value of
+  # the nested block to a variable
+  let result = (
+    squared
+  )
+
+  # Return the value of the result variable
+  result
+)
+```
+</ChatGpt>
+
+Not a particularly exciting example once again, but technically correct. ChatGPT also goes on about the actual code, explaining what each line does, further cementing the idea that it does actually know what it's doing --- at least so far.
+
+Every language needs some form of conditional execution. Let's add that next.
+
+<ChatMe>
+Add conditional statements. I do not want `if..else` statements in my language. Instead, I want a simple, right-associative ternary operator. Present a very simple code example.
+</ChatMe>
+<ChatGpt>
+```py
+# Define a lambda that takes a single argument and
+# returns "positive" if the argument is positive,
+# and "negative" otherwise
+let sign = :x -> (
+  # Use the ternary operator to
+  # evaluate the sign of the argument
+  x > 0 ? `positive` : `negative`
+)
+```
+</ChatGpt>
+
+What's interesting is that the AI now combines multiple constructs that I defined and fine-tuned. It still remembers that the strings in my language are delimited by `` ` ``.
+
+Also, don't mind that according to the AI, `0` is negative.
+
+One problem from a design standpoint is that the `:` operator can show up in both the ternary operator and the lambda expression. This time, I will tell ChatGPT directly what needs to change and how.
+
+<ChatMe>
+I changed my mind. Let's use `then` instead of `?` and `else` instead of `:` in the ternary operator.
+</ChatMe>
+<ChatGpt>
+```py
+let sign = :x -> (
+  x > 0 then `positive` else `negative`
+)
+```
+</ChatGpt>
+
+Very easy. Since we have conditional execution now, I can ask the AI to write a non-trivial program in my language.
+
+<ChatMe>
+Implement the Fibonacci sequence in my language.
+</ChatMe>
+<ChatGpt>
+```py
+let fib = :n -> (
+  # Use the ternary operator to handle
+  # the special cases of n = 0 and n = 1
+  n == 0 then 0 else (
+    n == 1 then 1 else (
+      # Recursively calculate the Fibonacci
+      # number using the previous two numbers
+      fib(n - 1) + fib(n - 2)
+    )
+  )
+)
+```
+</ChatGpt>
+<ChatMe>
+Also remove the redundant blocks.
+</ChatMe>
+<ChatGpt>
+```py
+let fib = :n ->
+  n == 0 then 0 else
+    n == 1 then 1 else
+      fib(n - 1) + fib(n - 2)
+```
+</ChatGpt>
+
+Isn't this something! Let's go further. It's pretty embarrassing for a language not to have a looping construct.
+
+<ChatMe>
+Add a loop construct for arrays. I don't like imperative programming. Think of something nice.
+</ChatMe>
+<ChatGpt>
+```py
+let square = :x -> x * x
+
+let numbers = [1, 2, 3, 4, 5]
+
+# Use the "map" higher-order function to apply
+# the "square" lambda to each element of the array
+let squared = map(square, numbers)
+```
+</ChatGpt>
+
+Novel approach! Ignoring a typical `for` function, like I asked it to. It's not very ergonomic though, so maybe we could dial it back a little.
+
+<ChatMe>
+That sounds good, but can we make the map function a special syntax case more similar to a traditional for-loop?
+</ChatMe>
+<ChatGpt>
+```py
+let squared = map(numbers) in square
+```
+</ChatGpt>
+<ChatMe>
+That's not quite right, but you gave me an idea. Let's treat `map` as a keyword and not a function call and use a more appropriate word than `in`.
+</ChatMe>
+<ChatGpt>
+```py
+let squared = map numbers using square
+```
+</ChatGpt>
+
+I have to say I was stumped at how easy it was to convey what I meant. Now to write a traditional `for` loop,
+
+```c
+for (int i = from; i < to; i += step)
+```
+we're gonna need something that plays well with the `map` statement.
+
+<ChatMe>
+Add a syntax for creating a range of numbers for easy iteration. Do something that's novel and dissimilar to other languages.
+</ChatMe>
+<ChatGpt>
+```py
+let square = :x -> x * x
+
+# Use the "range" syntax to generate an array of
+# numbers from 1 to 5 with a step size of 1
+let numbers = range 1 to 5 step 1
+
+let squared = map numbers using square
+```
+
+We print the value of the squared variable to the console. This will print the array `[1, 4, 9, 16, 25]`, which is the result of applying the square lambda to each element of the numbers array.
+</ChatGpt>
+
+As far as my limited knowledge goes, this particular syntax isn't especially popular. I did have to press *Try Again* a couple of times first though.
+
+The AI was a bit hesitant on whether the range was inclusive or exclusive later on, but overall it was impressive.
+
+Let's see if it can implement the Fibonacci sequence once again, using the newly learned constructs.
+
+<ChatMe>
+Implement the Fibonacci sequence using an iterative approach.
+</ChatMe>
+
+<ChatGpt>
+```py
+let fibonacci = :n -> (
+  # Define the starting values for
+  # the fibonacci sequence
+  let a = 0
+  let b = 1
+
+  let numbers = range 0 to (n - 1) step 1
+
+  let sequence = map numbers using :x -> (
+    let temp = b
+
+    # Use the "mut" keyword to reassign
+    # the value of "b" to the sum of "a" and "b"
+    mut b = a + b
+
+    # Use the "mut" keyword to reassign
+    # the value of "a" to the value of "temp"
+    mut a = temp
+
+    # Return the value of "a" as the result
+    # of the fibonacci calculation
+    a
+  )
+
+  # Return the value of the "b" variable as
+  # the result of the fibonacci lambda
+  b
+)
+```
+</ChatGpt>
+
+The AI impressively inlined the `map` callback instead of defining it as a separate variable, for the first time.
+
+There is also some redundant code, but we can let it slide.
+
+<ChatMe>
+I noticed you used the keyword `mut` to reassign a constant variable's (denoted by `let`) value. 
+
+Instead, the original variable declaration should be marked as mutable, and the reassignment syntax should not contain any keywords.
+</ChatMe>
+<ChatGpt>
+```py {2,3,10-12,14-16}
+let fibonacci = :n -> (
+  mut a = 0
+  mut b = 1
+
+  let numbers = range 0 to (n - 1) step 1
+
+  let sequence = map numbers using :x -> (
+    let temp = b
+
+    # Use the assignment operator "=" to reassign
+    # the value of "b" to the sum of "a" and "b"
+    b = a + b
+
+    # Use the assignment operator "=" to reassign
+    # the value of "a" to the value of "temp"
+    a = temp
+
+    a
+  )
+
+  b
+)
+```
+</ChatGpt>
+
+<ChatMe>
+Looks good, but what would happen if I called `fibonacci(0)`? And do you think the desirable outcome would happen? If not, fix it.
+</ChatMe>
+<ChatGpt>
+If you call `fibonacci(0)` in the previous example, it will return the value of the `b` variable as the result of the fibonacci calculation. Since the `b` variable is initialized to `1`, `fibonacci(0)` will return `1` as the result.
+
+This may not be the desired behavior, as the fibonacci sequence is typically defined to start with the numbers `0` and `1`, and the zeroth fibonacci number is `0`. To fix this issue, you can modify the code to handle the special case where n is `0` and return `0` as the result. Here is an example of how this might look in your language:
+
+```py
+let fibonacci = :n -> (
+  # Handle the special case where n is 0
+  if n == 0 then
+    # Return 0 as the result of the
+    # fibonacci calculation
+    return 0
+  end
+
+  # ...
+```
+</ChatGpt>
+At that point, the AI started losing it. It would frequently forget what constructs I have defined even if I stressed that it must not use any constructs from other languages.
+
+I had to remind it exactly which construct to use. It also forgot that my language used `then else` instead of `? :`.
+<ChatMe>
+Nice, but you forgot there is no `if..else` construct in my language and only my custom ternary operator.
+</ChatMe>
+
+<ChatGpt>
+```py {2}
+let fibonacci = :n -> (
+  n == 0 ? 0 : (
+    mut a = 0
+    mut b = 1
+
+    let numbers = range 0 to (n - 1) step 1
+
+    let sequence = map numbers using :x -> (
+      let temp = b
+
+      b = a + b
+
+      a = temp
+
+      a
+    )
+
+    b
+  )
+)
+```
+</ChatGpt>
+
+What's crazy is that it has actually transformed the code so that the logic for numbers higher than `0` is contained in the `else` part of the ternary operator.
+
+Anyway, it started losing coherence after this point. As one last effort, I asked it to evaluate and explain a custom function I wrote in the language.
+
+Given a number, the function creates an array of subsequent integers up to that number and then returns an array which represents a simple integration of that array.
+
+<ChatMe>
+Give me the result value of the following program written in my language.
+
+```py
+(
+  :a -> (
+    mut c = 0
+    map
+      range from 0 to a step 1
+      using :d -> (
+        c += d
+        c
+      )
+  )
+)(5)
+```
+</ChatMe>
+<ChatGpt>
+If you run the program in your language, it will return the following array as the result:
+
+```py
+[0, 1, 3, 6, 10]
+```
+</ChatGpt>
+<ChatMe>
+What is the name of the mathematical operation performed by this function from the input array to the output array?
+</ChatMe>
+<ChatGpt>
+The function you provided in your previous example performs a cumulative sum calculation on the input array, which means that it calculates the sum of the numbers in the array up to each element in the array, and returns the resulting array of sums.
+</ChatGpt>
+
+Folks, we are <GlitchText>doomed</GlitchText>.

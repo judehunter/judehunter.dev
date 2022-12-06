@@ -23,10 +23,11 @@
     "twin.d.ts",
     ".prettierrc.js",
     ".eslintrc.js",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    "**/*.jsx"
-, "scripts/genThumbnails.mjs"  ],
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "content/**/*.ts",
+    "content/**/*.tsx",
+    "scripts/genThumbnails.mjs"
+  ],
   "exclude": ["node_modules", "next-sitemap.config.mjs"]
 }

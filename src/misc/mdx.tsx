@@ -3,12 +3,8 @@ import {serialize} from 'next-mdx-remote/serialize';
 import path from 'path';
 import {getPlaiceholder} from 'plaiceholder';
 import {visit} from 'unist-util-visit';
-import {devCache} from './devCache';
 import remarkGfm from 'remark-gfm';
 import rehypePrism from 'rehype-prism-plus';
-
-export const devMdxCache =
-  devCache<Awaited<ReturnType<typeof serverSerializeMDX>>>();
 
 const dirExists = async (path) =>
   !!(await stat(path).catch((e) => null))?.isDirectory();
@@ -29,6 +25,33 @@ const serverSerializeMDX = (text: string) => {
             }
           });
         },
+        () => (tree) => {
+          visit(tree, 'root', (node) => {
+            if (!~text.indexOf('GraphQL has')) return;
+            // console.dir(node, {depth: null});
+          });
+        },
+        () => (tree) => {
+          visit(tree, 'code', (node, idx, parent) => {
+            if (!~text.indexOf('GraphQL has')) return;
+            const re = /\b([-\w]+)(?:=(?:"([^"]*)"|'([^']*)'))/g;
+            let match;
+            let attrs = {};
+            while ((match = re.exec(node.meta))) {
+              attrs[match[1]] = match[2] || match[3] || '';
+            }
+            parent.children[idx] = {
+              type: 'mdxJsxFlowElement',
+              name: 'CodeBlock',
+              attributes: Object.entries(attrs).map(([k, v]) => ({
+                type: 'mdxJsxAttribute',
+                name: k,
+                value: v,
+              })),
+              children: [node],
+            };
+          });
+        },
       ],
       rehypePlugins: [rehypePrism],
     },
@@ -43,12 +66,7 @@ export const serverSerializePostBySlug = async (slug: string) => {
     : slugPath + '.mdx';
   const file = await readFile(filePath, 'utf-8');
 
-  let source = devMdxCache.get(file);
-
-  if (!source) {
-    source = await serverSerializeMDX(file);
-    devMdxCache.set(file, source);
-  }
+  const source = await serverSerializeMDX(file);
 
   const components = isSlugPathDir
     ? Object.keys(await import(`../../content/posts/${slug}/components.tsx`))
@@ -70,12 +88,7 @@ export const serverSerializeAllPosts = async () => {
 
       const file = await readFile(filePath, 'utf-8');
 
-      let source = devMdxCache.get(file);
-
-      if (!source) {
-        source = await serverSerializeMDX(file);
-        devMdxCache.set(file, source);
-      }
+      const source = await serverSerializeMDX(file);
 
       const {base64: thumbnailBlurDataUrl} = await getPlaiceholder(
         source.frontmatter!.thumbnail,
