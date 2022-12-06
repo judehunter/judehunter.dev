@@ -25,6 +25,8 @@
     ".eslintrc.js",
     "src/**/*.ts",
     "src/**/*.tsx",
+    "src/**/*.js",
+    "src/**/*.jsx",
     "content/**/*.ts",
     "content/**/*.tsx",
     "scripts/genThumbnails.mjs"
