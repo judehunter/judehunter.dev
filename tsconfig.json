@@ -27,8 +27,6 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
-    "content/**/*.ts",
-    "content/**/*.tsx",
     "scripts/genThumbnails.mjs"
   ],
   "exclude": ["node_modules", "next-sitemap.config.mjs"]

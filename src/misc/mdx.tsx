@@ -40,7 +40,7 @@ const serverSerializeMDX = (text: string) => {
             while ((match = re.exec(node.meta))) {
               attrs[match[1]] = match[2] || match[3] || '';
             }
-            parent.children[idx] = {
+            parent.children[idx!] = {
               type: 'mdxJsxFlowElement',
               name: 'CodeBlock',
               attributes: Object.entries(attrs).map(([k, v]) => ({
