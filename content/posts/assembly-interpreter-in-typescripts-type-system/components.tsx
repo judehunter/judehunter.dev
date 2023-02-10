@@ -1,7 +1,8 @@
 import {useState} from 'react';
 import tw from 'twin.macro';
 import React from 'react';
-import {gaEvt, phEvt} from '../../../src/misc/a7s';
+import {gaEvt} from '../../../src/misc/a7s';
+import {posthog} from 'posthog-js';
 
 export {Fools} from './Fools';
 
@@ -47,7 +48,7 @@ export const AdderTable = () => {
 
   const sendEvt = () => {
     gaEvt({action: 'click_adder_table', category: 'engagement'});
-    phEvt('clicked adder table', {category: 'engagement'});
+    posthog.capture('clicked adder table', {category: 'engagement'});
   };
 
   return (

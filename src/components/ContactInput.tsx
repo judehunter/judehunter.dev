@@ -1,8 +1,9 @@
 import {useState} from 'react';
 import tw from 'twin.macro';
 import {GooeyLoader} from '../misc/GooeyLoader';
-import {gaEvt, phEvt} from '../misc/a7s';
+import {gaEvt} from '../misc/a7s';
 import {Button} from './Button';
+import {posthog} from 'posthog-js';
 
 export const ContactInput = ({...rest}) => {
   const [email, setEmail] = useState('');
@@ -13,7 +14,10 @@ export const ContactInput = ({...rest}) => {
     if (!email.trim().length) return;
     setSending(true);
     gaEvt({action: 'submit_contact_email', category: 'general'});
-    phEvt('submitted contact email', {category: 'general', value: email});
+    posthog.capture('submitted contact email', {
+      category: 'general',
+      value: email,
+    });
     await fetch('/api/getInContact', {
       method: 'POST',
       headers: {

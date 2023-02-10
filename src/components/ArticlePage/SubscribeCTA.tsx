@@ -2,7 +2,8 @@ import {Icon} from '@iconify/react';
 import {useState} from 'react';
 import tw from 'twin.macro';
 import {GooeyLoader} from '../../misc/GooeyLoader';
-import {gaEvt, phEvt} from '../../misc/a7s';
+import {gaEvt} from '../../misc/a7s';
+import {posthog} from 'posthog-js';
 
 const Input = ({val, onChange}) => {
   return (
@@ -37,7 +38,7 @@ export const SubscribeCTA = ({...rest}) => {
     if (!email.trim().length) return;
     setSending(true);
     gaEvt({action: 'subscribe_newsletter', category: 'general'});
-    phEvt('subscribed to newsletter', {category: 'general'});
+    posthog.capture('subscribed to newsletter', {category: 'general'});
     await fetch('/api/sub', {
       method: 'POST',
       headers: {
