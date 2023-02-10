@@ -2,7 +2,7 @@ import {Icon} from '@iconify/react';
 import {useState} from 'react';
 import tw from 'twin.macro';
 import {GooeyLoader} from '../../misc/GooeyLoader';
-import {evt} from '../../misc/gtag';
+import {gaEvt, phEvt} from '../../misc/a7s';
 
 const Input = ({val, onChange}) => {
   return (
@@ -36,7 +36,8 @@ export const SubscribeCTA = ({...rest}) => {
   const submit = async () => {
     if (!email.trim().length) return;
     setSending(true);
-    evt({action: 'subscribe_newsletter', category: 'general'});
+    gaEvt({action: 'subscribe_newsletter', category: 'general'});
+    phEvt('subscribed to newsletter', {category: 'general'});
     await fetch('/api/sub', {
       method: 'POST',
       headers: {

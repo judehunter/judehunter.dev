@@ -3,7 +3,7 @@ import {useEffect, useRef, useState} from 'react';
 import tw from 'twin.macro';
 import {m} from 'framer-motion';
 import {useRouter} from 'next/router';
-import {evt} from '../../misc/gtag';
+import {gaEvt, phEvt} from '../../misc/a7s';
 
 const LikeButton = () => {
   const SHOW_THRESHOLD = 20;
@@ -27,14 +27,20 @@ const LikeButton = () => {
 
   const giveLike = async () => {
     if (personalLikes.current >= 200) {
-      evt({action: 'like_post_overkill', category: 'engagement', label: slug});
+      gaEvt({
+        action: 'like_post_overkill',
+        category: 'engagement',
+        label: slug,
+      });
+      phEvt('liked post to overkill', {category: 'engagement', postSlug: slug});
       return;
     }
     fetch('/api/addPostLike', {
       method: 'POST',
       body: JSON.stringify({slug}),
     });
-    evt({action: 'like_post', category: 'engagement', label: slug});
+    gaEvt({action: 'like_post', category: 'engagement', label: slug});
+    phEvt('liked post', {category: 'engagement', postSlug: slug});
     setLikes((x) => x! + 1);
     personalLikes.current += 1;
     localStorage.setItem(

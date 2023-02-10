@@ -1,9 +1,17 @@
 import Script from 'next/script';
 import {GlobalStyles} from 'twin.macro';
 import '../misc/global.css';
+import {usePostHog} from '../misc/posthog';
 
 const App = ({Component, pageProps}) => {
-  // useGAPageView();
+  usePostHog(
+    process.env.NODE_ENV === 'production'
+      ? 'phc_QqZZAEEXYVVSnwfZQxcqMMfPH5n3gCjmLi4fSZX2yqY'
+      : 'phc_ME8up5kKmkINHUrDyBO03P812h1Os6XPMQPcleO3eeI',
+    {
+      api_host: 'https://app.posthog.com',
+    },
+  );
   return (
     <>
       <GlobalStyles />

@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import tw from 'twin.macro';
 import {GooeyLoader} from '../misc/GooeyLoader';
-import {evt} from '../misc/gtag';
+import {gaEvt, phEvt} from '../misc/a7s';
 import {Button} from './Button';
 
 export const ContactInput = ({...rest}) => {
@@ -12,7 +12,8 @@ export const ContactInput = ({...rest}) => {
     e.preventDefault();
     if (!email.trim().length) return;
     setSending(true);
-    evt({action: 'submit_contact_email', category: 'general'});
+    gaEvt({action: 'submit_contact_email', category: 'general'});
+    phEvt('submitted contact email', {category: 'general', value: email});
     await fetch('/api/getInContact', {
       method: 'POST',
       headers: {

@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import tw from 'twin.macro';
-import {evt} from '../../../src/misc/gtag';
+import React from 'react';
+import {gaEvt, phEvt} from '../../../src/misc/a7s';
 
 export {Fools} from './Fools';
 
@@ -45,7 +46,8 @@ export const AdderTable = () => {
   const carry = inputs.reduce((acc, cur) => acc + cur, 0) >= 2;
 
   const sendEvt = () => {
-    evt({action: 'click_adder_table', category: 'engagement'});
+    gaEvt({action: 'click_adder_table', category: 'engagement'});
+    phEvt('clicked adder table', {category: 'engagement'});
   };
 
   return (
