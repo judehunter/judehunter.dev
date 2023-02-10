@@ -1,7 +1,7 @@
 import Script from 'next/script';
 import {GlobalStyles} from 'twin.macro';
+import {usePostHog} from '../misc/a7s';
 import '../misc/global.css';
-import {usePostHog} from '../misc/posthog';
 
 const App = ({Component, pageProps}) => {
   usePostHog(
