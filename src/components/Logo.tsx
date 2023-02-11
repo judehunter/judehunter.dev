@@ -1,4 +1,4 @@
-export const BareLogo = () => {
+export const BareLogo = ({...rest}) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,6 +6,7 @@ export const BareLogo = () => {
       height="40"
       fill="none"
       viewBox="0 0 40 40"
+      {...rest}
     >
       <path
         stroke="currentColor"

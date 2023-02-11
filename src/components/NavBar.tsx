@@ -13,6 +13,80 @@ const NavLink = ({href, children}) => {
 };
 
 export const NavBar = () => {
+  return (
+    <div
+      tw="fixed left-0 top-0 right-0 text-[#f7f8f8] z-[999999999]"
+      css={[
+        css`
+          // mask: linear-gradient(
+          //   to top,
+          //   rgba(0, 0, 0, 0) 0%,
+          //   rgba(0, 0, 0, 1) 40px
+          // );
+          // background-image: linear-gradient(
+          //   to bottom,
+          //   #000212 0px,
+          //   #00021200 20px
+          // );
+        `,
+      ]}
+    >
+      <div
+        css={[
+          css`
+            z-index: 1;
+            &::before {
+              content: '';
+              position: absolute;
+              inset: -1px 0 -60%;
+              backdrop-filter: blur(12px);
+              z-index: 0;
+              mask: linear-gradient(to bottom, black 50px, transparent);
+              background-image: linear-gradient(
+                to bottom,
+                #000212 0px,
+                #00021200 30px
+              );
+            }
+          `,
+        ]}
+      />
+      <div tw="max-w-[500px] mx-auto px-6 box-sizing[content-box] relative">
+        <div
+          tw="
+            py-0 flex items-center justify-between font-medium text-[14px] border-b border-b-[#ffffff22] mb-0
+            w-full
+          "
+        >
+          <div tw="flex items-center flex-grow [& > *]:(px-[12px] my-2) mx-[-12px]">
+            <Link href="/" passHref>
+              <a>
+                <BareLogo tw="w-[30px] h-[30px] box-sizing[content-box]" />
+              </a>
+            </Link>
+            <Link href="/" passHref>
+              <a tw="hidden md:block">Portfolio</a>
+            </Link>
+            <Link href="/blog" passHref>
+              Blog
+            </Link>
+            <Link href="/#work" passHref>
+              Work
+            </Link>
+            <Link href="/#contact" passHref>
+              Contact
+            </Link>
+          </div>
+          <div tw="ml-[24px]">
+            <div>Newsletter</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const NavBar3 = () => {
   const {pathname} = useRouter();
   return (
     <m.nav

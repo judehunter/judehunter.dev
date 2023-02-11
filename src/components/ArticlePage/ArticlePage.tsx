@@ -273,7 +273,7 @@ export const ArticlePage = () => {
         strict
       >
         <NavBar />
-        <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
+        <div tw="background-color[#000212] min-h-screen text-[#dadfe7]">
           <div tw="pt-16 md:pt-32 flex"></div>
           <header>
             <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
