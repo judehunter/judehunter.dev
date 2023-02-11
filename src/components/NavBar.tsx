@@ -145,6 +145,7 @@ const Newsletter = ({
           </m.span> */}
         </div>
         <m.div
+          initial="hidden"
           variants={{
             hidden: {
               width: '82px',
@@ -211,6 +212,7 @@ const Newsletter = ({
         </m.div>
         <m.div
           tw="absolute right-0 top-1/2 transform[translateY(-50%)] pointer-events-none flex justify-end"
+          initial="false"
           variants={{
             true: {opacity: 1, transition: {delay: 0.2}},
             false: {opacity: 0},
@@ -221,6 +223,7 @@ const Newsletter = ({
         </m.div>
         <m.div
           tw="absolute right-0 top-1/2 transform[translateY(-50%)] pointer-events-none whitespace-nowrap"
+          initial="false"
           variants={{
             true: {opacity: 1, transition: {delay: 0.2}},
             false: {opacity: 0},
