@@ -9,7 +9,7 @@ const HeroImage = () => {
   return (
     <div tw="hidden md:block sticky bottom-0 height[100vh] margin-top[-100vh] z-index[0] opacity-80">
       <div tw="absolute left-0 top-0 right-0 height[100vh] overflow-hidden z-index[0]">
-        <div tw="background[linear-gradient(0deg, rgba(7, 12, 16, 1) 0%, rgba(7, 12, 16, 0) 19%)] absolute left-0 top-0 bottom-0 right-0 z-index[1]" />
+        <div tw="background[linear-gradient(0deg, rgba(0, 2, 18, 1) 0%, rgba(0, 2, 18, 0) 19%)] absolute left-0 top-0 bottom-0 right-0 z-index[1]" />
         <div tw="relative max-width[1150px] mx-auto padding-top[280px] px-4 box-sizing[content-box]">
           <m.div
             tw="
@@ -18,7 +18,7 @@ const HeroImage = () => {
               after:(
                 absolute
                 left-0 top-0 bottom-0 right-0 z-index[1]
-                background[linear-gradient(0deg, rgba(13,13,15,1) 0%, rgba(13,13,15,0) 19%)]
+                background[linear-gradient(0deg, rgba(0, 2, 18, 1) 0%, rgba(0, 2, 18, 0) 19%)]
               )
             "
             // width={980}
@@ -159,7 +159,7 @@ const AboutMe = () => {
               margin-top[40px]
               padding[20px 24px]
               md:padding[34px 56px]
-              background-image[linear-gradient(to bottom, #0e151cff 0%, #070c10ee 30%)]
+              background-image[linear-gradient(to bottom, rgba(0, 2, 18, 1) 0%, rgba(0, 2, 18, 0.7) 30%)]
               rounded-3xl
               text-xl
               line-height[1.8]
