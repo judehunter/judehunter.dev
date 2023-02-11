@@ -6,8 +6,8 @@ import {BareLogo, Logo} from './Logo';
 import {useState, useRef, useEffect} from 'react';
 import {keyframes} from '@emotion/react';
 import {GooeyLoader} from '../misc/GooeyLoader';
-import { gaEvt } from '../misc/a7s';
-import { posthog } from 'posthog-js';
+import {gaEvt} from '../misc/a7s';
+import {posthog} from 'posthog-js';
 
 const NavLink = ({href, children}) => {
   return (

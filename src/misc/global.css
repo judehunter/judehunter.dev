@@ -20,3 +20,7 @@ html {
 i {
   font-variation-settings: 'slnt' -2;
 }
+
+:root {
+  color-scheme: dark;
+}
