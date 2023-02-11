@@ -1,4 +1,4 @@
-import tw from 'twin.macro';
+import tw, {css} from 'twin.macro';
 import {Footer} from '../Footer';
 import {format} from 'date-fns';
 import Img from 'next/future/image';
@@ -212,7 +212,7 @@ const ContentSection = ({content, components}) => {
       <ArticleSideBar />
       <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
         <div
-          tw="font-size[17px] md:text-lg max-w-[50ch] mx-auto leading-[30px] md:leading-8"
+          tw="font-size[17px] md:text-lg max-w-[560px] mx-auto leading-[30px] md:leading-8"
           css={MDStyle}
         >
           <MDXRemote
@@ -275,31 +275,123 @@ export const ArticlePage = () => {
         <NavBar />
         <div tw="background-color[#000212] min-h-screen text-[#dadfe7]">
           <div tw="pt-16 md:pt-32 flex"></div>
-          <header>
-            <div tw="max-w-[600px] mx-auto mt-[80px] mb-[50px] px-6">
-              <aside tw="text-center mb-5 opacity-50">
-                {format(new Date(source.frontmatter!.createDate), 'MMM d, y')}
-                <span tw="hidden md:inline">
-                  {' '}
-                  <span tw="mx-4">·</span>{' '}
-                </span>
-                <br tw="inline md:hidden" />
-                {(source.frontmatter!.tags.slice(0, 3) as any as string[])
-                  .map((x) => `#${x}`)
-                  .join(' ')}
-              </aside>
-              <h1 tw="text-3xl text-center font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
+          <header
+          // css={[
+          //   css`
+          //     background-image: radial-gradient(
+          //       ellipse 80% 50% at 50% -20%,
+          //       rgba(120, 119, 198, 0.3),
+          //       transparent
+          //     );
+          //   `,
+          // ]}
+          >
+            <div tw="max-w-[600px] mx-auto mt-[40px] mb-[50px] px-6 box-sizing[content-box]">
+              <div tw="mb-4 flex items-center space-x-2">
+                <img src="/imgs/judeh.png" tw="w-[80px] ml-[-20px]" />
+                <div tw="font-semibold">
+                  <h2>jude hunter</h2>
+                  <aside tw="opacity-50 text-[14px] mt-2">
+                    {format(
+                      new Date(source.frontmatter!.createDate),
+                      'MMM d, y',
+                    )}
+                    <span tw="hidden md:inline">
+                      {' '}
+                      <span tw="mx-4">·</span>{' '}
+                    </span>
+                    <br tw="inline md:hidden" />
+                    {(source.frontmatter!.tags.slice(0, 3) as any as string[])
+                      .map((x) => `#${x}`)
+                      .join(' ')}
+                  </aside>
+                </div>
+              </div>
+              <h1 tw="text-3xl font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
                 {source.frontmatter!.title}
               </h1>
             </div>
-            <div tw="max-w-[700px] h-[400px] mx-auto relative">
-              <Img
-                src={source.frontmatter!.thumbnail}
-                alt={'thumbnail'}
-                fill
-                priority
-                tw="rounded-[8px] object-fit[cover]"
-              />
+            <div
+              tw="max-w-[700px] h-[400px] mx-auto relative p-[1px] rounded-[8px]"
+              css={[
+                css`
+                  // background-color: red;
+                  background-image: radial-gradient(
+                      ellipse 100% 100% at 100% 100%,
+                      #ffffff33,
+                      transparent
+                    ),
+                    radial-gradient(
+                      ellipse 100% 100% at 0% 30%,
+                      #ffffff33,
+                      transparent
+                    );
+                  // &::before {
+                  //   content: '';
+                  //   position: absolute;
+                  //   left: 50%;
+                  //   bottom: -500px;
+                  //   top: -500px;
+                  //   width: 1300px;
+                  //   transform: translateX(-50%);
+                  //   background-image: radial-gradient(
+                  //     ellipse 50% 30% at 50% 60%,
+                  //     rgba(120, 119, 198, 0.15),
+                  //     transparent
+                  //   );
+                  // }
+                `,
+              ]}
+            >
+              <div
+                tw="hidden md:block"
+                css={[
+                  css`
+                    position: absolute;
+                    left: 50%;
+                    bottom: -500px;
+                    top: -500px;
+                    width: 90vw;
+                    transform: translateX(-50%);
+                    overflow-x: hidden;
+                    mask: linear-gradient(
+                      to right,
+                      transparent 0%,
+                      black 15%,
+                      black 85%,
+                      transparent 100%
+                    );
+                  `,
+                ]}
+              >
+                <div
+                  css={[
+                    css`
+                      position: absolute;
+                      left: 50%;
+                      bottom: 0px;
+                      top: 0px;
+                      width: 1300px;
+                      transform: translateX(-50%);
+                      background-image: radial-gradient(
+                        ellipse 50% 30% at 50% 60%,
+                        rgba(120, 119, 198, 0.15),
+                        transparent
+                      );
+                    `,
+                  ]}
+                />
+              </div>
+
+              <div tw="w-full h-full relative">
+                <Img
+                  src={source.frontmatter!.thumbnail}
+                  alt={'thumbnail'}
+                  fill
+                  priority
+                  tw="rounded-[8px] object-fit[cover] transform[rotateY('20def')]"
+                />
+              </div>
             </div>
           </header>
           <ContentSection content={source} {...{components}} />
