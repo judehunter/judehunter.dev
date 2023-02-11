@@ -5,6 +5,7 @@ import BlogIndexPageExport from '../../pages/blog';
 import {Footer} from '../Footer';
 import {NavBar} from '../NavBar';
 import {SubscribeCTA} from '../ArticlePage/SubscribeCTA';
+import {LazyMotion} from 'framer-motion';
 
 export const BlogIndexPage = () => {
   const {posts} = usePageProps<typeof BlogIndexPageExport>();
@@ -39,60 +40,67 @@ export const BlogIndexPage = () => {
 
   return (
     <>
-      <div tw="background-color[#070c10] min-h-screen text-[#dadfe7]">
-        <NavBar />
-        <div tw="pt-36"></div>
-        <div tw="flex justify-center pt-[0.3px]">
-          <SubscribeCTA />
-        </div>
-        <main tw="pb-[100px] mt-[50px] grid md:grid-template-columns[repeat(4, 1fr)] grid-template-columns[repeat(1, 1fr)] gap[50px 30px] max-w-[1300px] px-6 mx-auto">
-          <ArticleCard
-            tw="md:grid-column[1 / 3]"
-            css={bigTileStyles}
-            {...entries[0]}
-          />
-          <ArticleCard
-            tw="md:grid-column[3 / 5]"
-            css={bigTileStyles}
-            {...entries[1]}
-          />
-          {entries.slice(2).map((x, i) => (
+      <LazyMotion
+        features={() =>
+          import('../ArticlePage/motionFeatures').then((res) => res.default)
+        }
+        strict
+      >
+        <div tw="background-color[#000212] min-h-screen text-[#dadfe7]">
+          <NavBar />
+          <div tw="pt-36"></div>
+          <div tw="flex justify-center pt-[0.3px]">
+            <SubscribeCTA />
+          </div>
+          <main tw="pb-[100px] mt-[50px] grid md:grid-template-columns[repeat(4, 1fr)] grid-template-columns[repeat(1, 1fr)] gap[50px 30px] max-w-[1300px] px-6 mx-auto">
             <ArticleCard
-              //   tw="
-              //   width[100%]
-              //   [@media (min-width: 600px)]:(
-              //     width[50%]
-              //   )
-              //   [@media (min-width: 800px)]:(
-              //     width[29%]
-              //   )
-              //   [@media (min-width: 1160px)]:(
-              //     width[min(23%, 300px)]
-              //   )
-              // "
-              //   css={[
-              //     i === 2 &&
-              //       css`
-              //         display: none;
-              //         @media (min-width: 800px) {
-              //           display: flex;
-              //         }
-              //       `,
-              //     i === 3 &&
-              //       css`
-              //         display: none;
-              //         @media (min-width: 1160px) {
-              //           display: flex;
-              //         }
-              //       `,
-              //   ]}
-              key={i}
-              {...x}
+              tw="md:grid-column[1 / 3]"
+              css={bigTileStyles}
+              {...entries[0]}
             />
-          ))}
-        </main>
-        <Footer />
-      </div>
+            <ArticleCard
+              tw="md:grid-column[3 / 5]"
+              css={bigTileStyles}
+              {...entries[1]}
+            />
+            {entries.slice(2).map((x, i) => (
+              <ArticleCard
+                //   tw="
+                //   width[100%]
+                //   [@media (min-width: 600px)]:(
+                //     width[50%]
+                //   )
+                //   [@media (min-width: 800px)]:(
+                //     width[29%]
+                //   )
+                //   [@media (min-width: 1160px)]:(
+                //     width[min(23%, 300px)]
+                //   )
+                // "
+                //   css={[
+                //     i === 2 &&
+                //       css`
+                //         display: none;
+                //         @media (min-width: 800px) {
+                //           display: flex;
+                //         }
+                //       `,
+                //     i === 3 &&
+                //       css`
+                //         display: none;
+                //         @media (min-width: 1160px) {
+                //           display: flex;
+                //         }
+                //       `,
+                //   ]}
+                key={i}
+                {...x}
+              />
+            ))}
+          </main>
+          <Footer />
+        </div>
+      </LazyMotion>
     </>
   );
 };
