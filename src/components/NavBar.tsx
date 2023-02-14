@@ -92,12 +92,13 @@ const Newsletter = ({
     }
   }, [open]);
 
-  const [justSubmitted, setJustSubmitted] = useState(false);
-  const [sending, setSending] = useState(false);
+  const [submitState, setSubmitState] = useState<
+    null | 'sending' | 'submitted'
+  >(null);
 
   const submit = async () => {
     if (!email.trim().length) return;
-    setSending(true);
+    setSubmitState('sending');
     gaEvt({action: 'subscribe_newsletter', category: 'general'});
     posthog.capture('subscribed to newsletter', {category: 'general'});
     await fetch('/api/sub', {
@@ -108,12 +109,11 @@ const Newsletter = ({
       },
       body: JSON.stringify({email}),
     });
-    setJustSubmitted(true);
-    setSending(false);
+    setSubmitState('submitted');
     setTimeout(() => {
-      setJustSubmitted(false);
       setEmail('');
       onChangeOpen(false);
+      setSubmitState(null);
     }, 3000);
   };
 
@@ -129,11 +129,11 @@ const Newsletter = ({
               hidden: {
                 opacity: 1,
                 pointerEvents: 'auto',
-                transition: {
-                  delay: 0.6,
-                },
               },
-              shown: {opacity: 0, pointerEvents: 'none'},
+              shown: {
+                opacity: 0,
+                pointerEvents: 'none',
+              },
             }}
             role="button"
             onClick={() => onChangeOpen(true)}
@@ -151,39 +151,33 @@ const Newsletter = ({
               width: '82px',
               opacity: 0,
               pointerEvents: 'none',
-              transition: {
-                delay: 0.4,
-              },
             },
             shown: {
               width: '200px',
               opacity: 1,
               pointerEvents: 'auto',
             },
-            after: {opacity: 0, width: '200px'},
+            after: {
+              opacity: 0,
+              width: '82px',
+              transition: {opacity: {duration: 0.2}, width: {delay: 0.3}},
+            },
           }}
-          animate={
-            open ? (sending || justSubmitted ? 'after' : 'shown') : 'hidden'
-          }
+          animate={open ? (submitState ? 'after' : 'shown') : 'hidden'}
           tw="p-[1px] h-[30px] rounded"
           css={[
             css`
               animation: ${rotate} 1s linear infinite;
               background-image: radial-gradient(
-                  ellipse 100% 100% at 50% 50%,
-                  #ffffff44,
+                  ellipse 50% 50% at 50% 50%,
+                  #ffffff66,
                   transparent
                 ),
                 radial-gradient(
-                  ellipse 50% 50% at 0% 30%,
+                  ellipse 100% 100% at 0% 30%,
                   #ffffff22,
                   transparent
                 );
-              // radial-gradient(
-              //   ellipse 100% 100% at 100% 00%,
-              //   #ffffff22,
-              //   transparent
-              // );
               background-size: 200% 200%;
               background-repeat: no-repeat;
             `,
@@ -201,7 +195,7 @@ const Newsletter = ({
               tw="bg-[#12142d] w-full h-full min-w-0 px-2 py-1 outline-none rounded"
               placeholder="Your email here"
               onBlur={() => {
-                if (open && !sending && !justSubmitted) {
+                if (open && !submitState) {
                   onChangeOpen(false);
                 }
               }}
@@ -214,10 +208,10 @@ const Newsletter = ({
           tw="absolute right-0 top-1/2 transform[translateY(-50%)] pointer-events-none flex justify-end"
           initial="false"
           variants={{
-            true: {opacity: 1, transition: {delay: 0.2}},
+            true: {opacity: 1},
             false: {opacity: 0},
           }}
-          animate={`${sending}`}
+          animate={`${submitState === 'sending'}`}
         >
           <GooeyLoader />
         </m.div>
@@ -225,10 +219,10 @@ const Newsletter = ({
           tw="absolute right-0 top-1/2 transform[translateY(-50%)] pointer-events-none whitespace-nowrap"
           initial="false"
           variants={{
-            true: {opacity: 1, transition: {delay: 0.2}},
+            true: {opacity: 1},
             false: {opacity: 0},
           }}
-          animate={`${justSubmitted}`}
+          animate={`${submitState === 'submitted'}`}
         >
           Thank you!
         </m.div>
@@ -300,7 +294,7 @@ export const NavBar = () => {
               <m.div
                 tw="flex items-center flex-grow [& > *]:(px-[12px] my-2) mx-[-12px] overflow-hidden"
                 variants={{
-                  hidden: {width: 'auto', opacity: 1, transition: {delay: 0.2}},
+                  hidden: {width: 'auto', opacity: 1},
                   shown: isScreenMd
                     ? {width: 'auto', opacity: 1}
                     : {width: '0px', opacity: 0},

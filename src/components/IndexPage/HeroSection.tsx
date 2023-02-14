@@ -3,7 +3,6 @@ import {m} from 'framer-motion';
 import tw from 'twin.macro';
 import {AnimText, CapsPreTitle, PullUpText} from './misc';
 import Img from 'next/future/image';
-import {OpenToWork} from '../OpenToWork';
 
 const HeroImage = () => {
   return (
@@ -182,12 +181,12 @@ const AboutMe = () => {
             "
         >
           <div>
-            <em tw="font-semibold mb-1 block">
+            {/* <em tw="font-semibold mb-1 block">
               I’m looking for a new professional relationship{' '}
               <OpenToWork tw="relative top-[-2px]" />
-            </em>
-            Currently a Full-Stack Engineer at <b>Millie Group</b> and
-            Ex&nbsp;Frontend Engineer at <b>Playbook Technologies</b>.
+            </em> */}
+            Currently a Software Engineer at <b>Snaplet</b> and Ex&nbsp;Frontend
+            Engineer at <b>Playbook Technologies</b>.
           </div>
           <p>
             Pursuing a <b>Computer Science BSc</b> degree at <b>LNU, Sweden</b>.

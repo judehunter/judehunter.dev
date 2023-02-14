@@ -289,7 +289,7 @@ export const ArticlePage = () => {
           >
             <div tw="max-w-[600px] mx-auto mt-[40px] mb-[50px] px-6 box-sizing[content-box]">
               <div tw="mb-4 flex items-center space-x-2">
-                <SnapletAvatar tw="w-[80px] h-[80px] ml-[-20px]" />
+                <SnapletAvatar tw="w-[80px] h-[80px] ml-[-20px]!" />
                 <div tw="font-semibold">
                   <h2>jude hunter</h2>
                   <aside tw="opacity-50 text-[14px] mt-2">
