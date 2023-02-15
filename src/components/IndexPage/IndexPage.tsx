@@ -6,7 +6,7 @@ import {HeroSection} from './HeroSection';
 import {WhatDoYouSay} from './WhatDoYouSay';
 import {Footer} from '../Footer';
 import {LazyMotion} from 'framer-motion';
-import { CookieBanner } from '../CookieBanner';
+import {CookieBanner} from '../CookieBanner';
 
 export const IndexPage = () => {
   return (
