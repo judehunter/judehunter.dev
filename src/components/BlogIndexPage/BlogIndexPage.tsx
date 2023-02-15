@@ -6,6 +6,7 @@ import {Footer} from '../Footer';
 import {NavBar} from '../NavBar';
 import {SubscribeCTA} from '../ArticlePage/SubscribeCTA';
 import {LazyMotion} from 'framer-motion';
+import {CookieBanner} from '../CookieBanner';
 
 export const BlogIndexPage = () => {
   const {posts} = usePageProps<typeof BlogIndexPageExport>();
@@ -100,6 +101,7 @@ export const BlogIndexPage = () => {
           </main>
           <Footer />
         </div>
+        <CookieBanner />
       </LazyMotion>
     </>
   );

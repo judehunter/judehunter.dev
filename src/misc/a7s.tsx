@@ -10,7 +10,6 @@ export const usePostHog = (
   const router = useRouter();
 
   useEffect(() => {
-    // Init PostHog
     posthog.init(apiKey, config, name);
 
     // Track page views
@@ -22,6 +21,8 @@ export const usePostHog = (
     };
   }, []);
 };
+
+// export const PostHogLoadedContext = createContext<() => void
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const gaEvt = ({

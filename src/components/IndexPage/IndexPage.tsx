@@ -6,6 +6,7 @@ import {HeroSection} from './HeroSection';
 import {WhatDoYouSay} from './WhatDoYouSay';
 import {Footer} from '../Footer';
 import {LazyMotion} from 'framer-motion';
+import { CookieBanner } from '../CookieBanner';
 
 export const IndexPage = () => {
   return (
@@ -26,6 +27,7 @@ export const IndexPage = () => {
         <Footer />
         {/* convinced yet? shoot me an email! */}
       </div>
+      <CookieBanner />
     </LazyMotion>
   );
 };
