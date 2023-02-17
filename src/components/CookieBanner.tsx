@@ -6,7 +6,6 @@ import {posthog} from 'posthog-js';
 
 export const CookieBanner = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
-
   const [bannerOpen, setBannerOpen] = useState(false);
 
   useEffect(() => {
@@ -32,25 +31,27 @@ export const CookieBanner = () => {
       tw="
         fixed
         left-1/2
-        transform[translateX(-50%)]
-        bottom-12
+        bottom-16
         z-[999999999]
       "
       variants={{
         hidden: {y: 160, x: '-50%'},
         shown: {y: 0, x: '-50%'},
       }}
-      transition={{type: 'spring', bounce: 0.3, duration: 0.5}}
+      transition={{type: 'spring', bounce: 0.3, duration: 0.5, delay: 1}}
       initial={bannerOpen ? 'shown' : 'hidden'}
       animate={bannerOpen ? 'shown' : 'hidden'}
     >
-      <div
+      <m.div
         tw="
           backdrop-filter[blur(10px)]
           bg-[#12142d66]
           rounded-[42px]
           border border-[#ffffff33]
         "
+        animate={{x: detailsOpen ? 0 : [0, 10, -10, 5, -5, 0]}}
+        whileHover={{x: 0}}
+        transition={{delay: 10}}
       >
         <div
           tw="
@@ -133,7 +134,7 @@ export const CookieBanner = () => {
             </div>
           </div>
         </m.div>
-      </div>
+      </m.div>
       <div
         tw="flex justify-center transition-opacity"
         css={[detailsOpen && tw`opacity-0 pointer-events-none`]}
