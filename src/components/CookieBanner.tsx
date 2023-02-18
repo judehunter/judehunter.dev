@@ -16,14 +16,14 @@ export const CookieBanner = () => {
 
   const accept = () => {
     setBannerOpen(false);
-    posthog.capture('accepted cookies');
-    posthog.opt_in_capturing();
+    // posthog.capture('accepted cookies');
+    // posthog.opt_in_capturing();
   };
 
   const decline = () => {
     setBannerOpen(false);
-    posthog.capture('declined cookies');
-    posthog.opt_out_capturing();
+    // posthog.capture('declined cookies');
+    // posthog.opt_out_capturing();
   };
 
   return (
@@ -35,10 +35,10 @@ export const CookieBanner = () => {
         z-[999999999]
       "
       variants={{
-        hidden: {y: 160, x: '-50%'},
-        shown: {y: 0, x: '-50%'},
+        hidden: {y: 'calc(100% + 64px)', x: '-50%'},
+        shown: {y: 0, x: '-50%', transition: {delay: 1}},
       }}
-      transition={{type: 'spring', bounce: 0.3, duration: 0.5, delay: 1}}
+      transition={{type: 'spring', bounce: 0.3, duration: 0.5}}
       initial={bannerOpen ? 'shown' : 'hidden'}
       animate={bannerOpen ? 'shown' : 'hidden'}
     >
