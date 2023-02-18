@@ -16,14 +16,14 @@ export const CookieBanner = () => {
 
   const accept = () => {
     setBannerOpen(false);
-    // posthog.capture('accepted cookies');
-    // posthog.opt_in_capturing();
+    posthog.capture('accepted cookies');
+    posthog.opt_in_capturing();
   };
 
   const decline = () => {
     setBannerOpen(false);
-    // posthog.capture('declined cookies');
-    // posthog.opt_out_capturing();
+    posthog.capture('declined cookies');
+    posthog.opt_out_capturing();
   };
 
   return (
