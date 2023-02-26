@@ -22,8 +22,6 @@ export const usePostHog = (
   }, []);
 };
 
-// export const PostHogLoadedContext = createContext<() => void
-
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const gaEvt = ({
   action,

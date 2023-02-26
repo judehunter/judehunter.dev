@@ -101,7 +101,7 @@ export const BlogIndexPage = () => {
           </main>
           <Footer />
         </div>
-        {/* <CookieBanner /> */}
+        <CookieBanner />
       </LazyMotion>
     </>
   );

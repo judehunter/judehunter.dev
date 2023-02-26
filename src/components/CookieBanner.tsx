@@ -18,12 +18,18 @@ export const CookieBanner = () => {
     setBannerOpen(false);
     posthog.capture('accepted cookies');
     posthog.opt_in_capturing();
+    (window as any).gtag?.('consent', 'update', {
+      analytics_storage: 'granted',
+    });
   };
 
   const decline = () => {
     setBannerOpen(false);
     posthog.capture('declined cookies');
     posthog.opt_out_capturing();
+    (window as any).gtag?.('consent', 'update', {
+      analytics_storage: 'denied',
+    });
   };
 
   return (

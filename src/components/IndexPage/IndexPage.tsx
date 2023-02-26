@@ -27,7 +27,7 @@ export const IndexPage = () => {
         <Footer />
         {/* convinced yet? shoot me an email! */}
       </div>
-      {/* <CookieBanner /> */}
+      <CookieBanner />
     </LazyMotion>
   );
 };
