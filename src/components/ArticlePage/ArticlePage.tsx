@@ -14,7 +14,6 @@ import {LazyMotion} from 'framer-motion';
 import {SubscribeCTA} from './SubscribeCTA';
 import {NavBar} from '../NavBar';
 import {SnapletAvatar} from '../SnapletAvatar';
-import {CookieBanner} from '../CookieBanner';
 
 const DotPattern = () => {
   return (
@@ -408,7 +407,7 @@ export const ArticlePage = () => {
           <YouveReached />
           <Footer />
         </div>
-        <CookieBanner />
+        {/* <CookieBanner /> */}
       </LazyMotion>
     </>
   );
