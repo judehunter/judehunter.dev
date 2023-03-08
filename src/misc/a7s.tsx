@@ -1,16 +1,36 @@
 import {useRouter} from 'next/router';
 import posthog, {PostHogConfig} from 'posthog-js';
-import {useEffect} from 'react';
+import {createContext, useContext, useEffect} from 'react';
 
 export const usePostHog = (
   apiKey: string,
   config?: Partial<PostHogConfig>,
   name?: string,
-): void => {
+) => {
   const router = useRouter();
 
+  const subscribers: (() => void)[] = [];
+  const subscribeLoaded = (subscriber: typeof subscribers[number]) => {
+    if (posthog.__loaded) {
+      subscriber();
+    } else {
+      subscribers.push(subscriber);
+    }
+  };
+
   useEffect(() => {
-    posthog.init(apiKey, config, name);
+    posthog.init(
+      apiKey,
+      {
+        ...config,
+        loaded() {
+          for (const s of subscribers) {
+            s();
+          }
+        },
+      },
+      name,
+    );
 
     // Track page views
     const handleRouteChange = () => posthog.capture('$pageview');
@@ -20,7 +40,14 @@ export const usePostHog = (
       router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, []);
+
+  return {subscribeLoaded};
 };
+
+export const PostHogContext = createContext<ReturnType<typeof usePostHog>>(
+  null!,
+);
+export const usePostHogContext = () => useContext(PostHogContext);
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const gaEvt = ({

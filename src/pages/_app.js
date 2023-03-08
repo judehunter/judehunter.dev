@@ -1,10 +1,10 @@
 import Script from 'next/script';
 import {GlobalStyles} from 'twin.macro';
-import {usePostHog} from '../misc/a7s';
+import {PostHogContext, usePostHog} from '../misc/a7s';
 import '../misc/global.css';
 
 const App = ({Component, pageProps}) => {
-  usePostHog(
+  const p = usePostHog(
     process.env.NODE_ENV === 'production'
       ? 'phc_QqZZAEEXYVVSnwfZQxcqMMfPH5n3gCjmLi4fSZX2yqY'
       : 'phc_ME8up5kKmkINHUrDyBO03P812h1Os6XPMQPcleO3eeI',
@@ -35,7 +35,9 @@ const App = ({Component, pageProps}) => {
           />
         </>
       )}
-      <Component {...pageProps} />
+      <PostHogContext.Provider value={p}>
+        <Component {...pageProps} />
+      </PostHogContext.Provider>
     </>
   );
 };

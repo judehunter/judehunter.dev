@@ -3,15 +3,22 @@ import tw from 'twin.macro';
 import {m} from 'framer-motion';
 import {useEffect, useState} from 'react';
 import {posthog} from 'posthog-js';
+import {usePostHogContext} from '../misc/a7s';
 
 export const CookieBanner = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [bannerOpen, setBannerOpen] = useState(false);
 
+  const {subscribeLoaded} = usePostHogContext();
+
   useEffect(() => {
-    setBannerOpen(
-      !(posthog.has_opted_in_capturing() || posthog.has_opted_out_capturing()),
-    );
+    subscribeLoaded(() => {
+      setBannerOpen(
+        !(
+          posthog.has_opted_in_capturing() || posthog.has_opted_out_capturing()
+        ),
+      );
+    });
   }, []);
 
   const accept = () => {
