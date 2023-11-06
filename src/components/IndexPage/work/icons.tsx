@@ -102,9 +102,8 @@ export const icons = {
     // style: tw`fill[white]`,
   },
   nuxtjs: {
-    icon: 'teenyicons:nuxtjs-solid',
+    icon: 'skill-icons:nuxtjs-dark',
     name: 'Nuxt',
-    style: tw`[fill: white]`,
   },
   prisma: {
     icon: 'logos:prisma',

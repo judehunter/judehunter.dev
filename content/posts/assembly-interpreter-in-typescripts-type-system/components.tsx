@@ -58,7 +58,7 @@ export const AdderTable = () => {
           <span tw="md:hidden">tap</span>
           <span tw="hidden md:inline">click</span> to try it yourself
         </h3>
-        <div tw="grid grid-template-rows[grid-template-rows: repeat(1, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-[#2E3440] font-family['Fira Code']) md:max-w-[300px] select-none">
+        <div tw="grid [grid-template-rows: repeat(1, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-[#2E3440] [font-family: 'Fira Code']) md:max-w-[300px] select-none">
           <div className="header">A</div>
           <div className="header">B</div>
           <div className="header">C</div>
@@ -101,7 +101,7 @@ export const AdderTable = () => {
       </div>
       <div tw="mt-12">
         <h3 tw="pb-2">or use this cheatsheet</h3>
-        <div tw="grid grid-template-rows[grid-template-rows: repeat(9, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-[#2E3440] font-family['Fira Code']) md:max-w-[300px]">
+        <div tw="grid [grid-template-rows: repeat(9, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-[#2E3440] [font-family: 'Fira Code']) md:max-w-[300px]">
           <div className="header">A</div>
           <div className="header">B</div>
           <div className="header">C</div>
