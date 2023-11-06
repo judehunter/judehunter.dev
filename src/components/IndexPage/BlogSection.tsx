@@ -2,7 +2,7 @@ import {ReactNode} from 'react';
 import tw, {css} from 'twin.macro';
 import {ArticleCard} from '../ArticleCard';
 import {usePageProps} from '../../misc/common';
-import IndexPageExport from '../../pages';
+import IndexPageExport from '../../pages/old';
 import {ScrollInterpolationPullUp} from './misc';
 import Link from 'next/link';
 import {m} from 'framer-motion';

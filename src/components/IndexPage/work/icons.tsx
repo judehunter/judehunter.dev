@@ -20,7 +20,7 @@ export const icons = {
   nodejs: {
     icon: 'logos:nodejs-icon',
     name: 'Node.js',
-    style: tw`[& > path]:fill[#5bc145]`,
+    style: tw`[& > path]:[fill: #5bc145]`,
   },
   css: {
     icon: 'logos:css-3',
@@ -69,7 +69,7 @@ export const icons = {
   swr: {
     icon: 'logos:swr',
     name: 'SWR',
-    style: tw`fill[white]`,
+    style: tw`[fill: white]`,
   },
   storybook: {
     icon: 'logos:storybook-icon',
@@ -94,7 +94,7 @@ export const icons = {
   wordpress: {
     icon: 'logos:wordpress-icon',
     name: 'Wordpress',
-    style: tw`[& > path]:fill[white]`,
+    style: tw`[& > path]:[fill: white]`,
   },
   nextjs: {
     icon: 'logos:nextjs-icon',
@@ -104,12 +104,12 @@ export const icons = {
   nuxtjs: {
     icon: 'teenyicons:nuxtjs-solid',
     name: 'Nuxt',
-    style: tw`fill[white]`,
+    style: tw`[fill: white]`,
   },
   prisma: {
     icon: 'logos:prisma',
     name: 'Prisma',
-    style: tw`fill[white]`,
+    style: tw`[fill: white]`,
   },
   netlify: {
     icon: 'vscode-icons:file-type-netlify',
@@ -118,16 +118,15 @@ export const icons = {
   aws: {
     icon: 'logos:aws',
     name: 'AWS Services',
-    style: tw`[& > path:nth-of-type(1)]:fill[white]`,
+    style: tw`[& > path:nth-of-type(1)]:[fill: white]`,
   },
   lambda: {
     icon: 'logos:aws-lambda',
     name: 'AWS Lambda',
   },
   digitalocean: {
-    icon: 'cib:digital-ocean',
+    icon: 'logos:digital-ocean-icon',
     name: 'Digital Ocean',
-    style: tw`fill[white]`,
   },
   python: {
     icon: 'logos:python',
@@ -136,7 +135,7 @@ export const icons = {
   koa: {
     icon: 'logos:koa',
     name: 'Koa',
-    style: tw`fill[white]`,
+    style: tw`[fill: white]`,
   },
   photoshop: {
     icon: 'vscode-icons:file-type-photoshop',
@@ -147,11 +146,11 @@ export const icons = {
     name: 'Affinity Designer',
   },
   lightroom: {
-    icon: 'simple-icons:adobelightroom',
+    icon: 'logos:adobe-lightroom',
     name: 'Adobe Lightroom',
   },
   indesign: {
-    icon: 'simple-icons:adobeindesign',
+    icon: 'logos:adobe-indesign',
     name: 'Adobe Indesign',
   },
   sass: {
@@ -161,6 +160,54 @@ export const icons = {
   typeorm: {
     icon: 'logos:typeorm',
     name: 'TypeORM',
-    style: tw`[& path:nth-of-type(1)]:(fill[white])`,
+    style: tw`[& path:nth-of-type(1)]:([fill: white])`,
+  },
+  postgres: {
+    icon: 'logos:postgresql',
+    name: 'PostgreSQL',
+  },
+  neon: {
+    icon: 'logos:neon-icon',
+    name: 'Neon',
+  },
+  trpc: {
+    icon: 'devicon:trpc',
+    name: 'tRPC',
+  },
+  posthog: {
+    icon: 'logos:posthog-icon',
+    name: 'Posthog',
+    style: tw`[&>path:nth-of-type(2)]:([fill: white])`,
+  },
+  linear: {
+    icon: 'logos:linear-icon',
+    name: 'Linear',
+    style: tw`[&>path:nth-of-type(1)]:([fill: white])`,
+  },
+  sentry: {
+    icon: 'simple-icons:sentry',
+    name: 'Sentry',
+    style: tw`[&>path:nth-of-type(1)]:([fill: white])`,
+  },
+  figma: {
+    icon: 'logos:figma',
+    name: 'Figma',
+  },
+  shortcut: {
+    icon: 'logos:shortcut-icon',
+    name: 'Shortcut',
+  },
+  vercel: {
+    icon: 'devicon:vercel',
+    name: 'Vercel',
+    style: tw`[fill: white]`,
+  },
+  heroku: {
+    icon: 'devicon:heroku',
+    name: 'Heroku',
+  },
+  monday: {
+    icon: 'logos:monday-icon',
+    name: 'Monday',
   },
 };
