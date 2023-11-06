@@ -547,7 +547,7 @@ const Nav = () => {
             tw="text-center font-bold text-gold-12  overflow-hidden whitespace-nowrap mt-[-12px]"
             animate={
               stuck
-                ? {
+                ? ({
                     width: 'auto',
                     opacity: 1,
                     transition: {
@@ -557,8 +557,8 @@ const Nav = () => {
                         times: [0, 0.3],
                       },
                     },
-                  }
-                : {
+                  } as any)
+                : ({
                     width: '0px',
                     opacity: 0,
                     transition: {
@@ -568,7 +568,7 @@ const Nav = () => {
                         times: [0, 0.7],
                       },
                     },
-                  }
+                  } as any)
             }
           >
             <div tw="mr-4 pl-6">jude hunter</div>
