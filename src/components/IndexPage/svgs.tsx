@@ -457,7 +457,7 @@ export const PlaybookLogo = ({...rest}) => {
   );
 };
 
-export const HeadSvg = () => {
+export const HeadSvg = ({...rest}) => {
   return (
     <svg
       width="117"
@@ -465,6 +465,7 @@ export const HeadSvg = () => {
       viewBox="0 0 117 208"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      {...rest}
     >
       <path
         d="M50.8345 132.843C51.7115 132.317 54.1236 133.83 55.2196 134.652C55.8956 135.292 57.8516 136.253 60.2636 134.981L61.9076 133.337C62.4556 132.734 63.8816 131.55 65.1966 131.637"

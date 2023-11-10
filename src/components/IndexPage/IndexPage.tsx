@@ -11,26 +11,10 @@ import {
   NavContext,
   useNavContextValue,
 } from './misc';
-
-const JudeHunterHeader = () => {
-  return (
-    <div tw="text-center font-bold [font-size: 20px] pt-6 text-gold-12">
-      jude hunter
-    </div>
-  );
-};
-
-const Footer = () => {
-  return (
-    <div tw="flex justify-center mt-16">
-      <div tw="font-medium text-gold-7 text-center">
-        made with ❤️ and 🏳️‍🌈
-        <br />
-        by jude hunter &copy;
-      </div>
-    </div>
-  );
-};
+import {JudeHunterHeader} from '../JudeHunterHeader';
+import {LazyMotion} from 'framer-motion';
+import {CookieBanner} from '../CookieBanner';
+import {Footer} from '../Footer';
 
 const FeaturedInSection = () => {
   return (
@@ -72,21 +56,29 @@ const FeaturedInSection = () => {
 export const IndexPage = () => {
   const navContextValue = useNavContextValue();
   return (
-    <div tw="bg-gold-1 min-h-screen text-pink-500 font-black pb-20 px-4">
-      <IdOffset id="about" />
-      <NavContext.Provider value={navContextValue}>
-        <JudeHunterHeader />
-        <FeaturedInSection />
-        <HeroSection />
-        <Nav />
-        <WorkSection />
-        <ArticlesSection />
-        <NewsletterSection />
-        <div tw="flex justify-center mt-16">
-          <GetInContactSection />
-        </div>
-        <Footer />
-      </NavContext.Provider>
-    </div>
+    <LazyMotion
+      features={() =>
+        import('../../misc/motionFeatures').then((res) => res.default)
+      }
+      strict
+    >
+      <div tw="bg-gold-1 min-h-screen text-pink-500 font-black pb-20 px-4">
+        <IdOffset id="about" />
+        <NavContext.Provider value={navContextValue}>
+          <JudeHunterHeader />
+          <FeaturedInSection />
+          <HeroSection />
+          <Nav />
+          <WorkSection />
+          <ArticlesSection />
+          <NewsletterSection />
+          <div tw="flex justify-center mt-16">
+            <GetInContactSection />
+          </div>
+          <Footer />
+        </NavContext.Provider>
+      </div>
+      <CookieBanner />
+    </LazyMotion>
   );
 };

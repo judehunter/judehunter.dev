@@ -5,9 +5,7 @@ import {useState} from 'react';
 import {gaEvt} from '../../misc/a7s';
 import posthog from 'posthog-js';
 
-export const NewsletterSection = () => {
-  const ref = useIntersectNav('newsletter');
-
+export const ActualNewsletter = () => {
   const [email, setEmail] = useState('');
   const [submitState, setSubmitState] = useState<
     null | 'sending' | 'submitted'
@@ -36,10 +34,9 @@ export const NewsletterSection = () => {
   return (
     <div
       tw="
-        max-w-[440px] mx-auto mt-20 p-4 rounded-[16px]
+        max-w-[440px] mx-auto p-4 rounded-[16px]
         [background: radial-gradient(103.2% 100% at 50% 100%, #3E382C 0%, rgba(38, 35, 28, 0.00) 100%);]
       "
-      ref={ref}
     >
       <IdOffset id="newsletter" />
       <h1 tw="font-medium text-gold-12 [font-size: 20px]">
@@ -78,6 +75,16 @@ export const NewsletterSection = () => {
           </div>
         )}
       </form>
+    </div>
+  );
+};
+
+export const NewsletterSection = () => {
+  const ref = useIntersectNav('newsletter');
+
+  return (
+    <div ref={ref} tw="mt-20">
+      <ActualNewsletter />
     </div>
   );
 };

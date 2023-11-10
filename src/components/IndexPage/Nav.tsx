@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect, useContext} from 'react';
-import {motion} from 'framer-motion';
+import {m} from 'framer-motion';
 import {NavContext} from './misc';
 import tw from 'twin.macro';
 
@@ -26,7 +26,7 @@ const NavItem = ({children, section, layoutId}) => {
       </span>
       <div tw="h-1 flex justify-center mt-1">
         {active ? (
-          <motion.div
+          <m.div
             tw="w-3 h-1 bg-yellow-11 rounded-full"
             layoutId={`${layoutId}Active`}
             transition={{type: 'spring', bounce: 0.3}}
@@ -81,13 +81,13 @@ export const Nav = () => {
     >
       <div tw="hidden md:([flex-basis: 282px] block)" />
       <div tw="md:block hidden">
-        <motion.div
+        <m.div
           tw="max-w-[555px] [backdrop-filter: blur(10px)] -ml-6 rounded-full"
           animate={stuck ? {marginLeft: '-80px'} : {marginLeft: '-24px'}}
           transition={{type: 'tween', ease: 'easeOut'}}
         >
           <div tw="items-center flex">
-            <motion.div
+            <m.div
               tw="text-center font-bold text-gold-12  overflow-hidden whitespace-nowrap mt-[-10px]"
               animate={
                 stuck
@@ -116,10 +116,10 @@ export const Nav = () => {
               }
             >
               <div tw="mr-4 pl-6">jude hunter</div>
-            </motion.div>
+            </m.div>
             <ActualNav layoutId="desktopNav" />
           </div>
-        </motion.div>
+        </m.div>
       </div>
       <div tw="flex grow justify-center md:hidden [backdrop-filter: blur(10px)] rounded-full w-full -mx-2">
         <ActualNav layoutId="mobileNav" />
