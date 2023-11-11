@@ -72,7 +72,7 @@ export const useIntersectNav = (section: NavSection) => {
         }
       },
       {
-        rootMargin: '-50% 0px -50% 0px',
+        rootMargin: '-49% 0px -49% 0px',
         threshold: 0,
       },
     );
