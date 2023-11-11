@@ -6,8 +6,8 @@ export const OpenToWork = ({...rest}) => {
       tw="
         rounded-lg
         text-xs
-        text-[#070c10]
-        bg-[#7fec9d]
+        text-gold-1
+        bg-yellow-11
         font-bold
         px-2
         py-1

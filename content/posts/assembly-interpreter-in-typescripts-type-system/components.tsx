@@ -29,6 +29,8 @@ export const ShowcaseImage = () => {
   );
 };
 
+const active = tw`bg-yellow-9! text-gold-1`;
+
 export const AdderTable = () => {
   const rows = [
     [0, 0, 0, 0, 0],
@@ -58,7 +60,7 @@ export const AdderTable = () => {
           <span tw="md:hidden">tap</span>
           <span tw="hidden md:inline">click</span> to try it yourself
         </h3>
-        <div tw="grid [grid-template-rows: repeat(1, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-[#2E3440] [font-family: 'Fira Code']) md:max-w-[300px] select-none">
+        <div tw="grid [grid-template-rows: repeat(1, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-gold-3 [font-family: 'Fira Code']) md:max-w-[300px] select-none">
           <div className="header">A</div>
           <div className="header">B</div>
           <div className="header">C</div>
@@ -67,7 +69,7 @@ export const AdderTable = () => {
           {/*  */}
           <div
             tw="cursor-pointer"
-            css={[inputs[0] && tw`bg-green-600!`]}
+            css={[inputs[0] && active]}
             onClick={() => {
               setInputs((x) => [+!x[0], x[1], x[2]]);
               sendEvt();
@@ -77,7 +79,7 @@ export const AdderTable = () => {
           </div>
           <div
             tw="cursor-pointer"
-            css={[inputs[1] && tw`bg-green-600!`]}
+            css={[inputs[1] && active]}
             onClick={() => {
               setInputs((x) => [x[0], +!x[1], x[2]]);
               sendEvt();
@@ -87,7 +89,7 @@ export const AdderTable = () => {
           </div>
           <div
             tw="cursor-pointer"
-            css={[inputs[2] && tw`bg-green-600!`]}
+            css={[inputs[2] && active]}
             onClick={() => {
               setInputs((x) => [x[0], x[1], +!x[2]]);
               sendEvt();
@@ -95,13 +97,13 @@ export const AdderTable = () => {
           >
             {inputs[2]}
           </div>
-          <div css={[result && tw`bg-green-600!`]}>{result}</div>
-          <div css={[carry && tw`bg-green-600!`]}>{+carry}</div>
+          <div css={[result && active]}>{result}</div>
+          <div css={[carry && active]}>{+carry}</div>
         </div>
       </div>
       <div tw="mt-12">
         <h3 tw="pb-2">or use this cheatsheet</h3>
-        <div tw="grid [grid-template-rows: repeat(9, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-[#2E3440] [font-family: 'Fira Code']) md:max-w-[300px]">
+        <div tw="grid [grid-template-rows: repeat(9, minmax(0, 1fr))] grid-cols-5 gap-3 [& > *:not(.header)]:(rounded-[8px] bg-gold-3 [font-family: 'Fira Code']) md:max-w-[300px]">
           <div className="header">A</div>
           <div className="header">B</div>
           <div className="header">C</div>
@@ -109,7 +111,7 @@ export const AdderTable = () => {
           <div className="header">carry</div>
           {/*  */}
           {rows.flat().map((x, i) => (
-            <div key={i} css={[x && tw`bg-green-600!`]}>
+            <div key={i} css={[x && active]}>
               {x}
             </div>
           ))}

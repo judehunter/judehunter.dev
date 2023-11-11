@@ -41,7 +41,7 @@ const DotPattern = () => {
                 y={0}
                 width={4}
                 height={4}
-                tw="text-[#2a3b4c]"
+                tw="text-gold-3"
                 fill="currentColor"
               />
             </pattern>
@@ -73,7 +73,7 @@ const DotPattern = () => {
                 y={0}
                 width={4}
                 height={4}
-                tw="text-[#2a3b4c]"
+                tw="text-gold-3"
                 fill="currentColor"
               />
             </pattern>
@@ -93,6 +93,7 @@ const MDStyle = tw`
   [font-family: 'Inter var experimental']
   text-gold-12/80
   font-normal
+  [font-size: 16px] max-w-[560px] mx-auto leading-[1.7]
   // leading-[1.5]!
   [& h1]:(
     text-3xl
@@ -132,14 +133,14 @@ const MDStyle = tw`
   //   rounded-[8px]
   // )
   [& :not(pre)>code]:(
-    bg-[#2a3b4c]
+    bg-gold-3
     rounded
     px-1.5
     font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
     font-size[15px] md:font-size[16px]
   )
   [& hr]:(
-    border-top-color[#2a3b4c]
+    border-t border-gold-3
     my-8
   )
   [& em]:(
@@ -147,8 +148,8 @@ const MDStyle = tw`
     font-style[normal]
   )
   [& a]:(
-    text-[#7fec9d]
-    underline 
+    text-yellow-9
+    border-b border-yellow-9/50
   )
   [&]:(
     font-variant-ligatures[none]
@@ -217,10 +218,7 @@ const ContentSection = ({content, components}) => {
       <DotPattern />
       <ArticleSideBar />
       <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
-        <div
-          tw="font-size[17px] md:text-lg max-w-[560px] mx-auto leading-[30px] md:leading-8"
-          css={MDStyle}
-        >
+        <div css={MDStyle}>
           <MDXRemote
             {...content}
             components={{
@@ -228,7 +226,7 @@ const ContentSection = ({content, components}) => {
                 <>
                   {filename ? (
                     <div tw="flex mb-[-0.5em] mt-[0.5em] font-family['Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace]!">
-                      <div tw="bg-[#192732] px-2 -ml-2 rounded-t-[0.3em] font-size[15px] md:font-size[16px]">
+                      <div tw="bg-gold-3 px-2 -ml-2 rounded-t-[0.3em] font-size[15px] md:font-size[16px]">
                         {filename}
                       </div>
                     </div>
@@ -280,14 +278,14 @@ export const ArticlePage = () => {
         }
         strict
       >
-        <div tw="bg-gold-1 text-pink-600 font-black">
+        <div tw="bg-gold-1 text-pink-600 font-black pb-20">
           <JudeHunterHeader />
           <div tw="min-h-screen">
             <header>
               <div tw="max-w-[600px] mx-auto pt-[40px] mb-[30px] px-6 [box-sizing: content-box]">
                 <div tw="mb-4 flex items-center space-x-2">
                   <HeadSvg tw="w-[80px] h-[80px] ml-[-20px]!" />
-                  <div tw="font-semibold text-gold-12">
+                  <div tw="font-semibold text-gold-11">
                     <h2>jude hunter</h2>
                     <aside tw="opacity-50 text-[14px] mt-2">
                       {format(
@@ -339,7 +337,7 @@ export const ArticlePage = () => {
             </header>
             <ContentSection content={source} {...{components}} />
 
-            <footer tw="mt-6">
+            <footer tw="mt-10">
               <ActualNewsletter />
 
               <ArticleBottomNav />
