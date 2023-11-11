@@ -13,6 +13,7 @@ export const ActualNewsletter = () => {
 
   const submit = async () => {
     if (!email.trim().length || submitState !== null) return;
+
     setSubmitState('sending');
     gaEvt({action: 'subscribe_newsletter', category: 'general'});
     posthog.capture('subscribed to newsletter', {category: 'general'});
@@ -57,13 +58,17 @@ export const ActualNewsletter = () => {
             <input
               tw="outline-none bg-gold-1 grow h-[55px] rounded-[6px] px-6 placeholder:text-gold-8"
               placeholder="your email here"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <Icon
-              icon="iconamoon:send-fill"
-              width={36}
-              height={36}
-              tw="cursor-pointer"
-            />
+            <button type="submit">
+              <Icon
+                icon="iconamoon:send-fill"
+                width={36}
+                height={36}
+                tw="cursor-pointer"
+              />
+            </button>
           </>
         ) : submitState === 'sending' ? (
           <div tw="h-[55px] grow flex items-center justify-center">
