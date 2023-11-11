@@ -9,7 +9,7 @@ import {posthog} from 'posthog-js';
 const LikeButton = () => {
   const SHOW_THRESHOLD = 20;
   const slug = useRouter().query.slug as string;
-  const [likes, setLikes] = useState<null | number>(null);
+  const [likes, setLikes] = useState<null | number>(2000);
 
   const getLikes = async () =>
     fetch('/api/getPostLikes', {
@@ -65,14 +65,14 @@ const LikeButton = () => {
       className="group"
       onClick={giveLike}
     >
-      <div tw="absolute left-1/2 top-1/2 transform[translateX(-50%) translateY(calc(-50% - 14px))] w-[90px] h-[90px] rounded-full z-index[0] bg-[#070c10] md:hidden block" />
+      <div tw="absolute left-1/2 top-1/2 [transform: translateX(-50%) translateY(calc(-50% - 14px))] w-[90px] h-[90px] rounded-full z-index[0] bg-gold-3 md:hidden block" />
       <Icon
         icon="ph:hands-clapping-bold"
         width={32}
-        tw="group-hover:transform[scale(1.3)] transition-transform z-index[1]"
+        tw="group-hover:(transform[scale(1.3)] text-gold-12) transition-transform z-index[1] text-gold-11"
       />
       <div
-        tw="opacity-100 font-semibold z-index[1] mt-[4px] h-[24px] transition-all text-sm"
+        tw="opacity-100 font-semibold z-index[1] mt-[4px] h-[24px] transition-all text-sm text-gold-11 [font-family: 'Inter var experimental'] min-w-[60px] text-center"
         css={likes! < SHOW_THRESHOLD && tw`opacity-0 h-0 mb-1`}
       >
         {likes}
@@ -80,7 +80,7 @@ const LikeButton = () => {
       {hits.map((x, i) => (
         <m.div
           key={x}
-          tw="font-semibold text-[#7fec9d] absolute top-[-24px] left-1/2 z-index[1] text-sm"
+          tw="font-semibold text-gold-11 absolute top-[-24px] left-1/2 z-index[1] text-sm [font-family: 'Inter var experimental']"
           initial="before"
           animate={i === hits.length - 1 ? 'visible' : 'after'}
           transition={{opacity: {delay: 0}}}
@@ -113,7 +113,7 @@ const LikeButton = () => {
 export const ArticleSideBar = () => {
   return (
     <>
-      <div tw="absolute left-0 top[-381px] md:top-[-401px] bottom-0 right-0 h-full pointer-events-none z-index[99999]">
+      <div tw="absolute left-0 [top: -300px] md:top-[-385px] bottom-0 right-0 h-full pointer-events-none z-index[99999]">
         {/* <div tw="w-[563px] " */}
         <div tw="sticky top[90px] md:top-[150px] pointer-events-none max-w-[700px] mx-auto flex justify-end md:justify-start">
           <div
