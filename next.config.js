@@ -19,20 +19,20 @@ module.exports = withRemoteRefresh({
     legacyBrowsers: false,
     browsersListForSwc: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: `/:path*`,
-      },
-      {
-        source: '/motioned',
-        destination: `${MOTIONED_URL}/motioned`,
-      },
-      {
-        source: '/motioned/:path*',
-        destination: `${MOTIONED_URL}/motioned/:path*`,
-      },
-    ]
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/:path*',
+  //       destination: `/:path*`,
+  //     },
+  //     {
+  //       source: '/motioned',
+  //       destination: `${MOTIONED_URL}/motioned`,
+  //     },
+  //     {
+  //       source: '/motioned/:path*',
+  //       destination: `${MOTIONED_URL}/motioned/:path*`,
+  //     },
+  //   ]
+  // },
 });

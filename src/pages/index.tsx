@@ -19,10 +19,6 @@ const IndexPageExport = (
   const ogImageUrl = `${getUrl()}/ogimages/homepage.png`;
 
   return (
-    // original: #0D0D0F
-    // other candidates:
-    // #10101c
-    // #070c10
     <>
       <Head>
         <title>Jude Hunter · Portfolio</title>
@@ -55,10 +51,12 @@ const IndexPageExport = (
 };
 export const getStaticProps = async () => {
   const posts = await serverSerializeAllPosts();
-  const slimPosts = posts.map((x) => {
-    const {source, ...rest} = x;
-    return {...rest, source: {frontmatter: source.frontmatter}};
-  });
+  const slimPosts = posts
+    .map((x) => {
+      const {source, ...rest} = x;
+      return {...rest, source: {frontmatter: source.frontmatter}};
+    })
+    .slice(0, 4);
   return {props: {posts: slimPosts}};
 };
 

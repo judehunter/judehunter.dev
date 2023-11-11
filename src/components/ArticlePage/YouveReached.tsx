@@ -1,67 +1,33 @@
-import {Icon} from '@iconify/react';
 import tw from 'twin.macro';
-import Img from 'next/future/image';
 import {OpenToWork} from '../OpenToWork';
+import {GetInContactSection} from '../IndexPage/misc';
+import {HeadSvg} from '../IndexPage/svgs';
 
 export const YouveReached = () => {
   return (
     <div tw="overflow-hidden mt-[-300px] pt-[300px]">
-      <div tw="max-w-[700px] mx-auto flex mb-24 box-sizing[content-box] px-4">
+      <div tw="max-w-[600px] mx-auto flex mb-0 box-sizing[content-box] px-4">
         <div>
-          <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mb-3">
+          <div tw="text-gold-4 font-medium letter-spacing[0.025em] mb-3 [font-family: 'Inter var experimental']">
             HI, YOU’VE REACHED
           </div>
-          <div tw="text-2xl mb-2 flex items-center">
+          <div tw="text-2xl mb-2 flex items-center text-gold-12 font-bold">
             <span tw="mr-4">jude hunter</span> <OpenToWork />
           </div>
-          <div tw="opacity-70">
-            An advocate of free-as-in-freedom software and an active social
-            progressivist in dire need of building empowering solutions.
+          <div tw="opacity-70 text-gold-11 font-medium">
+            Front-end engineer, advocate of free-as-in-freedom software and an
+            active social progressivist
           </div>
-          <div tw="text-[#7FEC9D] font-medium letter-spacing[0.025em] mt-7 mb-3">
+          <div tw="text-gold-4 font-medium letter-spacing[0.025em] mt-7 mb-3 [font-family: 'Inter var experimental']">
             LEAVE A MESSAGE AT THE TONE
           </div>
           <div tw="">
             {/* <ContactInput tw="font-size[0.9em]" /> */}
-            <div tw="text-white font-size[30px] space-x-[20px] flex items-center mt-[25px] md:mt-0">
-              <a
-                href="mailto:jude@judehunter.dev"
-                target="_blank"
-                aria-label="email"
-              >
-                <Icon icon="mdi:email-open" tw="mb-[-5px]" />
-              </a>
-              <a
-                href="https://github.com/judehunter"
-                target="_blank"
-                tw="font-size[27px]"
-                aria-label="GitHub"
-              >
-                <Icon icon="akar-icons:github-fill" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/jude-hunter/"
-                target="_blank"
-                aria-label="LinkedIn"
-              >
-                <Icon icon="akar-icons:linkedin-fill" />
-              </a>
-              <a href="https://twitter.com/judehunterdev" target="_blank">
-                <Icon icon="akar-icons:twitter-fill" tw="ml-[-3px]" />
-              </a>
-            </div>
+            <GetInContactSection />
           </div>
         </div>
-        <div tw="w-[0%] md:w-[27%] flex-shrink-0 relative pointer-events-none">
-          <div tw="absolute left-[-120px] md:left-[0px] top-[-135px] md:top-[-35px] bottom-0 right-[-80px]">
-            <Img
-              src="/outline.png"
-              tw="w-auto h-auto rounded-full"
-              width={270}
-              height={270}
-              alt="Avatar photo of the blog post author Jude Hunter"
-            />
-          </div>
+        <div tw="hidden md:block ml-8">
+          <HeadSvg />
         </div>
       </div>
     </div>

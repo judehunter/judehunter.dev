@@ -44,11 +44,12 @@ export const CookieBanner = () => {
       tw="
         fixed
         left-1/2
-        bottom-16
+        md:left-36
+        bottom-4
         z-[999999999]
       "
       variants={{
-        hidden: {y: 'calc(100% + 64px)', x: '-50%'},
+        hidden: {y: 'calc(100% + 120px)', x: '-50%'},
         shown: {y: 0, x: '-50%', transition: {delay: 1}},
       }}
       transition={{type: 'spring', bounce: 0.3, duration: 0.5}}
@@ -58,7 +59,7 @@ export const CookieBanner = () => {
       <m.div
         tw="
           backdrop-filter[blur(10px)]
-          bg-[#12142d66]
+          bg-gold-4/50
           rounded-[42px]
           border border-[#ffffff33]
         "
@@ -154,7 +155,7 @@ export const CookieBanner = () => {
         role="button"
         onClick={() => setDetailsOpen(true)}
       >
-        <div tw="text-xs text-center text-[#ffffff88] underline bg-[#12142d55] py-1 px-3 rounded-b-lg backdrop-filter[blur(12px)]">
+        <div tw="text-xs text-center text-[#ffffff88] underline bg-gold-4/50 py-1 px-3 rounded-b-lg backdrop-filter[blur(12px)] font-medium">
           What is this?
         </div>
       </div>

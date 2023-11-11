@@ -1,140 +1,137 @@
-import {DatePeriod, ScrollInterpolationWorkTech} from './misc';
-import {
-  IntersoLogo,
-  MillieLogo,
-  PlaybookLogo,
-  ZwierciadlaLogo,
-} from './work/logos';
-import tw from 'twin.macro';
-import {ReactNode} from 'react';
-import {icons} from './work/icons';
 import {Icon} from '@iconify/react';
-import {Tooltip} from '../Tooltip';
+import {icons} from './icons';
+import {IdOffset, SectionHeader, useIntersectNav} from './misc';
+import {MillieLogo, PlaybookLogo, SnapletLogo, ZwierciadlaLogo} from './svgs';
 
-type WorkItem = {
-  company: string;
-  logo: ReactNode;
-  positions: {
-    title: string;
-    period: {
-      start: Date;
-      end: Date | null;
-    };
-    description: ReactNode;
-  }[];
-  tech: {icon: string; name: string; dark?: boolean; style?: any}[];
+const WorkDescription = ({from, to, children, ...rest}) => {
+  return (
+    <p tw="md:max-w-[382px] " {...rest}>
+      <span tw="font-medium text-gold-12 [font-size: 14px]">
+        {from}
+        {to ? ' · ' + to : ''}
+      </span>
+      &nbsp;&nbsp;&nbsp;
+      <span tw="text-gold-11 font-medium">{children}</span>
+    </p>
+  );
 };
 
-const workItems: WorkItem[] = [
+const work = [
   {
-    company: 'Playbook',
-    logo: <PlaybookLogo />,
-    positions: [
-      {
-        title: 'frontend engineer',
-        period: {
-          start: new Date('May 1 2021'),
-          end: new Date('Aug 1 2022'),
-        },
-        description:
-          'I developed multiple various web applications for internal use, as well as end-user facing applications for hundreds of thousands of Playbook’s customers.',
-      },
-    ],
+    logo: <SnapletLogo />,
+    description: (
+      <WorkDescription from="2023" to={undefined}>
+        I invented and engineered Snaplet’s innovative product, the VS Code
+        extension for instant preview databases in the local environment.
+        <br />
+        In general, my mission was to push the boundaries of user experience
+        across the product offering.
+      </WorkDescription>
+    ),
     tech: [
-      icons.typescript,
-      icons.react,
       icons.nextjs,
-      icons.javascript,
+      icons.react,
+      icons.typescript,
       icons.nodejs,
-      icons.storybook,
       icons.tailwind,
-      icons.swr,
-      // icons.eslint,
-      icons.parcel,
       icons.vite,
-      icons.netlify,
-      icons.graphql,
-      icons.mailchimp,
+      icons.prisma,
+      icons.postgres,
+      icons.neon,
+      icons.trpc,
+      icons.storybook,
+      icons.figma,
+      icons.posthog,
+      icons.linear,
+      icons.sentry,
     ],
   },
   {
-    company: 'MillieGroup',
-    logo: <MillieLogo width={120} />,
-    positions: [
-      {
-        title: 'fullstack engineer',
-        period: {
-          start: new Date('Sep 1 2020'),
-          end: null,
-        },
-        description: (
-          <>
-            I developed Millie’s entire pivotal student portal with scalability
-            in mind to allow for tens of thousands of concurrent real-time
-            users.
-            <br />
-            <br />I designed, architected, and spearheaded the implementation of
-            a variety of crucial tooling to propel Millie into the EdTech
-            industry.
-          </>
-        ),
-      },
-    ],
+    logo: <PlaybookLogo tw="mt-1 transform scale-[0.8] origin-left" />,
+    description: (
+      <WorkDescription from="2021" to="22">
+        I developed multiple various web applications for internal use, as well
+        as end-user facing applications for hundreds of thousands of Playbook’s
+        customers.
+      </WorkDescription>
+    ),
     tech: [
-      icons.typescript,
       icons.react,
-      icons.prisma,
-      icons.javascript,
+      icons.typescript,
       icons.nodejs,
+      icons.tailwind,
+      icons.vite,
+      icons.graphql,
+      icons.postgres,
+      icons.sentry,
+      icons.mailchimp,
+      icons.netlify,
+      icons.storybook,
+      icons.figma,
+      icons.shortcut,
+    ],
+  },
+  {
+    logo: <MillieLogo tw="mt-1" />,
+    description: (
+      <WorkDescription from="2020" to="23">
+        I developed Millie’s entire pivotal student portal with scalability in
+        mind to allow for tens of thousands of concurrent real-time users.
+        <br />I designed, architected, and spearheaded the implementation of a
+        variety of crucial tooling to propel Millie into the EdTech industry.
+      </WorkDescription>
+    ),
+    tech: [
+      icons.react,
+      icons.typescript,
+      icons.nodejs,
+      icons.tailwind,
+      icons.vite,
+      icons.prisma,
+      icons.postgres,
+      icons.typeorm,
+      icons.sentry,
+      icons.vercel,
+      icons.heroku,
       icons.aws,
       icons.lambda,
-      icons.tailwind,
-      icons.vite,
-      icons.koa,
-      icons.typeorm,
+      icons.figma,
+      icons.monday,
     ],
   },
   {
-    company: 'Interso',
-    logo: <IntersoLogo />,
-    positions: [
-      {
-        title: 'e-commerce fullstack engineer',
-        period: {
-          start: new Date('Feb 1 2020'),
-          end: new Date('Jun 1 2020'),
-        },
-        description:
-          'I designed, built from the ground up, and deployed an e-commerce website for a local family business who was in need of help during the COVID-19 crisis.',
-      },
-    ],
+    logo: <img src="/interso.png" alt="Interso" width={80} />,
+    description: (
+      <WorkDescription from="2020" to={undefined}>
+        I designed, built from the ground up, and deployed an e-commerce website
+        for a local family business who was in need of help during the
+        COVID&#8209;19 crisis.
+      </WorkDescription>
+    ),
     tech: [
       icons.vue,
-      icons.prisma,
-      icons.strapi,
       icons.typescript,
-      icons.javascript,
       icons.nodejs,
+      icons.tailwind,
+      icons.nuxtjs,
+      icons.strapi,
       icons.graphql,
       icons.digitalocean,
-      icons.nuxtjs,
       icons.sass,
+      icons.affinitydesigner,
     ],
   },
   {
-    company: 'Zwierciadła',
-    logo: <ZwierciadlaLogo />,
-    positions: [
-      {
-        title: 'IT&Photo team lead',
-        period: {
-          start: new Date('Sep 1 2018'),
-          end: new Date('Sep 1 2019'),
-        },
-        description:
-          'I’ve led the IT&Photo team during the 16th edition of Zwierciadła - the largest and most recognizable nation-wide theatre event for the youth. We’ve successfully revived the event’s social media & website and dealt with multiple partners and sponsors. That edition was a great success and attracted 1000+ spectators at just one venue.',
-      },
-    ],
+    logo: <ZwierciadlaLogo tw="w-[120px]" />,
+    description: (
+      <WorkDescription from="2018" to="2019">
+        I’ve led the IT&Photo team during the 16th edition of Zwierciadła - the
+        largest and most recognizable nation-wide theatre event for the youth.
+        We’ve successfully revamped the event's national brand, and cooperated
+        with multiple partners and sponsors. That edition was a great success
+        and attracted 1000+ spectators at just one venue.
+      </WorkDescription>
+    ),
     tech: [
       icons.wordpress,
       icons.python,
@@ -146,121 +143,59 @@ const workItems: WorkItem[] = [
   },
 ];
 
-const WorkSectionItemTech = ({tech}: {tech: WorkItem['tech']}) => {
-  const BIG_SIZE = 60;
-  const SMALL_SIZE = 40;
+const TechIcon = ({icon, style, name}) => {
   return (
-    <div tw="padding[30px] padding-left[37px] margin-top[0px] margin-left[-7px] bg-[#090F14] height[100%] rounded-r-[7px] flex flex-col justify-center">
-      <div tw="flex space-x-4">
-        {tech.slice(0, 3).map((x) => (
-          <Tooltip
-            key={x.icon}
-            target={
-              <Icon
-                icon={x.icon}
-                height={BIG_SIZE}
-                width={BIG_SIZE}
-                css={[
-                  x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[5px]`,
-                  x.style,
-                ]}
-              />
-            }
-            side="top"
-          >
-            <span tw="whitespace-nowrap">{x.name}</span>
-          </Tooltip>
-        ))}
-      </div>
-      <div tw="flex flex-wrap margin[-8px] margin-top[16px] [& > *]:(margin[8px])">
-        {tech.slice(3).map((x) => (
-          <Tooltip
-            key={x.icon}
-            target={
-              <Icon
-                icon={x.icon}
-                height={SMALL_SIZE}
-                width={SMALL_SIZE}
-                css={[
-                  x.dark && tw`bg-[#edf0f1] border-radius[100%] padding[3px]`,
-                  x.style,
-                ]}
-              />
-            }
-            side="top"
-          >
-            <span tw="whitespace-nowrap">{x.name}</span>
-          </Tooltip>
-        ))}
-      </div>
+    <div title={name}>
+      <Icon icon={icon} width={24} height={24} css={style} />
     </div>
   );
 };
 
-const WorkSectionItem = ({item}: {item: WorkItem}) => {
+const WorkItem = ({logo, description, tech}) => {
   return (
-    <div tw="flex items-stretch md:(flex-row) flex-col">
-      {/* <ScrollInterpolationPullUp length={0} tw="z-index[1] flex items-stretch [& > *]:(flex items-stretch)"> */}
-      <div tw="w-full md:width[60%] background-color[#0E151C] border-radius[7px] padding[30px 25px 20px] md:padding[30px 35px 20px] z-index[1] flex-shrink-0">
-        <div tw="margin-bottom[28px]">{item.logo}</div>
-        {item.positions
-          .map((x, i) => (
-            <div key={i}>
-              <h1 tw="text-2xl font-semibold margin-bottom[10px]">{x.title}</h1>
-              <p tw="line-height[1.7]">
-                <DatePeriod start={x.period.start} end={x.period.end} />
-                {x.description}
-              </p>
-            </div>
-          ))
-          .reduce(
-            (prev, curr, idx) =>
-              [
-                prev,
-                <div
-                  tw="width[80px] height[1px] bg-white margin[25px 0]"
-                  key={`sep${idx}`}
-                /> /*<div tw="width[100%] height[2px] bg-[#070C10] margin[25px 0]" key={`sep${idx}`} />*/,
-                curr,
-              ] as any,
-          )}
-        {/* <h1>
-          {item}
-        </h1> */}
-      </div>
-      {/* </ScrollInterpolationPullUp> */}
-      <ScrollInterpolationWorkTech
-        length={450}
-        tw="flex-grow flex align-self[stretch] z-index[0] [& > *]:flex-grow"
-      >
-        <div tw="md:block h-full hidden">
-          <WorkSectionItemTech tech={item.tech} />
+    <div tw="flex items-start flex-col md:(flex-row max-w-[840px])">
+      <div tw="md:(w-[282px] pl-28) mb-4">{logo}</div>
+      <div>
+        <div>{description}</div>
+        <div tw="mt-4 flex gap-4 items-center flex-wrap max-w-[400px]">
+          {tech?.map((item, i) => (
+            <TechIcon {...item} key={i} />
+          ))}
         </div>
-      </ScrollInterpolationWorkTech>
+      </div>
     </div>
   );
 };
 
 export const WorkSection = () => {
+  const ref = useIntersectNav('resume');
   return (
-    <div tw="text-white mt-[-80px] pt-[80px]" id="work">
-      <div tw="relative max-width[1000px] mx-auto px-4 box-sizing[content-box] padding-top[100px]">
-        <h1 tw="mb-[50px] text-center font-semibold text-4xl">
-          professional experience
-        </h1>
-        {/* <div tw="flex items-start">
-          <div tw="sticky top-[150px] height[200px] width[60px] flex-shrink-0 hidden md:block">
-            <h1 tw="transform[translateX(-85px) translateY(80px) rotate(-90deg)] text-4xl font-semibold absolute left-0 top-0">
-              experience
-            </h1>
-          </div> */}
-        <div tw="flex-grow space-y-[40px]">
-          {workItems.map((x, i) => (
-            <WorkSectionItem item={x} key={i} />
-          ))}
+    <section tw="max-w-[840px] mt-10 mx-auto" ref={ref}>
+      <IdOffset id="resume" />
+      <SectionHeader>resumé</SectionHeader>
+
+      <div tw="md:ml-[282px] mt-7">
+        <div>
+          <img
+            src="/imgs/lnu.png"
+            width={186.41}
+            height={30.22}
+            title="Linnaeus University, Sweden"
+            alt="Linnaeus University, Sweden"
+          />
         </div>
-        {/* </div> */}
+        <WorkDescription from="2021" to="24" tw="mt-3.5">
+          Software Engineering BSc Degree
+          <br />
+          from LNU, Sweden
+        </WorkDescription>
       </div>
-    </div>
+
+      <div tw="[& > * + *]:(mt-11 md:(mt-8)) mt-11">
+        {work.map((item, i) => (
+          <WorkItem {...item} key={i} />
+        ))}
+      </div>
+    </section>
   );
 };

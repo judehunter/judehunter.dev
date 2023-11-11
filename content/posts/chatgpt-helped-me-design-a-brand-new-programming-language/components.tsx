@@ -27,8 +27,8 @@ export const ChatMe = ({children}) => {
         <div
           tw="
           font-size[0.9em]
-          bg-[#0e161c]
-          border border-[#2a3b4c]
+          bg-gold-2
+          border border-gold-7
           rounded-lg px-8
           min-w-[70%]
           max-w-[100%]
@@ -59,7 +59,7 @@ export const ChatGpt = ({children}) => {
           tw="
           font-size[0.9em]
           // bg-[#2a3b4c33]
-          border border-[#2a3b4c]
+          border border-gold-7
           rounded-lg px-8
           max-w-[90%]
           min-w-[70%]

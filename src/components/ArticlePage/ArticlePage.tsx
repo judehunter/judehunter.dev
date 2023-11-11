@@ -11,10 +11,10 @@ import {MDXRemote} from 'next-mdx-remote';
 import {usePageProps} from '../../misc/common';
 import ArticlePageExport from '../../pages/blog/[slug]';
 import {LazyMotion} from 'framer-motion';
-import {SubscribeCTA} from './SubscribeCTA';
-import {NavBar} from '../NavBar';
-import {SnapletAvatar} from '../SnapletAvatar';
 import {CookieBanner} from '../CookieBanner';
+import {JudeHunterHeader} from '../JudeHunterHeader';
+import {ActualNewsletter} from '../IndexPage/NewsletterSection';
+import {HeadSvg} from '../IndexPage/svgs';
 
 const DotPattern = () => {
   return (
@@ -41,7 +41,7 @@ const DotPattern = () => {
                 y={0}
                 width={4}
                 height={4}
-                tw="text-[#2a3b4c]"
+                tw="text-gold-3"
                 fill="currentColor"
               />
             </pattern>
@@ -73,7 +73,7 @@ const DotPattern = () => {
                 y={0}
                 width={4}
                 height={4}
-                tw="text-[#2a3b4c]"
+                tw="text-gold-3"
                 fill="currentColor"
               />
             </pattern>
@@ -90,6 +90,11 @@ const DotPattern = () => {
 };
 
 const MDStyle = tw`
+  [font-family: 'Inter var experimental']
+  text-gold-12/80
+  font-normal
+  [font-size: 16px] max-w-[560px] mx-auto leading-[1.7]
+  // leading-[1.5]!
   [& h1]:(
     text-3xl
     mb-5
@@ -128,14 +133,14 @@ const MDStyle = tw`
   //   rounded-[8px]
   // )
   [& :not(pre)>code]:(
-    bg-[#2a3b4c]
+    bg-gold-3
     rounded
     px-1.5
     font-family["Fira Code", Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace]!
     font-size[15px] md:font-size[16px]
   )
   [& hr]:(
-    border-top-color[#2a3b4c]
+    border-t border-gold-3
     my-8
   )
   [& em]:(
@@ -143,8 +148,8 @@ const MDStyle = tw`
     font-style[normal]
   )
   [& a]:(
-    text-[#7fec9d]
-    underline 
+    text-yellow-9
+    border-b border-yellow-9/50
   )
   [&]:(
     font-variant-ligatures[none]
@@ -203,7 +208,7 @@ const ContentSection = ({content, components}) => {
       }),
     );
   return (
-    <main tw="relative pt-16">
+    <main tw="relative pt-8">
       {/* <Head>
         <link
           rel="stylesheet"
@@ -213,10 +218,7 @@ const ContentSection = ({content, components}) => {
       <DotPattern />
       <ArticleSideBar />
       <div tw="relative px-5 sm:px-6 lg:px-8 overflow-hidden">
-        <div
-          tw="font-size[17px] md:text-lg max-w-[560px] mx-auto leading-[30px] md:leading-8"
-          css={MDStyle}
-        >
+        <div css={MDStyle}>
           <MDXRemote
             {...content}
             components={{
@@ -224,7 +226,7 @@ const ContentSection = ({content, components}) => {
                 <>
                   {filename ? (
                     <div tw="flex mb-[-0.5em] mt-[0.5em] font-family['Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace]!">
-                      <div tw="bg-[#192732] px-2 -ml-2 rounded-t-[0.3em] font-size[15px] md:font-size[16px]">
+                      <div tw="bg-gold-3 px-2 -ml-2 rounded-t-[0.3em] font-size[15px] md:font-size[16px]">
                         {filename}
                       </div>
                     </div>
@@ -271,144 +273,82 @@ export const ArticlePage = () => {
   return (
     <>
       <LazyMotion
-        features={() => import('./motionFeatures').then((res) => res.default)}
+        features={() =>
+          import('../../misc/motionFeatures').then((res) => res.default)
+        }
         strict
       >
-        <NavBar />
-        <div tw="background-color[#000212] min-h-screen text-[#dadfe7]">
-          <div tw="pt-16 md:pt-32 flex"></div>
-          <header
-          // css={[
-          //   css`
-          //     background-image: radial-gradient(
-          //       ellipse 80% 50% at 50% -20%,
-          //       rgba(120, 119, 198, 0.3),
-          //       transparent
-          //     );
-          //   `,
-          // ]}
-          >
-            <div tw="max-w-[600px] mx-auto mt-[40px] mb-[50px] px-6 box-sizing[content-box]">
-              <div tw="mb-4 flex items-center space-x-2">
-                <SnapletAvatar tw="w-[80px] h-[80px] ml-[-20px]!" />
-                <div tw="font-semibold">
-                  <h2>jude hunter</h2>
-                  <aside tw="opacity-50 text-[14px] mt-2">
-                    {format(
-                      new Date(source.frontmatter!.createDate),
-                      'MMM d, y',
-                    )}
-                    <span tw="hidden md:inline">
-                      {' '}
-                      <span tw="mx-4">·</span>{' '}
-                    </span>
-                    <br tw="inline md:hidden" />
-                    {(source.frontmatter!.tags.slice(0, 3) as any as string[])
-                      .map((x) => `#${x}`)
-                      .join(' ')}
-                  </aside>
+        <div tw="bg-gold-1 text-pink-600 font-black pb-20">
+          <JudeHunterHeader />
+          <div tw="min-h-screen">
+            <header>
+              <div tw="max-w-[600px] mx-auto pt-[40px] mb-[30px] px-6 [box-sizing: content-box]">
+                <div tw="mb-4 flex items-center space-x-2">
+                  <HeadSvg tw="w-[80px] h-[80px] ml-[-20px]!" />
+                  <div tw="font-semibold text-gold-11">
+                    <h2>jude hunter</h2>
+                    <aside tw="opacity-50 text-[14px] mt-2">
+                      {format(
+                        new Date(source.frontmatter!.createDate),
+                        'MMM d, y',
+                      )}
+                      <span tw="hidden md:inline">
+                        {' '}
+                        <span tw="mx-4">·</span>{' '}
+                      </span>
+                      <br tw="inline md:hidden" />
+                      {(source.frontmatter!.tags.slice(0, 3) as any as string[])
+                        .map((x) => `#${x}`)
+                        .join(' ')}
+                    </aside>
+                  </div>
                 </div>
+                <h1 tw="text-3xl font-extrabold tracking-tight leading-[1.2]! text-gold-12 sm:text-4xl">
+                  {source.frontmatter!.title}
+                </h1>
               </div>
-              <h1 tw="text-3xl font-extrabold tracking-tight leading-[3rem]! text-[#dadfe7] sm:text-4xl">
-                {source.frontmatter!.title}
-              </h1>
-            </div>
-            <div
-              tw="max-w-[700px] h-[400px] mx-auto relative p-[1px] rounded-[8px]"
-              css={[
-                css`
-                  // background-color: red;
-                  background-image: radial-gradient(
-                      ellipse 100% 100% at 100% 100%,
-                      #ffffff33,
-                      transparent
-                    ),
-                    radial-gradient(
-                      ellipse 100% 100% at 0% 30%,
-                      #ffffff33,
-                      transparent
-                    );
-                  // &::before {
-                  //   content: '';
-                  //   position: absolute;
-                  //   left: 50%;
-                  //   bottom: -500px;
-                  //   top: -500px;
-                  //   width: 1300px;
-                  //   transform: translateX(-50%);
-                  //   background-image: radial-gradient(
-                  //     ellipse 50% 30% at 50% 60%,
-                  //     rgba(120, 119, 198, 0.15),
-                  //     transparent
-                  //   );
-                  // }
-                `,
-              ]}
-            >
               <div
-                tw="hidden md:block"
+                tw="max-w-[700px] h-[300px] mx-auto relative p-[1px] rounded-[8px]"
                 css={[
                   css`
-                    position: absolute;
-                    left: 50%;
-                    bottom: -500px;
-                    top: -500px;
-                    width: 90vw;
-                    transform: translateX(-50%);
-                    overflow-x: hidden;
-                    mask: linear-gradient(
-                      to right,
-                      transparent 0%,
-                      black 15%,
-                      black 85%,
-                      transparent 100%
-                    );
+                    background-image: radial-gradient(
+                        ellipse 100% 100% at 100% 100%,
+                        #ffffff33,
+                        transparent
+                      ),
+                      radial-gradient(
+                        ellipse 100% 100% at 0% 30%,
+                        #ffffff33,
+                        transparent
+                      );
                   `,
                 ]}
               >
-                <div
-                  css={[
-                    css`
-                      position: absolute;
-                      left: 50%;
-                      bottom: 0px;
-                      top: 0px;
-                      width: 1300px;
-                      transform: translateX(-50%);
-                      background-image: radial-gradient(
-                        ellipse 50% 30% at 50% 60%,
-                        rgba(120, 119, 198, 0.15),
-                        transparent
-                      );
-                    `,
-                  ]}
-                />
+                <div tw="w-full h-full relative">
+                  <Img
+                    src={source.frontmatter!.thumbnail}
+                    alt={'thumbnail'}
+                    fill
+                    priority
+                    tw="rounded-[8px] [object-fit: cover]"
+                  />
+                </div>
               </div>
+            </header>
+            <ContentSection content={source} {...{components}} />
 
-              <div tw="w-full h-full relative">
-                <Img
-                  src={source.frontmatter!.thumbnail}
-                  alt={'thumbnail'}
-                  fill
-                  priority
-                  tw="rounded-[8px] object-fit[cover] transform[rotateY('20def')]"
-                />
-              </div>
-            </div>
-          </header>
-          <ContentSection content={source} {...{components}} />
+            <footer tw="mt-10">
+              <ActualNewsletter />
 
-          <footer>
-            <SubscribeCTA tw="mx-auto px-2 mt-8" />
+              <ArticleBottomNav />
+            </footer>
 
-            <ArticleBottomNav />
-          </footer>
-
-          <div tw="h-16" />
-          <YouveReached />
-          <Footer />
+            <div tw="h-16" />
+            <YouveReached />
+            <Footer />
+          </div>
+          <CookieBanner />
         </div>
-        <CookieBanner />
       </LazyMotion>
     </>
   );

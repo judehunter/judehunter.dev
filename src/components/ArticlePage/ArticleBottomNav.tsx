@@ -8,7 +8,7 @@ export const ArticleBottomNav = () => {
   const {nextUp} = usePageProps<typeof ArticlePageExport>();
   return (
     <>
-      <nav tw="flex items-center md:flex-col flex-col text-lg md:px-0 pl-6 pr-6">
+      <nav tw="flex items-center md:flex-col flex-col text-lg md:px-0 pl-6 pr-6 mt-6">
         <Link passHref href={nextUp.url}>
           <a
             tw="
@@ -16,15 +16,14 @@ export const ArticleBottomNav = () => {
               border-2
               rounded-xl
               md:rounded-full
-              border-[#dadfe7]
-              text-[#dadfe7]!
+              border-gold-3
+              text-gold-12!
               no-underline!
               font-medium
               transition-all
               // transition-duration[0.5s]
               hover:(
-                text-[#7fec9d]!
-                border-[#7fec9d]
+                border-gold-7
               )
               line-height[32px]
               mt-8
@@ -33,7 +32,7 @@ export const ArticleBottomNav = () => {
             className="group"
           >
             <div tw="flex">
-              <div tw="text-xs h-[20px] mt-[-23px] md:(mt-[-16px] mb-[-4px]) font-semibold text-[#7fec9d] bg-[#070c10] px-1 -mx-1">
+              <div tw="text-xs h-[20px] mt-[-23px] md:(mt-[-16px] mb-[-4px]) font-semibold text-yellow-9 bg-gold-1 px-1 -mx-1">
                 UP NEXT
               </div>
             </div>
@@ -45,8 +44,9 @@ export const ArticleBottomNav = () => {
                   font-size[2em]
                   ml-[7px]
                   mr-[-45px]
-                  transition-transform
+                  transition-all
                   group-hover:(
+                    text-gold-7
                     transform[translateX(12px)]
                   )
                   flex-shrink-0
@@ -55,10 +55,10 @@ export const ArticleBottomNav = () => {
             </div>
           </a>
         </Link>
-        <div tw="text-sm opacity-70 mt-3">
+        <div tw="text-sm opacity-70 mt-3 font-medium text-gold-12">
           or{' '}
           <Link passHref href="/blog">
-            <a tw="text-[rgba(218, 223, 231)]! underline">see all articles</a>
+            <a tw="text-gold-12 underline">see all articles</a>
           </Link>
         </div>
       </nav>
