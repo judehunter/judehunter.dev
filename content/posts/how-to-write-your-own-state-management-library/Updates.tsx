@@ -1,5 +1,5 @@
 import {createContext, useContext, useEffect, useState} from 'react';
-import tw from 'twin.macro';
+import tw, {theme} from 'twin.macro';
 import {m, useAnimation} from 'framer-motion';
 
 const ContextExampleContext = createContext<any>(null!);
@@ -12,22 +12,22 @@ const ContextExampleFourth = () => {
   useEffect(() => {
     if (justRerendered) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [justRerendered]);
 
   return (
     <m.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      tw="flex-grow border-2 rounded-[8px] border-gold-4 overflow-hidden"
       animate={controls}
       transition={{duration: 1}}
     >
       <m.div
-        tw="h-full rounded-[8px] p-4"
-        animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-        whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+        tw="h-full p-4"
+        animate={{backgroundColor: theme`colors.gold.1`}}
+        whileHover={{backgroundColor: theme`colors.gold.2`}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">A</div>
@@ -43,22 +43,22 @@ const ContextExampleThird = () => {
   useEffect(() => {
     if (justRerendered) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [justRerendered]);
 
   return (
     <m.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      tw="flex-grow border-2 rounded-[8px] border-gold-4 overflow-hidden"
       animate={controls}
       transition={{duration: 1}}
     >
       <m.div
-        tw="h-full rounded-[8px] p-4"
-        animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-        whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+        tw="h-full p-4"
+        animate={{backgroundColor: theme`colors.gold.1`}}
+        whileHover={{backgroundColor: theme`colors.gold.2`}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">C</div>
@@ -74,23 +74,23 @@ const ContextExampleSecond = () => {
   useEffect(() => {
     if (justRerendered) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [justRerendered]);
 
   return (
     <m.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      tw="flex-grow border-2 rounded-[8px] border-gold-4 overflow-hidden"
       animate={controls}
       transition={{duration: 1}}
       onMouseEnter={(e) => e.stopPropagation()}
     >
       <m.div
-        tw="h-full rounded-[8px] flex flex-col p-4"
-        animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-        whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+        tw="h-full flex flex-col p-4"
+        animate={{backgroundColor: theme`colors.gold.1`}}
+        whileHover={{backgroundColor: theme`colors.gold.2`}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="text-center mb-4">B</div>
@@ -111,9 +111,9 @@ const ContextExampleFirst = () => {
   useEffect(() => {
     if (justRerendered) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [justRerendered]);
 
@@ -125,16 +125,16 @@ const ContextExampleFirst = () => {
         Context API
       </div>
       <m.div
-        tw="w-[270px] h-[270px] border-2 border-[rgb(46, 52, 64)] rounded-[8px] flex flex-col font-semibold cursor-pointer"
+        tw="w-[270px] h-[270px] border-2 border-gold-4 rounded-[8px] flex flex-col font-semibold cursor-pointer overflow-hidden"
         animate={controls}
         transition={{duration: 1}}
         onMouseEnter={(e) => e.stopPropagation()}
         onClick={() => setJustRerendered((x) => x + 1)}
       >
         <m.div
-          tw="h-full rounded-[8px] flex flex-col p-4"
-          animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-          whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+          tw="h-full flex flex-col p-4"
+          animate={{backgroundColor: theme`colors.gold.1`}}
+          whileHover={{backgroundColor: theme`colors.gold.2`}}
           transition={{duration: 0.1, ease: 'linear'}}
         >
           <div tw="text-center mb-4">A</div>
@@ -158,15 +158,15 @@ const StoreExampleFourth = () => {
   useEffect(() => {
     if (state.A || state.B) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [state.A, state.B]);
 
   return (
     <m.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      tw="flex-grow border-2 rounded-[8px] border-gold-4 overflow-hidden"
       animate={controls}
       transition={{duration: 1}}
       onClick={(e) => {
@@ -175,9 +175,9 @@ const StoreExampleFourth = () => {
       }}
     >
       <m.div
-        tw="h-full rounded-[8px] p-4"
-        animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-        whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+        tw="h-full p-4"
+        animate={{backgroundColor: theme`colors.gold.1`}}
+        whileHover={{backgroundColor: theme`colors.gold.2`}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">A</div>
@@ -193,15 +193,15 @@ const StoreExampleThird = () => {
   useEffect(() => {
     if (state.C || state.A || state.B) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [state.C, state.A, state.B]);
 
   return (
     <m.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      tw="flex-grow border-2 rounded-[8px] border-gold-4 overflow-hidden"
       animate={controls}
       transition={{duration: 1}}
       onClick={(e) => {
@@ -210,9 +210,9 @@ const StoreExampleThird = () => {
       }}
     >
       <m.div
-        tw="h-full rounded-[8px] p-4"
-        animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-        whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+        tw="h-full p-4"
+        animate={{backgroundColor: theme`colors.gold.1`}}
+        whileHover={{backgroundColor: theme`colors.gold.2`}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="justify-center h-full flex items-center">C</div>
@@ -228,15 +228,15 @@ const StoreExampleSecond = () => {
   useEffect(() => {
     if (state.B || state.A) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [state.B, state.A]);
 
   return (
     <m.div
-      tw="flex-grow border-2 rounded-[8px] border-[rgb(46, 52, 64)]"
+      tw="flex-grow border-2 rounded-[8px] border-gold-4 overflow-hidden"
       animate={controls}
       transition={{duration: 1}}
       onMouseEnter={(e) => e.stopPropagation()}
@@ -246,9 +246,9 @@ const StoreExampleSecond = () => {
       }}
     >
       <m.div
-        tw="h-full rounded-[8px] flex flex-col p-4"
-        animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-        whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+        tw="h-full flex flex-col p-4"
+        animate={{backgroundColor: theme`colors.gold.1`}}
+        whileHover={{backgroundColor: theme`colors.gold.2`}}
         transition={{duration: 0.1, ease: 'linear'}}
       >
         <div tw="text-center mb-4">B</div>
@@ -269,9 +269,9 @@ const StoreExampleFirst = () => {
   useEffect(() => {
     if (state.A) {
       controls.set({
-        borderColor: 'rgb(127, 236, 157)',
+        borderColor: theme`colors.yellow.11`,
       });
-      controls.start({borderColor: 'rgb(46, 52, 64)'});
+      controls.start({borderColor: theme`colors.gold.4`});
     }
   }, [state.A]);
 
@@ -283,16 +283,16 @@ const StoreExampleFirst = () => {
         Stores
       </div>
       <m.div
-        tw="w-[270px] h-[270px] border-2 border-[rgb(46, 52, 64)] rounded-[8px] flex flex-col font-semibold cursor-pointer"
+        tw="w-[270px] h-[270px] border-2 border-gold-4 overflow-hidden rounded-[8px] flex flex-col font-semibold cursor-pointer"
         animate={controls}
         transition={{duration: 1}}
         onMouseEnter={(e) => e.stopPropagation()}
         onClick={() => setState((x) => ({...x, A: x.A + 1}))}
       >
         <m.div
-          tw="h-full rounded-[8px] flex flex-col p-4"
-          animate={{backgroundColor: 'rgb(7,  12, 16)'}}
-          whileHover={{backgroundColor: 'rgb(15, 20, 26)'}}
+          tw="h-full flex flex-col p-4"
+          animate={{backgroundColor: theme`colors.gold.1`}}
+          whileHover={{backgroundColor: theme`colors.gold.2`}}
           transition={{duration: 0.1, ease: 'linear'}}
         >
           <div tw="text-center mb-4">A</div>

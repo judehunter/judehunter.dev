@@ -9,7 +9,7 @@ import {posthog} from 'posthog-js';
 const LikeButton = () => {
   const SHOW_THRESHOLD = 20;
   const slug = useRouter().query.slug as string;
-  const [likes, setLikes] = useState<null | number>(2000);
+  const [likes, setLikes] = useState<null | number>(null);
 
   const getLikes = async () =>
     fetch('/api/getPostLikes', {
