@@ -122,7 +122,7 @@ export const CookieBanner = () => {
           animate={detailsOpen ? 'shown' : 'hidden'}
           initial="hidden"
         >
-          <div tw="px-6 pb-4 pt-2 width[258px]">
+          <div tw="px-6 pb-4 pt-2 width[258px] font-medium text-gold-12">
             I use cookies to understand
             <br />
             how you use my website.
