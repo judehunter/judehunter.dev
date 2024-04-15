@@ -7,6 +7,8 @@ export const Footer = () => {
         made with ❤️ and 🏳️‍🌈
         <br />
         by jude hunter &copy;
+        <br />
+        <span style="color:#ffffff88">legal name: Mateusz Sowinski-Smetny</span>
       </div>
     </div>
   );
