@@ -1,7 +1,14 @@
 import {Icon} from '@iconify/react';
 import {icons} from './icons';
 import {IdOffset, SectionHeader, useIntersectNav} from './misc';
-import {MillieLogo, PlaybookLogo, SnapletLogo, ZwierciadlaLogo} from './svgs';
+import {
+  HunchLogo,
+  MillieLogo,
+  PlaybookLogo,
+  SnapletLogo,
+  ZwierciadlaLogo,
+} from './svgs';
+import {ReactNode} from 'react';
 
 const WorkDescription = ({from, to, children, ...rest}) => {
   return (
@@ -16,9 +23,49 @@ const WorkDescription = ({from, to, children, ...rest}) => {
   );
 };
 
-const work = [
+type Work = {
+  name: string;
+  logo: ReactNode;
+  link?: string;
+  description: React.ReactNode;
+  tech: {icon: string; style?: any; name: string}[];
+};
+
+const work: Work[] = [
   {
+    name: 'Hunch',
+    logo: (
+      <HunchLogo tw="mt-1.5 transform scale-[1.3] origin-left text-white" />
+    ),
+    link: 'https://hunch.tools/',
+    description: (
+      <WorkDescription from="2024" to={undefined}>
+        I am a part of the team responsible for implementing Hunch's primary
+        product
+        <br />— a dynamic, no-code platform that integrates multiple AI models,
+        enhancing productivity and creativity. My focus is on delivering a
+        seamless and high standard user experience.
+      </WorkDescription>
+    ),
+    tech: [
+      icons.vite,
+      icons.react,
+      icons.typescript,
+      icons.nodejs,
+      icons.tailwind,
+      icons.socketio,
+      icons.radix,
+      icons.openapi,
+      icons.figma,
+      icons.posthog,
+      icons.linear,
+      icons.sentry,
+    ],
+  },
+  {
+    name: 'Snaplet',
     logo: <SnapletLogo />,
+    link: 'https://snaplet.dev/',
     description: (
       <WorkDescription from="2023" to={undefined}>
         I invented and engineered Snaplet’s innovative product, the VS Code
@@ -47,7 +94,9 @@ const work = [
     ],
   },
   {
+    name: 'Playbook',
     logo: <PlaybookLogo tw="mt-1 transform scale-[0.8] origin-left" />,
+    link: 'https://www.joinplaybook.com/',
     description: (
       <WorkDescription from="2021" to="22">
         I developed multiple various web applications for internal use, as well
@@ -72,7 +121,9 @@ const work = [
     ],
   },
   {
+    name: 'Millie',
     logo: <MillieLogo tw="mt-1" />,
+    link: 'https://www.milliegroup.com/',
     description: (
       <WorkDescription from="2020" to="23">
         I developed Millie’s entire pivotal student portal with scalability in
@@ -100,6 +151,7 @@ const work = [
     ],
   },
   {
+    name: 'Interso',
     logo: <img src="/interso.png" alt="Interso" width={80} />,
     description: (
       <WorkDescription from="2020" to={undefined}>
@@ -122,6 +174,7 @@ const work = [
     ],
   },
   {
+    name: 'Zwierciadła',
     logo: <ZwierciadlaLogo tw="w-[120px]" />,
     description: (
       <WorkDescription from="2018" to="2019">
@@ -143,7 +196,7 @@ const work = [
   },
 ];
 
-const TechIcon = ({icon, style, name}) => {
+const TechIcon = ({icon, style, name}: any) => {
   return (
     <div title={name}>
       <Icon icon={icon} width={24} height={24} css={style} />
@@ -151,10 +204,32 @@ const TechIcon = ({icon, style, name}) => {
   );
 };
 
-const WorkItem = ({logo, description, tech}) => {
+const LinkOrDivLogo = ({
+  children,
+  link,
+  name,
+}: {
+  children: ReactNode;
+  link?: string;
+  name: string;
+}) => {
+  if (link) {
+    return (
+      <a href={link} title={name} target="_blank" rel="noreferrer">
+        {children}
+      </a>
+    );
+  }
+
+  return <div>{children}</div>;
+};
+
+const WorkItem = ({logo, description, tech, link, name}: Work) => {
   return (
     <div tw="flex items-start flex-col md:(flex-row max-w-[840px])">
-      <div tw="md:(w-[282px] pl-28) mb-4">{logo}</div>
+      <div tw="md:(w-[282px] pl-28) mb-4">
+        <LinkOrDivLogo {...{name, link}}>{logo}</LinkOrDivLogo>
+      </div>
       <div>
         <div>{description}</div>
         <div tw="mt-4 flex gap-4 items-center flex-wrap max-w-[400px]">

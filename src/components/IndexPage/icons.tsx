@@ -209,4 +209,19 @@ export const icons = {
     icon: 'logos:monday-icon',
     name: 'Monday',
   },
+  openapi: {
+    icon: 'file-icons:openapi',
+    name: 'OpenAPI',
+    style: tw`text-white`,
+  },
+  socketio: {
+    icon: 'simple-icons:socketdotio',
+    name: 'Socket.io',
+    style: tw`text-white`,
+  },
+  radix: {
+    icon: 'tabler:brand-radix-ui',
+    name: 'Radix',
+    style: tw`text-white`,
+  },
 };
