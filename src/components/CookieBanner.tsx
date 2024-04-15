@@ -6,6 +6,10 @@ import {posthog} from 'posthog-js';
 import {usePostHogContext} from '../misc/a7s';
 
 export const CookieBanner = () => {
+  return null;
+}
+
+export const CookieBanner2 = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [bannerOpen, setBannerOpen] = useState(false);
 
