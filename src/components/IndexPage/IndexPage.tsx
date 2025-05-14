@@ -62,7 +62,7 @@ export const IndexPage = () => {
       }
       strict
     >
-      <div tw="bg-gold-1 min-h-screen text-pink-500 font-black pb-20 px-4">
+      <div tw="bg-gold-1 min-h-screen font-black pb-20 px-4">
         <IdOffset id="about" />
         <NavContext.Provider value={navContextValue}>
           <JudeHunterHeader />

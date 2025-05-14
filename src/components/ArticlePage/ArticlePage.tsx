@@ -278,7 +278,7 @@ export const ArticlePage = () => {
         }
         strict
       >
-        <div tw="bg-gold-1 text-pink-600 font-black pb-20">
+        <div tw="bg-gold-1 font-black pb-20">
           <JudeHunterHeader />
           <div tw="min-h-screen">
             <header>
