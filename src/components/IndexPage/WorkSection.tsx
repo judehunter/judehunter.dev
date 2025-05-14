@@ -39,12 +39,12 @@ const work: Work[] = [
     ),
     link: 'https://hunch.tools/',
     description: (
-      <WorkDescription from="2024" to={undefined}>
+      <WorkDescription from="2024" to="2025">
         I am a part of the team responsible for implementing Hunch's primary
         product
-        <br />— a dynamic, no-code platform that integrates multiple AI models,
-        enhancing productivity and creativity. My focus is on delivering a
-        seamless and high standard user experience.
+        <br />— a dynamic, canvas-based, no-code platform that integrates
+        multiple AI models, enhancing productivity and creativity. My focus is
+        on delivering a seamless and high standard user experience.
       </WorkDescription>
     ),
     tech: [
@@ -99,9 +99,9 @@ const work: Work[] = [
     link: 'https://www.joinplaybook.com/',
     description: (
       <WorkDescription from="2021" to="22">
-        I developed multiple various web applications for internal use, as well
-        as end-user facing applications for hundreds of thousands of Playbook’s
-        customers.
+        I created multiple various web applications for internal use, as well as
+        end-user facing applications at scale for hundreds of thousands of
+        Playbook’s customers.
       </WorkDescription>
     ),
     tech: [
@@ -178,11 +178,11 @@ const work: Work[] = [
     logo: <ZwierciadlaLogo tw="w-[120px]" />,
     description: (
       <WorkDescription from="2018" to="2019">
-        I’ve led the IT&Photo team during the 16th edition of Zwierciadła - the
+        I led the IT&Photo team during the 16th edition of Zwierciadła - the
         largest and most recognizable nation-wide theatre event for the youth.
-        We’ve successfully revamped the event's national brand, and cooperated
-        with multiple partners and sponsors. That edition was a great success
-        and attracted 1000+ spectators at just one venue.
+        We successfully revamped the event's national brand, and cooperated with
+        multiple partners and sponsors. That edition was a great success and
+        attracted an unusual 1000+ spectators at just one venue.
       </WorkDescription>
     ),
     tech: [
@@ -259,7 +259,7 @@ export const WorkSection = () => {
             alt="Linnaeus University, Sweden"
           />
         </div>
-        <WorkDescription from="2021" to="24" tw="mt-3.5">
+        <WorkDescription from="paused" to={undefined} tw="mt-3.5">
           Software Engineering BSc Degree
           <br />
           from LNU, Sweden

@@ -33,7 +33,7 @@ export const HeroSection = () => {
         </div>
         <div tw="text-gold-11 font-medium [line-height: 1.37] [& > p + p]:(mt-4) mt-11">
           <p>
-            jude is a front-end developer with a passion for
+            jude is a front-end engineer with a passion for
             <BrOrSpace />
             the arcana of software
           </p>
