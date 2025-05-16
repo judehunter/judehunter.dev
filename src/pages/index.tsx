@@ -63,8 +63,8 @@ export const getStaticProps = async () => {
     'the-journey-of-queso-my-programming-language',
     'creating-wazum-the-webassembly-compilation-library',
   ];
-  const pickedPosts = pickedSlugs.map((x) =>
-    slimPosts.find((y) => y.slug === x),
+  const pickedPosts = pickedSlugs.map(
+    (x) => slimPosts.find((y) => y.slug === x)!,
   );
   return {props: {posts: pickedPosts}};
 };
