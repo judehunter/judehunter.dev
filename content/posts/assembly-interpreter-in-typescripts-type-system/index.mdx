@@ -1,7 +1,7 @@
 ---
 title: 'Assembly interpreter inside of TypeScript''s type system'
 createDate: '2022-11-16T14:43:05.597Z'
-updateDate: '2022-11-16T14:43:05.597Z'
+updateDate: '2025-05-19T16:36:33.753Z'
 thumbnail: /media/willow-xk-nl-1AVWC1RE-unsplash.jpg
 description: 'TypeScript''s type system is crazy advanced. We can even build entire programming languages on the type level. I built a whole Assembly interpreter in type annotations and it''s cursed.'
 tags:
@@ -596,7 +596,7 @@ type EvalInstr<Instr, Ctx extends Context> =
 
 Now, for the hard part. Remember that we want to transform the `Ctx` so that the return value contains our immediate value in `r0`. This means that we will need to overwrite the register value.
 
-There isn't a very easy way to do that in TypeScript, since the intersection operator `&` takes the first value it sees, and we want the opposite behavior. It's time for another utility type.
+There isn't a very easy way to do that in TypeScript, since the intersection operator `&` would not fit here. It's time for another utility type.
 
 ```ts
 type Overwrite<

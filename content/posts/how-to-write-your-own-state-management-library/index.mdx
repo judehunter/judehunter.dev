@@ -1,7 +1,7 @@
 ---
 title: 'How to write your own state management library'
 createDate: '2022-10-02T13:39:01.540Z'
-updateDate: '2022-10-05T15:37:42.432Z'
+updateDate: '2025-05-19T16:36:33.753Z'
 thumbnail: /media/michael-dziedzic-W6l35A_rxxU-unsplash.jpg
 description: 'Ever wondered what magic happens behind the scenes of state management libraries for SPA frameworks? Jump in for a deep dive on selectors, subscribers, preventing re-renders, and more.'
 tags:
@@ -310,7 +310,11 @@ const createStore = <STATE, ACTIONS>(
     notify({...state, ...newVal});
   });
 
-  return {state, subscribe, ...actualActions};
+  // since `createStore` is a closure, we want to
+  // expose a getter that lets us get the current value
+  const getState = () => state
+
+  return {getState, subscribe, ...actualActions};
 };
 ```
 
@@ -327,7 +331,7 @@ const useSelector = <STATE,>(
   // we use the current state value to set the
   // initial value for our state
   const [selectedValue, setSelectedValue]
-    = useState(selector(store.state))
+    = useState(() => selector(store.getState()))
 
   useEffect(() => {
     // if the return part is confusing to you,
