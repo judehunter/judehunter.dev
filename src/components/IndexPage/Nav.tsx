@@ -85,6 +85,7 @@ export const Nav = () => {
           tw="max-w-[555px] [backdrop-filter: blur(10px)] -ml-6 rounded-full"
           animate={stuck ? {marginLeft: '-80px'} : {marginLeft: '-24px'}}
           transition={{type: 'tween', ease: 'easeOut'}}
+          initial={false}
         >
           <div tw="items-center flex">
             <m.div
@@ -114,6 +115,7 @@ export const Nav = () => {
                       },
                     } as any)
               }
+              initial={false}
             >
               <div tw="mr-4 pl-6">jude hunter</div>
             </m.div>
