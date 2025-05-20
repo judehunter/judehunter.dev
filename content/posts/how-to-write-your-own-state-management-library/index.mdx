@@ -1,7 +1,7 @@
 ---
 title: 'How to write your own state management library'
 createDate: '2022-10-02T13:39:01.540Z'
-updateDate: '2025-05-19T16:36:33.753Z'
+updateDate: '2025-05-20T06:35:39.642Z'
 thumbnail: /media/michael-dziedzic-W6l35A_rxxU-unsplash.jpg
 description: 'Ever wondered what magic happens behind the scenes of state management libraries for SPA frameworks? Jump in for a deep dive on selectors, subscribers, preventing re-renders, and more.'
 tags:
@@ -226,8 +226,8 @@ leader.notify({ direction: 'south', velocity: 20 });
 
 // changing direction and velocity
 leader.notify({ direction: 'west', velocity: 5 });
-// Drone A changed direction: south
-// Drone B changed velocity: 20
+// Drone A changed direction: west
+// Drone B changed velocity: 5
 ```
 
 In practice, this would look very different, since selectors commonly allow any value to be returned. We will include that in the actual implementation. Additionally, React's built-in equality checking will do some heavy lifting for us.
