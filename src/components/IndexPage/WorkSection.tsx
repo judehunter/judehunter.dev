@@ -178,11 +178,12 @@ const work: Work[] = [
     logo: <ZwierciadlaLogo tw="w-[120px]" />,
     description: (
       <WorkDescription from="2018" to="2019">
-        I led the IT&Photo team during the 16th edition of Zwierciadła - the
-        largest and most recognizable nation-wide theatre event for the youth.
-        We successfully revamped the event's national brand, and cooperated with
-        multiple partners and sponsors. That edition was a great success and
-        attracted an unusual 1000+ spectators at just one venue.
+        I led the Engineering & Design team during the 16th edition of
+        Zwierciadła - the largest and most recognizable nation-wide theatre
+        event for the youth. We successfully revamped the event's national
+        brand, and cooperated with multiple partners and sponsors. That edition
+        was a great success and attracted an unusual 1000+ spectators at just
+        one venue.
       </WorkDescription>
     ),
     tech: [
