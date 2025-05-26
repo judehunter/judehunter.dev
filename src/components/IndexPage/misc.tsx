@@ -1,5 +1,11 @@
 import {useState, createContext, useRef, useEffect, useContext} from 'react';
-import {GithubIcon, LinkedInIcon, PaperplaneIcon, TwitterIcon} from './svgs';
+import {
+  BskyIcon,
+  GithubIcon,
+  LinkedInIcon,
+  PaperplaneIcon,
+  TwitterIcon,
+} from './svgs';
 
 export const SectionHeader = ({children}) => {
   return (
@@ -11,9 +17,9 @@ export const SectionHeader = ({children}) => {
 
 export const GetInContactSection = () => {
   return (
-    <div tw="flex items-center">
+    <div tw="flex items-center -my-2">
       <a
-        tw="flex items-center text-yellow-11 gap-x-1.5"
+        tw="flex items-center text-yellow-11 gap-x-1.5 px-2 py-2 hover:bg-gold-2 transition-colors rounded-full -ml-2"
         href="mailto:jude@judehunter.dev"
         target="_blank"
       >
@@ -24,25 +30,33 @@ export const GetInContactSection = () => {
         href="https://github.com/judehunter"
         rel="noopener noreferrer"
         target="_blank"
-        tw="p-2 -m-2 ml-4"
+        tw="p-2 -m-2 ml-2 hover:bg-gold-2 transition-colors rounded-full"
       >
         <GithubIcon />
+      </a>
+      <a
+        href="https://bsky.app/profile/judehunter.dev"
+        rel="noopener noreferrer"
+        target="_blank"
+        tw="p-2 -m-2 ml-3 hover:bg-gold-2 transition-colors rounded-full"
+      >
+        <BskyIcon tw="-mb-0.5" />
+      </a>
+      <a
+        href="https://x.com/judehunterdev"
+        rel="noopener noreferrer"
+        target="_blank"
+        tw="p-2 -m-2 ml-3 hover:bg-gold-2 transition-colors rounded-full"
+      >
+        <TwitterIcon tw="-mb-0.5" />
       </a>
       <a
         href="https://www.linkedin.com/in/jude-hunter"
         rel="noopener noreferrer"
         target="_blank"
-        tw="p-2 -m-2 ml-3"
+        tw="p-2 -m-2 ml-3 hover:bg-gold-2 transition-colors rounded-full"
       >
         <LinkedInIcon />
-      </a>
-      <a
-        href="https://twitter.com/judehunterdev"
-        rel="noopener noreferrer"
-        target="_blank"
-        tw="p-2 -m-2 ml-3"
-      >
-        <TwitterIcon tw="-mb-0.5" />
       </a>
     </div>
   );

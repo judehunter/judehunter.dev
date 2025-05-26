@@ -9,6 +9,7 @@ import {
   ZwierciadlaLogo,
 } from './svgs';
 import {ReactNode} from 'react';
+import tw, {TwStyle} from 'twin.macro';
 
 const WorkDescription = ({from, to, children, ...rest}) => {
   return (
@@ -26,6 +27,7 @@ const WorkDescription = ({from, to, children, ...rest}) => {
 type Work = {
   name: string;
   logo: ReactNode;
+  logoWrapperClassName?: TwStyle;
   link?: string;
   description: React.ReactNode;
   tech: {icon: string; style?: any; name: string}[];
@@ -34,9 +36,8 @@ type Work = {
 const work: Work[] = [
   {
     name: 'Hunch',
-    logo: (
-      <HunchLogo tw="mt-1.5 transform scale-[1.3] origin-left text-white" />
-    ),
+    logo: <HunchLogo tw="w-[90px] h-auto text-white" />,
+    logoWrapperClassName: tw`mt-1.5`,
     link: 'https://hunch.tools/',
     description: (
       <WorkDescription from="2024" to="2025">
@@ -95,7 +96,8 @@ const work: Work[] = [
   },
   {
     name: 'Playbook',
-    logo: <PlaybookLogo tw="mt-1 transform scale-[0.8] origin-left" />,
+    logo: <PlaybookLogo tw="w-[125px] h-auto" />,
+    logoWrapperClassName: tw`mt-1`,
     link: 'https://www.joinplaybook.com/',
     description: (
       <WorkDescription from="2021" to="22">
@@ -122,7 +124,8 @@ const work: Work[] = [
   },
   {
     name: 'Millie',
-    logo: <MillieLogo tw="mt-1" />,
+    logo: <MillieLogo />,
+    logoWrapperClassName: tw`mt-1`,
     link: 'https://www.milliegroup.com/',
     description: (
       <WorkDescription from="2020" to="23">
@@ -209,27 +212,46 @@ const LinkOrDivLogo = ({
   children,
   link,
   name,
+  logoWrapperClassName,
 }: {
   children: ReactNode;
   link?: string;
   name: string;
+  logoWrapperClassName?: TwStyle;
 }) => {
   if (link) {
     return (
-      <a href={link} title={name} target="_blank" rel="noreferrer">
-        {children}
-      </a>
+      <div tw="flex" css={[logoWrapperClassName]}>
+        <a
+          tw="p-3 -mt-3 -ml-3 rounded-full hover:bg-gold-2 transition-colors"
+          href={link}
+          title={name}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {children}
+        </a>
+      </div>
     );
   }
 
   return <div>{children}</div>;
 };
 
-const WorkItem = ({logo, description, tech, link, name}: Work) => {
+const WorkItem = ({
+  logo,
+  description,
+  tech,
+  link,
+  name,
+  logoWrapperClassName,
+}: Work) => {
   return (
     <div tw="flex items-start flex-col md:(flex-row max-w-[840px])">
       <div tw="md:(w-[282px] pl-28) mb-4">
-        <LinkOrDivLogo {...{name, link}}>{logo}</LinkOrDivLogo>
+        <LinkOrDivLogo {...{name, link, logoWrapperClassName}}>
+          {logo}
+        </LinkOrDivLogo>
       </div>
       <div>
         <div>{description}</div>

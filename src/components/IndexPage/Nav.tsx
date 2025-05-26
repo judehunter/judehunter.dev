@@ -8,7 +8,7 @@ const NavItem = ({children, section, layoutId}) => {
   const active = visible === section;
   return (
     <li
-      tw="flex flex-col items-center cursor-pointer"
+      tw="flex flex-col items-center cursor-pointer hover:bg-gold-2 py-1.5 px-4 first:pl-6 last:pr-6 transition-colors"
       onClick={(e) => {
         document
           .getElementById(section)!
@@ -39,7 +39,7 @@ const NavItem = ({children, section, layoutId}) => {
 
 const ActualNav = ({layoutId}) => {
   return (
-    <ul tw="items-center gap-x-8 px-6 py-1.5 border border-gold-4 flex justify-center rounded-full w-full md:(w-auto)">
+    <ul tw="items-center border border-gold-4 flex justify-center rounded-full w-full md:(w-auto) overflow-hidden">
       <NavItem section="about" {...{layoutId}}>
         about
       </NavItem>
@@ -89,7 +89,7 @@ export const Nav = () => {
         >
           <div tw="items-center flex">
             <m.div
-              tw="text-center font-bold text-gold-12  overflow-hidden whitespace-nowrap mt-[-10px]"
+              tw="text-center font-bold text-gold-12 overflow-hidden whitespace-nowrap mt-[-10px]"
               animate={
                 stuck
                   ? ({
