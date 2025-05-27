@@ -54,6 +54,7 @@ const work: Work[] = [
       icons.typescript,
       icons.nodejs,
       icons.tailwind,
+      icons.cloudflare,
       icons.socketio,
       icons.radix,
       icons.openapi,
@@ -66,7 +67,7 @@ const work: Work[] = [
   {
     name: 'Snaplet',
     logo: <SnapletLogo />,
-    link: 'https://snaplet.dev/',
+    link: 'https://supabase.com/blog/snaplet-is-now-open-source',
     description: (
       <WorkDescription from="2023" to={undefined}>
         I invented and engineered Snaplet’s innovative product, the VS Code

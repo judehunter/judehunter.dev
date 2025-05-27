@@ -224,4 +224,8 @@ export const icons = {
     name: 'Radix',
     style: tw`text-white`,
   },
+  cloudflare: {
+    icon: 'devicon:cloudflare',
+    name: 'Cloudflare',
+  },
 };
