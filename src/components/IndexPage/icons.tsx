@@ -228,4 +228,8 @@ export const icons = {
     icon: 'devicon:cloudflare',
     name: 'Cloudflare',
   },
+  paddle: {
+    icon: 'lineicons:paddle',
+    name: 'Paddle.js',
+  },
 };
