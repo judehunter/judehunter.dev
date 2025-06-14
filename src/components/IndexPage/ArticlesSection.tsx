@@ -7,20 +7,14 @@ import {ArticleItem} from '../ArticleItem';
 export const ArticlesSection = () => {
   const ref = useIntersectNav('articles');
 
-  const entries = usePageProps<typeof IndexPageExport>()
-    .posts.sort(
-      (a, b) =>
-        new Date(b.source.frontmatter!.createDate).getTime() -
-        new Date(a.source.frontmatter!.createDate).getTime(),
-    )
-    .map((x) => ({
-      title: x.source.frontmatter!.title,
-      image: x.source.frontmatter!.thumbnail,
-      tags: (x.source.frontmatter!.tags as any as string[]).map((x) => x!),
-      url: x.url,
-      imageBlur: x.thumbnailBlurDataUrl,
-      slug: x.slug,
-    }));
+  const entries = usePageProps<typeof IndexPageExport>().posts.map((x) => ({
+    title: x.source.frontmatter!.title,
+    image: x.source.frontmatter!.thumbnail,
+    tags: (x.source.frontmatter!.tags as any as string[]).map((x) => x!),
+    url: x.url,
+    imageBlur: x.thumbnailBlurDataUrl,
+    slug: x.slug,
+  }));
 
   return (
     <section tw="md:(max-w-[840px] mx-auto) mt-14" ref={ref}>
