@@ -57,11 +57,11 @@ export const getStaticProps = async () => {
     return {...rest, source: {frontmatter: source.frontmatter}};
   });
   const pickedSlugs = [
-    'chatgpt-helped-me-design-a-brand-new-programming-language',
     'assembly-interpreter-in-typescripts-type-system',
     'how-to-write-your-own-state-management-library',
     'the-journey-of-queso-my-programming-language',
     'creating-wazum-the-webassembly-compilation-library',
+    'chatgpt-helped-me-design-a-brand-new-programming-language',
   ];
   const pickedPosts = pickedSlugs.map(
     (x) => slimPosts.find((y) => y.slug === x)!,
